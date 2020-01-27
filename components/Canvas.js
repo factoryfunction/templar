@@ -2,8 +2,7 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import styled from 'styled-components'
 import CanvasLayers from './CanvasLayers'
 import useClickHandler from '../utilities/useClickHandler'
-import layersStore from '../stores/layersStore'
-// import Icon from './Icon'
+import useLayersStore from '../stores/layersStore'
 
 const StyledCanvasContainer = styled.div`
   width: calc(100vw - 320px);
@@ -12,6 +11,7 @@ const StyledCanvasContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding-top: 180px;
+  padding-bottom: 180px;
 `
 
 const StyledCanvas = styled.div`
@@ -36,9 +36,10 @@ const WRAPPER_PROPS = {
 }
 
 const Canvas = (props) => {
+  const layersStore = useLayersStore()
+
   useClickHandler('#CanvasContainer', (event) => {
     const containsLayer = event.target.querySelector('.CanvasLayer')
-    // const elementUnderClick = document.elementFromPoint(event.x, event.y)
 
     if (containsLayer) {
       layersStore.deselectAllLayers()

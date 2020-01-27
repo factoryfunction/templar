@@ -1,0 +1,40 @@
+/* Default state */
+.rc-checkbox {
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  display: inline-block;
+  position: relative;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.rc-checkbox-inner {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+}
+.rc-checkbox-inner:after {
+  content: '';
+}
+
+.rc-checkbox-input {
+  position: absolute;
+  left: 0;
+  z-index: 9999;
+  cursor: pointer;
+  opacity: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.rc-checkbox-checked .rc-checkbox-inner:after {
+  content: '++';
+}

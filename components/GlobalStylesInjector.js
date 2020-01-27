@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components'
 
 const GlobalStylesInjector = createGlobalStyle`
     @import url('https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700,700i|Work+Sans:200,300,400,500,600,700,800&display=swap');
@@ -14,9 +14,8 @@ const GlobalStylesInjector = createGlobalStyle`
         --monoFont: 'Space Mono', monospace;
 
         --dark0: #12011D;
-
         --white: #fff;
-
+        --mainPurple: #7416ca;
         --editorBackgroundColor: #F4F4F4;
         --whiteBorderColor: #D8CFDE;
 
@@ -31,6 +30,13 @@ const GlobalStylesInjector = createGlobalStyle`
     h1, h2, h3, h4 {
         font-family: var(--monoFont);
     }
-`;
 
-export default GlobalStylesInjector;
+    .PowerSelect__Option {
+        padding-left: 12px;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        font-family: var(--mainFont);
+    }
+`
+
+export default GlobalStylesInjector

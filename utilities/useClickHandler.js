@@ -9,7 +9,7 @@ const useClickHandler = (query, handler) => {
     target.addEventListener('click', handler)
 
     return () => {
-      console.log('removing listener')
+      // console.log('removing listener')
       target.removeEventListener('click', handler)
     }
   }, [query])

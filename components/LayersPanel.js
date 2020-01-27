@@ -1,42 +1,33 @@
 import styled from 'styled-components'
-import { observer } from 'mobx-react-lite'
 
 import Spacer from './Spacer'
 import Icon from './Icon'
-import layersStore from '../stores/layersStore'
+import Small from './Small'
+import SmallInput from './SmallInput'
+import useLayersStore from '../stores/layersStore'
+
+import {
+  SelectedImageEditor,
+  ImageSizeEditor,
+  LayerNameEditor,
+  HeightStyleEditor,
+  WidthStyleEditor,
+  TopStyleEditor,
+  LeftStyleEditor,
+  LayerTextEditor,
+  ImageWidthStyleEditor,
+  ImageHeightStyleEditor,
+  ImageRatioLockEditor,
+  WidthContainmentEditor,
+  SelectedFontEditor,
+} from './InputEditors'
 
 import { LAYER_TYPE_ICON_NAME_MAP, LAYER_TYPE_ICON_SIZE_MAP } from '../consts'
-import useLayer from '../utilities/useLayer'
-
-const StyledLayersPanelContainer = styled.div`
-  width: 320px;
-  max-height: calc(100vh - 40px);
-  height: calc(100vh - 40px);
-  background: var(--white);
-  border-left: 1px solid var(--whiteBorderColor);
-  position: fixed;
-  top: 48px;
-  right: 0px;
-`
-
-const StyledPanelTitleContainer = styled.div`
-  width: 100%;
-  height: 40px;
-  min-height: 40px;
-  padding-left: 16px;
-  display: flex;
-  align-items: center;
-`
-
-const StyledPanelTitle = styled.p`
-  font-family: var(--monoFont);
-  color: var(--text0);
-  font-size: 14px;
-`
+import useLayerClickHandlers from '../utilities/useLayerClickHandlers'
 
 const StyledLayersList = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   width: 100%;
   max-height: calc(100vh - 128px);
   overflow: auto;
@@ -51,55 +42,15 @@ const StyledLayersList = styled.div`
   }
 `
 
-const LayersPanel = (props) => {
-  return (
-    <StyledLayersPanelContainer>
-      <PanelTitle />
-      <StyledLayersList>
-        <For each='layer' of={layersStore.layers.reverse()}>
-          <Layer key={layer.id} id={layer.id} />
-        </For>
-      </StyledLayersList>
-      <StyledBottomContainer>
-        <AddTextLayerIcon />
-        <AddImageLayerIcon />
-        <AddBlockLayerIcon />
-      </StyledBottomContainer>
-    </StyledLayersPanelContainer>
-  )
-}
-
-const AddTextLayerIcon = (props) => {
-  const onClick = React.useCallback(() => {
-    layersStore.insertTextLayer()
-  }, [])
-
-  return <Icon name='text' size='24px' color='#fff' onClick={onClick} />
-}
-
-const AddImageLayerIcon = (props) => {
-  const onClick = React.useCallback(() => {
-    layersStore.insertImageLayer()
-  }, [])
-
-  return <Icon name='scenery' size='24px' color='#fff' onClick={onClick} />
-}
-
-const AddBlockLayerIcon = (props) => {
-  const onClick = React.useCallback(() => {
-    layersStore.insertBlockLayer()
-  }, [])
-
-  return <Icon name='square-full' size='24px' color='#fff' onClick={onClick} />
-}
-
-const PanelTitle = (props) => {
-  return (
-    <StyledPanelTitleContainer>
-      <StyledPanelTitle>Layers</StyledPanelTitle>
-    </StyledPanelTitleContainer>
-  )
-}
+const StyledLayerEditor = styled.div`
+  width: 100%;
+  height: fit-content;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--whiteBorderColor);
+  background: #f6ebfe2e;
+`
 
 const StyledLayer = styled.div`
   width: 100%;
@@ -109,6 +60,7 @@ const StyledLayer = styled.div`
   display: flex;
   align-items: center;
   border-radius: 2px;
+  cursor: pointer;
 
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
@@ -123,12 +75,23 @@ const StyledLayer = styled.div`
   }
 `
 
+const StyledLayerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 const StyledLayerName = styled.p`
   font-family: var(--mainFont);
   color: var(--subTextColor);
   font-size: 14px;
   margin-left: 8px;
   margin-bottom: 2px;
+  cursor: pointer;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
 `
 
 const StyledLayerIconContainer = styled.div`
@@ -141,157 +104,107 @@ const StyledRemoveIcon = styled(Icon)`
   margin-left: auto;
 `
 
-const Layer = observer((props) => {
-  const { layer, layerActions, layerRef } = useLayer(props.id)
-  const iconName = LAYER_TYPE_ICON_NAME_MAP[layer.type]
-  const iconSize = LAYER_TYPE_ICON_SIZE_MAP[layer.type]
+export const LayersPanel = (props) => {
+  const layersStore = useLayersStore()
 
   return (
     <>
-      <StyledLayer ref={layerRef} draggable data-is-selected={String(layer.isSelected)}>
+      <StyledLayersList>
+        <For each='layer' of={layersStore.layers}>
+          <Layer key={layer.id} layer={layer} layersStore={layersStore} />
+        </For>
+      </StyledLayersList>
+      <StyledBottomContainer>
+        <Icon name='text' size='24px' color='#fff' onClick={layersStore.addTextLayer} />
+        <Icon name='scenery' size='24px' color='#fff' onClick={layersStore.addImageLayer} />
+        <Icon name='square-full' size='24px' color='#fff' onClick={layersStore.addBlockLayer} />
+      </StyledBottomContainer>
+    </>
+  )
+}
+
+const Layer = (props) => {
+  const { layerRef } = useLayerClickHandlers(props.layer.id)
+  const iconName = LAYER_TYPE_ICON_NAME_MAP[props.layer.type]
+  const iconSize = LAYER_TYPE_ICON_SIZE_MAP[props.layer.type]
+
+  return (
+    <StyledLayerContainer>
+      <StyledLayer ref={layerRef} draggable data-is-selected={props.layer.isSelected}>
         <StyledLayerIconContainer>
           <Icon name={iconName} size={iconSize} color='var(--subTextColor)' />
         </StyledLayerIconContainer>
-        <StyledLayerName>{layer.name}</StyledLayerName>
+
+        <StyledLayerName>{props.layer.name}</StyledLayerName>
+
         <StyledRemoveIcon
+          data-is-component-action
           name='trash-alt'
           size='16px'
           color='var(--subTextColor)'
-          onClick={layerActions.removeLayer}
+          onClick={() => props.layersStore.removeLayer(props.layer.id)}
         />
       </StyledLayer>
-      <If condition={layer.isBeingEdited}>
+
+      <If condition={props.layer.isBeingEdited}>
         <Choose>
-          <When condition={layer.type === 'text'}>
-            <TextLayerEditor layer={layer} layerActions={layerActions}></TextLayerEditor>
+          <When condition={props.layer.type === 'text'}>
+            <TextLayerEditor layer={props.layer} layersStore={props.layersStore}></TextLayerEditor>
           </When>
 
-          <When condition={layer.type === 'image'}>
-            <ImageLayerEditor layer={layer} layerActions={layerActions}></ImageLayerEditor>
+          <When condition={props.layer.type === 'image'}>
+            <ImageLayerEditor layer={props.layer} layersStore={props.layersStore}></ImageLayerEditor>
           </When>
 
-          <When condition={layer.type === 'block'}>
-            <BlockLayerEditor layer={layer} layerActions={layerActions}></BlockLayerEditor>
+          <When condition={props.layer.type === 'block'}>
+            <BlockLayerEditor layer={props.layer} layersStore={props.layersStore}></BlockLayerEditor>
           </When>
         </Choose>
       </If>
-    </>
+    </StyledLayerContainer>
   )
-})
+}
 
-const StyledLayerEditor = styled.div`
-  width: 100%;
-  height: fit-content;
-  padding: 16px 24px;
-  display: flex;
-  flex-direction: column;
-`
-
-const SmallInput = styled.input`
-  border: 1px solid var(--whiteBorderColor);
-  border-radius: 3px;
-  outline: none;
-  padding: 8px 12px;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  font-family: var(--mainFont);
-`
-
-const Small = styled.small`
-  font-size: 12px;
-  letter-spacing: 0.5px;
-  font-family: var(--mainFont);
-`
-
-const TextLayerEditor = observer((props) => {
+const TextLayerEditor = (props) => {
   return (
     <StyledLayerEditor>
-      <Small>Layer Name:</Small>
-      <Spacer size='8px' />
-      <SmallInput value={props.layer.name} onChange={props.layerActions.setLayerName} />
-      <Spacer size='16px' />
-      <Small>Horizontal Position Percentage:</Small>
-      <Spacer size='8px' />
-      <SmallInput
-        value={props.layer.style.left.replace('%', '')}
-        type='number'
-        onChange={props.layerActions.setLayerStyleLeft}
-      />
-      <Spacer size='16px' />
-      <Small>Vertical Position Percentage:</Small>
-      <Spacer size='8px' />
-      <SmallInput
-        value={props.layer.style.top.replace('%', '')}
-        type='number'
-        onChange={props.layerActions.setLayerStyleTop}
-      />
-      <Spacer size='16px' />
+      <LayerNameEditor layer={props.layer} layersStore={props.layersStore} />
+      <SelectedFontEditor layer={props.layer} layersStore={props.layersStore} />
+      <LeftStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <TopStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <LayerTextEditor layer={props.layer} layersStore={props.layersStore} />
+      <WidthStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <HeightStyleEditor layer={props.layer} layersStore={props.layersStore} />
     </StyledLayerEditor>
   )
-})
+}
 
-const ImageLayerEditor = observer((props) => {
+const ImageLayerEditor = (props) => {
   return (
     <StyledLayerEditor>
-      <Small>Layer Name:</Small>
-      <Spacer size='8px' />
-      <SmallInput value={props.layer.name} onChange={props.layerActions.setLayerName} />
-      <Spacer size='16px' />
-      <Small>Horizontal Position Percentage:</Small>
-      <Spacer size='8px' />
-      <SmallInput
-        value={props.layer.style.left.replace('%', '')}
-        type='number'
-        onChange={props.layerActions.setLayerStyleLeft}
-      />
-      <Spacer size='16px' />
-      <Small>Vertical Position Percentage:</Small>
-      <Spacer size='8px' />
-      <SmallInput
-        value={props.layer.style.top.replace('%', '')}
-        type='number'
-        onChange={props.layerActions.setLayerStyleTop}
-      />
-      <Spacer size='16px' />
-
-      <Small>Placeholder Image Url:</Small>
-      <Spacer size='8px' />
-      <SmallInput
-        value={props.layer.style.backgroundImage.replace('url(', '').replace(')', '')}
-        type='text'
-        onChange={props.layerActions.setLayerStylePlaceholderImageUrl}
-      />
-      <Spacer size='16px' />
+      <LayerNameEditor layer={props.layer} layersStore={props.layersStore} />
+      <SelectedImageEditor layer={props.layer} layersStore={props.layersStore} />
+      <LeftStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <TopStyleEditor layer={props.layer} layersStore={props.layersStore} marginBottom='8px' />
+      {/* <WidthContainmentEditor layer={props.layer} layersStore={props.layersStore} marginBottom='0px' /> */}
+      <ImageRatioLockEditor layer={props.layer} layersStore={props.layersStore} marginBottom='20px' />
+      <ImageWidthStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <ImageHeightStyleEditor layer={props.layer} layersStore={props.layersStore} />
     </StyledLayerEditor>
   )
-})
+}
 
-const BlockLayerEditor = observer((props) => {
+const BlockLayerEditor = (props) => {
   return (
     <StyledLayerEditor>
-      <Small>Layer Name:</Small>
-      <Spacer size='8px' />
-      <SmallInput value={props.layer.name} onChange={props.layerActions.setLayerName} />
-      <Spacer size='16px' />
-      <Small>Horizontal Position Percentage:</Small>
-      <Spacer size='8px' />
-      <SmallInput
-        value={props.layer.style.left.replace('%', '')}
-        type='number'
-        onChange={props.layerActions.setLayerStyleLeft}
-      />
-      <Spacer size='16px' />
-      <Small>Vertical Position Percentage:</Small>
-      <Spacer size='8px' />
-      <SmallInput
-        value={props.layer.style.top.replace('%', '')}
-        type='number'
-        onChange={props.layerActions.setLayerStyleTop}
-      />
-      <Spacer size='16px' />
+      <LayerNameEditor layer={props.layer} layersStore={props.layersStore} />
+      <LeftStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <TopStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <WidthStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <HeightStyleEditor layer={props.layer} layersStore={props.layersStore} />
     </StyledLayerEditor>
   )
-})
+}
 
 const StyledBottomContainer = styled.div`
   width: 100%;
@@ -306,4 +219,4 @@ const StyledBottomContainer = styled.div`
   right: 0;
 `
 
-export default observer(LayersPanel)
+export default LayersPanel

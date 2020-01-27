@@ -31,11 +31,15 @@ const useLayer = (layerId) => {
   }, [])
 
   const setLayerStyleSize = React.useCallback((event) => {
-    layersStore.setLayerStyle(layerId, 'size', event.target.value + '%')
+    layersStore.setLayerStyle(layerId, 'size', Number(event.target.value))
   }, [])
 
   const setLayerStyleWidth = React.useCallback((event) => {
     layersStore.setLayerStyle(layerId, 'width', event.target.value + '%')
+  }, [])
+
+  const setLayerStyleMaxWidth = React.useCallback((event) => {
+    layersStore.setLayerStyle(layerId, 'maxWidth', event.target.value + '%')
   }, [])
 
   const setLayerStyleHeight = React.useCallback((event) => {
@@ -46,12 +50,16 @@ const useLayer = (layerId) => {
     layersStore.setLayerStyle(layerId, 'backgroundImage', `url(${event.target.value})`)
   }, [])
 
+  const setLayerUrl = React.useCallback((event) => {
+    layersStore.setLayerUrl(layerId, event.target.value)
+  }, [])
+
   useDoubleClick({
     onSingleClick: (e) => {
       layersStore.selectLayer(layerId)
     },
     onDoubleClick: (e) => {
-      layersStore.setLayerEditing(layerId, true)
+      layersStore.enableLayerEditing(layerId, true)
     },
     ref: layerRef,
     latency: 250,
@@ -66,8 +74,10 @@ const useLayer = (layerId) => {
     setLayerStyleTop,
     setLayerStyleSize,
     setLayerStyleWidth,
+    setLayerStyleMaxWidth,
     setLayerStyleHeight,
     setLayerStylePlaceholderImageUrl,
+    setLayerUrl,
   }
 
   return {

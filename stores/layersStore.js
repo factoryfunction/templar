@@ -1,186 +1,193 @@
-import { observable, reaction, computed } from 'mobx'
-import nanoid from 'nanoid'
+import * as React from 'react'
+import createContextStore from '../utilities/createContextStore'
+import createLayer from '../utilities/createLayer'
+import useFamiliarObjectArray from '../utilities/useFamiliarObjectArray'
+import useAssetsStore from './assetsStore'
 
-// Store
-// Constants
+// Always have the placeholder image asset.
+// This asset can not be edited or removed.
+const DEFAULT_LAYERS = []
 
-const PLACEHOLDER_IMAGE_URL = 'https://www.okcballet.org/wp-content/uploads/2016/09/placeholder-image.png'
+const useStoreCreator = () => {
+  const assetsStore = useAssetsStore()
+  const layers = useFamiliarObjectArray(DEFAULT_LAYERS, 'editorLayers')
 
-// Store
-// Definition
+  const addBlockLayer = React.useCallback(() => layers.addOne(createLayer('block')), [])
 
-class LayersStore {
-  @observable layers = []
+  const addTextLayer = React.useCallback(() => {
+    // New font layers have the WorkSans font asset by default.
+    const newLayer = createLayer('text')
+    const fontAsset = assetsStore.defaultAssets.defaultFontAsset
 
-  @computed get layerIds() {
-    return this.layers.map((layer) => {
-      return layer.id
+    layers.addOne({
+      ...newLayer,
+      fontAsset,
     })
-  }
+  }, [])
 
-  // Store
-  // Actions
+  const addImageLayer = React.useCallback(() => {
+    // New image layers have the placeholder image asset by default.
+    const newLayer = createLayer('image')
+    const imageAsset = assetsStore.defaultAssets.placeholderImageAsset
 
-  deselectAllLayers = () => {
-    this.layers.forEach((layer) => {
-      if (layer.isSelected) {
+    layers.addOne({
+      ...newLayer,
+      imageAsset,
+      style: {
+        ...newLayer.style,
+        width: imageAsset.width,
+        height: imageAsset.height,
+      },
+    })
+  }, [])
+
+  const setLayerName = React.useCallback((id, name) => {
+    layers.updateOne(id, (layer) => {
+      layer.name = name
+      return layer
+    })
+  }, [])
+
+  const setLayerText = React.useCallback((id, text) => {
+    layers.updateOne(id, (layer) => {
+      layer.text = text
+      return layer
+    })
+  }, [])
+
+  const setLayerStyle = React.useCallback((id, styleProperty, styleValue) => {
+    layers.updateOne(id, (layer) => {
+      const style = { ...layer.style, [styleProperty]: styleValue }
+      return { ...layer, style }
+    })
+  }, [])
+
+  const setLayerUrl = React.useCallback((id, url) => {
+    layers.updateOne(id, (layer) => {
+      layer.url = url
+      return layer
+    })
+  }, [])
+
+  const setLayerImageAsset = React.useCallback((id, asset) => {
+    layers.updateOne(id, (layer) => {
+      layer.imageAsset = asset
+      layer.url = asset.url
+      layer.style.width = asset.width
+      layer.style.height = asset.height
+      return layer
+    })
+  }, [])
+
+  const setLayerFontAsset = React.useCallback((id, asset) => {
+    layers.updateOne(id, (layer) => {
+      layer.fontAsset = asset
+      return layer
+    })
+  }, [])
+
+  const setLayerRatioLocked = React.useCallback((id, bool) => {
+    layers.updateOne(id, (layer) => {
+      layer.isRatioLocked = bool
+      return layer
+    })
+  }, [])
+
+  const setLayerWidthRestrcted = React.useCallback((id, bool) => {
+    layers.updateOne(id, (layer) => {
+      layer.isWidthRestrictedToDocument = bool
+      return layer
+    })
+  }, [])
+
+  const setLayerIndex = React.useCallback((id, newIndex) => {
+    layers.respositionOne(id, newIndex)
+  }, [])
+
+  const selectLayer = React.useCallback((id) => {
+    layers.updateAll((layer) => {
+      if (layer.id !== id) {
         layer.isSelected = false
         layer.isBeingEdited = false
-      }
-    })
-  }
-
-  setLayerEditing = (id, isEditing) => {
-    this.updateLayerById(id, (layer) => {
-      layer.isSelected = isEditing
-      layer.isBeingEdited = isEditing
-    })
-  }
-
-  getLayerById = (id) => {
-    let index = undefined
-
-    const layer = this.layers.find((layer, _index) => {
-      const matchesId = layer.id === id
-
-      if (matchesId) {
-        index = _index
-      }
-
-      return matchesId
-    })
-
-    return {
-      layer,
-      index,
-    }
-  }
-
-  updateLayerById = (id, handler) => {
-    this.layers.forEach((layer) => {
-      if (layer.id === id) {
-        handler(layer)
-      }
-    })
-  }
-
-  selectLayer = (id) => {
-    for (const layer of this.layers) {
-      if (layer.id === id) {
-        layer.isSelected = true
       } else {
-        layer.isSelected = false
-        layer.isBeingEdited = false
+        layer.isSelected = true
       }
-    }
-  }
 
-  deselectLayer = (id) => {
-    this.updateLayerById(id, (layer) => {
+      return layer
+    })
+  }, [])
+
+  const deselectLayer = React.useCallback((id) => {
+    layers.updateOne(id, (layer) => {
       layer.isSelected = false
       layer.isBeingEdited = false
+      return layer
     })
-  }
+  }, [])
 
-  setLayerName = (id, name) => {
-    this.layers.forEach((layer) => {
-      if (layer.id === id) {
-        layer.name = name
-      }
+  const selectAllLayers = React.useCallback(() => {
+    layers.updateAll((layer) => {
+      layer.isSelected = true
+      return layer
     })
-  }
+  }, [])
 
-  setLayerStyle = (id, styleProperty, styleValue) => {
-    this.layers.forEach((layer) => {
-      if (layer.id === id) {
-        layer.style[styleProperty] = styleValue
-      }
+  const deselectAllLayers = React.useCallback(() => {
+    layers.updateAll((layer) => {
+      layer.isSelected = false
+      layer.isBeingEdited = false
+      return layer
     })
-  }
+  }, [])
 
-  setLayerText = (id, text) => {
-    this.updateLayerById(id, (layer) => {
-      layer.text = text
+  const enableLayerEditing = React.useCallback((id) => {
+    layers.updateOne(id, (layer) => {
+      layer.isSelected = true
+      layer.isBeingEdited = true
+      return layer
     })
-  }
+  }, [])
 
-  insertTextLayer = () => {
-    this.layers.push({
-      isSelected: false,
-      isBeingEdited: false,
-      id: nanoid(),
-      type: 'text',
-      name: 'Text Layer',
-      text: 'some text',
-      style: {
-        position: 'absolute',
-        top: '2%',
-        left: '2%',
-        width: 'auto',
-        height: 'auto',
-        fontFamily: 'Work Sans',
-        fontStyle: 'normal',
-        fontWeight: 400,
-        letterSpacing: 0.5,
-        lineHeight: '140%',
-      },
+  const disableLayerEditing = React.useCallback((id) => {
+    layers.updateOne(id, (layer) => {
+      layer.isBeingEdited = false
+      return layer
     })
-  }
+  }, [])
 
-  insertImageLayer = () => {
-    this.layers.push({
-      isSelected: false,
-      isBeingEdited: false,
-      id: nanoid(),
-      type: 'image',
-      name: 'Image Layer',
-      url: PLACEHOLDER_IMAGE_URL,
-      style: {
-        position: 'absolute',
-        top: '2%',
-        left: '2%',
-        width: 'auto',
-        height: 'auto',
-        maxWidth: '50%',
-        display: 'flex',
-        backgroundSize: 'cover',
-        backgroundImage: `url(${PLACEHOLDER_IMAGE_URL})`,
-        size: 0.25,
-      },
+  const getLayerById = React.useCallback((id) => {
+    return layers.list.find((layer) => {
+      return layer.id === id
     })
-  }
+  }, [])
 
-  insertBlockLayer = () => {
-    this.layers.push({
-      isSelected: false,
-      isBeingEdited: false,
-      id: nanoid(),
-      type: 'block',
-      name: 'Block Layer',
-      style: {
-        position: 'absolute',
-        top: '2%',
-        left: '2%',
-        width: '5%',
-        height: '5%',
-        backgroundColor: 'rgba(0,0,0,0.75)',
-      },
-    })
-  }
+  global.layersList = layers.list
 
-  removeLayer = (id) => {
-    this.layers = this.layers.filter((layer) => {
-      return layer.id !== id
-    })
+  return {
+    layers: layers.list,
+    removeLayer: layers.removeOne,
+    addTextLayer,
+    addImageLayer,
+    addBlockLayer,
+    setLayerName,
+    setLayerText,
+    setLayerStyle,
+    setLayerUrl,
+    selectLayer,
+    deselectLayer,
+    selectAllLayers,
+    deselectAllLayers,
+    enableLayerEditing,
+    disableLayerEditing,
+    getLayerById,
+    setLayerIndex,
+    setLayerImageAsset,
+    setLayerRatioLocked,
+    setLayerWidthRestrcted,
+    setLayerFontAsset,
   }
 }
 
-const layersStore = new LayersStore()
-export default layersStore
-
-reaction(
-  () => layersStore.layers.length,
-  () => {
-    console.log('layers added or removed.')
-  },
-)
+const [LayersStoreProvider, useLayersStore, LayersStoreContext] = createContextStore(useStoreCreator)
+export { LayersStoreProvider, LayersStoreContext }
+export default useLayersStore
