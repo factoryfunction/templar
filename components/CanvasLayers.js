@@ -1,9 +1,5 @@
 import styled from 'styled-components'
-import { toJS } from 'mobx'
 import useLayersStore from '../stores/layersStore'
-import useLayer from '../utilities/useLayer'
-import { observer } from 'mobx-react-lite'
-import useImage from 'use-image'
 import useLayerClickHandlers from '../utilities/useLayerClickHandlers'
 import useAssetsStore from '../stores/assetsStore'
 
@@ -34,27 +30,30 @@ const CanvasLayer = (props) => {
   )
 }
 
-const DEFAULT_IMG = {
-  height: 0,
-  width: 0,
-}
-
 const TextCanvasLayer = (props) => {
   const { layerRef } = useLayerClickHandlers(props.layer.id)
+  const width = props.layer.style.width > 0 ? props.layer.style.width + 'in' : 'auto'
 
-  console.log(props.layer)
+  const height = props.layer.style.height > 0 ? props.layer.style.height + 'in' : 'auto'
+
   const style = {
     ...props.layer.style,
+    width,
+    height,
     top: props.layer.style.top + 'in',
     left: props.layer.style.left + 'in',
-    width: props.layer.style.width + 'in',
-    height: props.layer.style.height + 'in',
     fontFamily: `"${props.layer.fontAsset.name}"`,
+    overflow: 'hidden',
   }
 
   return (
     <p ref={layerRef} className='CanvasLayer' data-is-selected={props.layer.isSelected} style={style}>
-      {props.layer.text}
+      <For each='line' of={props.layer.text.split('\n')}>
+        <>
+          {line}
+          <br />
+        </>
+      </For>
     </p>
   )
 }
@@ -78,8 +77,6 @@ const BlockCanvasLayer = (props) => {
 const ImageCanvasLayer = (props) => {
   const { layerRef } = useLayerClickHandlers(props.layer.id)
   const { width, height, ...layerStyle } = props.layer.style
-  // const width = imageAsset.width * size
-  // const height = width * imageAsset.heightRatio
 
   const style = {
     ...layerStyle,

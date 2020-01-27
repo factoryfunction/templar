@@ -208,6 +208,40 @@ export const WidthStyleEditor = (props) => {
   )
 }
 
+export const TextWidthStyleEditor = (props) => {
+  return (
+    <EditorContainer marginBottom={props.marginBottom}>
+      <Small>Width (Inches or 0 for "auto"):</Small>
+      <Spacer size='8px' />
+      <SmallInput
+        value={props.layer.style.width}
+        type='number'
+        step='0.1'
+        onChange={(event) =>
+          props.layersStore.setLayerStyle(props.layer.id, 'width', Number(event.target.value))
+        }
+      />
+    </EditorContainer>
+  )
+}
+
+export const TextHeightStyleEditor = (props) => {
+  return (
+    <EditorContainer marginBottom={props.marginBottom}>
+      <Small>Heught (Inches or 0 for "auto"):</Small>
+      <Spacer size='8px' />
+      <SmallInput
+        value={props.layer.style.height}
+        type='number'
+        step='0.1'
+        onChange={(event) =>
+          props.layersStore.setLayerStyle(props.layer.id, 'height', Number(event.target.value))
+        }
+      />
+    </EditorContainer>
+  )
+}
+
 export const TopStyleEditor = (props) => {
   return (
     <EditorContainer marginBottom={props.marginBottom}>
@@ -233,6 +267,24 @@ export const LeftStyleEditor = (props) => {
         type='number'
         step='0.1'
         onChange={(event) => props.layersStore.setLayerStyle(props.layer.id, 'left', event.target.value)}
+      />
+    </EditorContainer>
+  )
+}
+
+export const FontSizeStyleEditor = (props) => {
+  return (
+    <EditorContainer marginBottom={props.marginBottom}>
+      <Small>Font Size:</Small>
+      <Spacer size='8px' />
+      <SmallInput
+        value={props.layer.style.fontSize}
+        type='number'
+        step='1'
+        onChange={(event) => {
+          const value = Number(event.target.value)
+          props.layersStore.setLayerStyle(props.layer.id, 'fontSize', value)
+        }}
       />
     </EditorContainer>
   )

@@ -9,9 +9,12 @@ const StyledCanvasContainer = styled.div`
   height: calc(100vh - 48px);
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding-top: 180px;
-  padding-bottom: 180px;
+  overflow: visible;
+
+  .react-transform-component {
+    width: 100% !important;
+    height: 100% !important;
+  }
 `
 
 const StyledCanvas = styled.div`
@@ -30,12 +33,20 @@ const StyledCanvas = styled.div`
 `
 
 const WRAPPER_PROPS = {
-  minScale: 0.75,
-  maxScale: 1.75,
-  limitToWrapper: true,
-  doubleClick: {
-    disabled: true,
+  defaultScale: 1,
+  // defaultPositionX: 96,
+  // defaultPositionY: 48,
+  options: {
+    minScale: 1,
+    maxScale: 2,
+    limitToWrapper: false,
+    limitToBounds: false,
+    centerContent: true,
   },
+
+  // scalePadding: {
+  //   size: 2.5,
+  // },
 }
 
 const Canvas = (props) => {
@@ -50,15 +61,38 @@ const Canvas = (props) => {
   })
 
   return (
-    <TransformWrapper scale={0.75} options={WRAPPER_PROPS}>
-      <TransformComponent>
-        <StyledCanvasContainer id='CanvasContainer'>
+    <StyledCanvasContainer id='CanvasContainer'>
+      <TransformWrapper
+        style={{ width: '100%', height: '100%' }}
+        options={{
+          limitToBounds: false,
+          transformEnabled: true,
+          disabled: false,
+          limitToWrapper: true,
+          centerContent: true,
+        }}
+        pan={{
+          disabled: false,
+          lockAxisX: false,
+          lockAxisY: false,
+          velocityEqualToMove: true,
+          velocity: true,
+        }}
+        pinch={{ disabled: true }}
+        doubleClick={{ disabled: true }}
+        wheel={{
+          wheelEnabled: true,
+          touchPadEnabled: false,
+          limitsOnWheel: false,
+        }}
+      >
+        <TransformComponent>
           <StyledCanvas>
             <CanvasLayers />
           </StyledCanvas>
-        </StyledCanvasContainer>
-      </TransformComponent>
-    </TransformWrapper>
+        </TransformComponent>
+      </TransformWrapper>
+    </StyledCanvasContainer>
   )
 }
 

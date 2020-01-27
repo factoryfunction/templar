@@ -1,5 +1,3 @@
-import nanoid from 'nanoid'
-
 const createLayer = (type) => {
   if (type === 'text') return createTextLayer()
   if (type === 'image') return createImageLayer()
@@ -21,11 +19,10 @@ const createTextLayer = () => {
       position: 'absolute',
       top: 0,
       left: 0,
-      width: 2.5,
-      height: 1.5,
+      width: 'auto',
+      height: 'auto',
       fontFamily: 'Work Sans',
-      fontStyle: 'normal',
-      fontWeight: 400,
+      fontSize: 24,
       letterSpacing: 0.5,
       lineHeight: '140%',
     },
@@ -38,6 +35,7 @@ const createImageLayer = () => {
     isSelected: false,
     isBeingEdited: false,
     isRatioLocked: true,
+    isOverflowEnabled: false,
     canFile: true,
     type: 'image',
     name: 'Image Layer',

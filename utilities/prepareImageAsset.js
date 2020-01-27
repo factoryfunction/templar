@@ -71,7 +71,6 @@ const prepareImageAsset = (file, suppliedImage, suppliedBase64) => {
 
 export default prepareImageAsset
 
-//
 export const prepareFontAsset = (file) => {
   const reader = new FileReader()
 

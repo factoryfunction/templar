@@ -10,6 +10,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@authpack/react": "^0.5.14",
+    "@authpack/sdk": "^0.8.18",
     "add": "^2.0.6",
     "array-move": "^2.2.1",
     "crooks": "^1.0.23",
@@ -37,6 +39,7 @@
     "use-double-click": "^1.0.5",
     "use-image": "^1.0.5",
     "use-immer": "^0.3.5",
+    "userbase-js": "^1.0.0",
     "yarn": "^1.21.1"
   },
   "devDependencies": {

@@ -1,10 +1,8 @@
 import styled from 'styled-components'
 
-import Spacer from './Spacer'
 import Icon from './Icon'
-import Small from './Small'
-import SmallInput from './SmallInput'
 import useLayersStore from '../stores/layersStore'
+import useDoubleClick from 'use-double-click'
 
 import {
   SelectedImageEditor,
@@ -20,6 +18,9 @@ import {
   ImageRatioLockEditor,
   WidthContainmentEditor,
   SelectedFontEditor,
+  FontSizeStyleEditor,
+  TextWidthStyleEditor,
+  TextHeightStyleEditor,
 } from './InputEditors'
 
 import { LAYER_TYPE_ICON_NAME_MAP, LAYER_TYPE_ICON_SIZE_MAP } from '../consts'
@@ -124,13 +125,19 @@ export const LayersPanel = (props) => {
 }
 
 const Layer = (props) => {
-  const { layerRef } = useLayerClickHandlers(props.layer.id)
   const iconName = LAYER_TYPE_ICON_NAME_MAP[props.layer.type]
   const iconSize = LAYER_TYPE_ICON_SIZE_MAP[props.layer.type]
 
+  const onClick = (event) => {
+    if (!event.target.getAttribute('data-is-component-action')) {
+      props.layersStore.selectLayer(props.layer.id)
+      props.layersStore.enableLayerEditing(props.layer.id)
+    }
+  }
+
   return (
     <StyledLayerContainer>
-      <StyledLayer ref={layerRef} draggable data-is-selected={props.layer.isSelected}>
+      <StyledLayer onClick={onClick} draggable data-is-selected={props.layer.isSelected}>
         <StyledLayerIconContainer>
           <Icon name={iconName} size={iconSize} color='var(--subTextColor)' />
         </StyledLayerIconContainer>
@@ -173,8 +180,9 @@ const TextLayerEditor = (props) => {
       <LeftStyleEditor layer={props.layer} layersStore={props.layersStore} />
       <TopStyleEditor layer={props.layer} layersStore={props.layersStore} />
       <LayerTextEditor layer={props.layer} layersStore={props.layersStore} />
-      <WidthStyleEditor layer={props.layer} layersStore={props.layersStore} />
-      <HeightStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <TextWidthStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <TextHeightStyleEditor layer={props.layer} layersStore={props.layersStore} />
+      <FontSizeStyleEditor layer={props.layer} layersStore={props.layersStore} />
     </StyledLayerEditor>
   )
 }
@@ -186,7 +194,6 @@ const ImageLayerEditor = (props) => {
       <SelectedImageEditor layer={props.layer} layersStore={props.layersStore} />
       <LeftStyleEditor layer={props.layer} layersStore={props.layersStore} />
       <TopStyleEditor layer={props.layer} layersStore={props.layersStore} marginBottom='8px' />
-      {/* <WidthContainmentEditor layer={props.layer} layersStore={props.layersStore} marginBottom='0px' /> */}
       <ImageRatioLockEditor layer={props.layer} layersStore={props.layersStore} marginBottom='20px' />
       <ImageWidthStyleEditor layer={props.layer} layersStore={props.layersStore} />
       <ImageHeightStyleEditor layer={props.layer} layersStore={props.layersStore} />

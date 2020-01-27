@@ -8,6 +8,7 @@ const SmallTextArea = styled.textarea`
   font-size: 14px;
   letter-spacing: 0.5px;
   font-family: var(--mainFont);
+  height: 80px;
 `
 
 export default SmallTextArea

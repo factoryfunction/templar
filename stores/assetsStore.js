@@ -63,8 +63,13 @@ const useStoreCreator = () => {
   )
 
   React.useEffect(() => {
-    console.log({ DEFAULT_ASSETS })
-    loadFont(DEFAULT_ASSETS.defaultFontAsset.name, DEFAULT_ASSETS.defaultFontAsset.url)
+    getAssetsByType('font').forEach((fontAsset) => {
+      // if (fontAsset.name === DEFAULT_ASSETS.defaultFontAsset.name) {
+      // return loadFont(DEFAULT_ASSETS.defaultFontAsset.name, DEFAULT_ASSETS.defaultFontAsset.url)
+      // }
+
+      loadFont(fontAsset.name, fontAsset.base64 || fontAsset.url)
+    })
   })
 
   global.assetsList = assets.list

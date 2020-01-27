@@ -26,6 +26,7 @@ const PLACEHOLDER_IMAGE_ASSET = {
 }
 
 const DEFAULT_FONT_ASSET = {
+  type: 'font',
   name: 'WorkSans-Regular.ttf',
   size: 131620,
   id: 'WorkSans-Regular.ttf',

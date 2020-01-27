@@ -1,6 +1,7 @@
 import GlobalStylesInjector from '../components/GlobalStylesInjector'
 import { AssetsStoreProvider } from '../stores/assetsStore'
 import { LayersStoreProvider } from '../stores/layersStore'
+// import { UserStoreProvider } from '../stores/userStore'
 import 'react-power-select/dist/react-power-select.css'
 
 const MyApp = (props) => {
