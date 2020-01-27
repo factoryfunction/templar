@@ -33,7 +33,6 @@ const useStoreCreator = () => {
     const prepare = async () => {
       try {
         const asset = await prepareFontAsset(file)
-        console.log('font...', asset)
         addAsset(asset)
       } catch (error) {
         throw error

@@ -81,6 +81,7 @@ export const prepareFontAsset = (file) => {
       await loadFont(file.name, base64)
 
       resolve({
+        type: 'font',
         name: file.name,
         size: file.size,
         id: file.path,

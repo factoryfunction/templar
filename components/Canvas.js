@@ -30,6 +30,9 @@ const StyledCanvas = styled.div`
 `
 
 const WRAPPER_PROPS = {
+  minScale: 0.75,
+  maxScale: 1.75,
+  limitToWrapper: true,
   doubleClick: {
     disabled: true,
   },
@@ -47,7 +50,7 @@ const Canvas = (props) => {
   })
 
   return (
-    <TransformWrapper {...WRAPPER_PROPS}>
+    <TransformWrapper scale={0.75} options={WRAPPER_PROPS}>
       <TransformComponent>
         <StyledCanvasContainer id='CanvasContainer'>
           <StyledCanvas>

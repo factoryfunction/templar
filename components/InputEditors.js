@@ -19,6 +19,8 @@ export const SelectedFontEditor = (props) => {
   const assetsStore = useAssetsStore()
   const options = assetsStore.getAssetsByType('font')
 
+  console.log({ options, assetsStore })
+
   return (
     <EditorContainer marginBottom={props.marginBottom}>
       <Small>Font:</Small>

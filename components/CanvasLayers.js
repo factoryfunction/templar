@@ -42,13 +42,14 @@ const DEFAULT_IMG = {
 const TextCanvasLayer = (props) => {
   const { layerRef } = useLayerClickHandlers(props.layer.id)
 
+  console.log(props.layer)
   const style = {
     ...props.layer.style,
     top: props.layer.style.top + 'in',
     left: props.layer.style.left + 'in',
     width: props.layer.style.width + 'in',
     height: props.layer.style.height + 'in',
-    fontFamily: props.layer.fontAsset.name,
+    fontFamily: `"${props.layer.fontAsset.name}"`,
   }
 
   return (
