@@ -131,13 +131,23 @@ const Layer = (props) => {
   const onClick = (event) => {
     if (!event.target.getAttribute('data-is-component-action')) {
       props.layersStore.selectLayer(props.layer.id)
+    }
+  }
+
+  const onDoubleClick = (event) => {
+    if (!event.target.getAttribute('data-is-component-action')) {
       props.layersStore.enableLayerEditing(props.layer.id)
     }
   }
 
   return (
     <StyledLayerContainer>
-      <StyledLayer onClick={onClick} draggable data-is-selected={props.layer.isSelected}>
+      <StyledLayer
+        onDoubleClick={onDoubleClick}
+        onClick={onClick}
+        draggable
+        data-is-selected={props.layer.isSelected}
+      >
         <StyledLayerIconContainer>
           <Icon name={iconName} size={iconSize} color='var(--subTextColor)' />
         </StyledLayerIconContainer>

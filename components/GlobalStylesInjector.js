@@ -7,9 +7,33 @@ const GlobalStylesInjector = createGlobalStyle`
         box-sizing: border-box;
         margin: 0;
         padding: 0;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
     }
 
     :root {
+        /* Accent colors for light or dark theme. */
+        --highlight: #ff8906;
+        --secondary: #f25f4c;
+        --tertiary: #e53170;
+
+        /* Dark theme. */
+        --night-white: #fffffe;
+        --night-black: #0f0e17;
+        --night-gray: #a7a9be;
+
+        --day-gray: #ececed;
+        /* --gray: #e9e9ea; */
+
+        --backgroundColor: #eff0f3;
+        --headingColor: #0d0d0d;
+
+        --boxShadow0: 0 1px 2px rgba(0, 0, 0, 0.125), 0 2px 4px rgba(0, 0, 0, 0.125), 0 4px 8px rgba(0, 0, 0, 0.125),
+    0 8px 16px rgba(0, 0, 0, 0.125);
+
+        --paneTransform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg)
+    skew(0deg, 0deg);
+
         --mainFont: 'Work Sans', sans-serif;
         --monoFont: 'Space Mono', monospace;
 

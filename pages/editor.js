@@ -1,22 +1,35 @@
-import EditorTopBar from '../components/EditorTopBar'
 import LayersPanel from '../components/LayersPanel'
 import Canvas from '../components/Canvas'
 import styled from 'styled-components'
 import Spacer from '../components/Spacer'
 import { AssetsPanel } from '../components/AssetsPanel'
 
+import { LeftPanel } from './editor/LeftPanel'
+
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background: var(--editorBackgroundColor);
+  background: var(--day-gray);
   width: 100vw;
   height: 100vh;
+
+  .react-contextmenu--visible {
+    border-radius: 4px;
+    background: var(--night-white);
+    color: var(--night-black);
+    padding: 12px;
+    padding-top: 0;
+
+    .react-contextmenu-item {
+      margin-top: 12px;
+    }
+  }
 `
 
 const StyledPanelContainer = styled.div`
   width: 320px;
-  max-height: calc(100vh - 40px);
-  height: calc(100vh - 40px);
+  max-height: calc(90vh - 80px);
+  height: calc(90vh - 80px);
   background: var(--white);
   border-left: 1px solid var(--whiteBorderColor);
   position: fixed;
@@ -28,10 +41,12 @@ const StyledPanelTitlesContainer = styled.div`
   width: 100%;
   height: 40px;
   min-height: 40px;
-  padding-left: 16px;
+  /* padding: 0 16px; */
   display: flex;
+  justify-content: space-evenly;
   align-items: center;
   user-select: none;
+  background: #12011d24;
 `
 
 const StyledPanelTitle = styled.p`
@@ -44,9 +59,9 @@ const StyledPanelTitle = styled.p`
 const Editor = () => {
   return (
     <StyledContainer>
-      <EditorTopBar />
       <Canvas />
       <Panels />
+      <LeftPanel />
     </StyledContainer>
   )
 }
@@ -80,6 +95,10 @@ const Panels = (props) => {
         <When condition={panelState.open === 'assets'}>
           <AssetsPanel />
         </When>
+        <When condition={panelState.open === 'options'}>
+          {/* <AssetsPanel /> */}
+          {/* <AssetsPanel /> */}
+        </When>
       </Choose>
     </StyledPanelContainer>
   )
@@ -88,12 +107,23 @@ const Panels = (props) => {
 const PanelTitles = (props) => {
   return (
     <StyledPanelTitlesContainer>
-      <StyledPanelTitle isOpen={props.openPanel === 'layers'} onClick={() => props.setOpenPanel('layers')}>
+      <StyledPanelTitle
+        isOpen={props.openPanel === 'layers'}
+        onClick={() => props.setOpenPanel('layers')}
+      >
         Layers
       </StyledPanelTitle>
-      <Spacer size='24px' />
-      <StyledPanelTitle isOpen={props.openPanel === 'assets'} onClick={() => props.setOpenPanel('assets')}>
+      <StyledPanelTitle
+        isOpen={props.openPanel === 'assets'}
+        onClick={() => props.setOpenPanel('assets')}
+      >
         Assets
+      </StyledPanelTitle>
+      <StyledPanelTitle
+        isOpen={props.openPanel === 'options'}
+        onClick={() => props.setOpenPanel('options')}
+      >
+        Options
       </StyledPanelTitle>
     </StyledPanelTitlesContainer>
   )

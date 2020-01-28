@@ -11,6 +11,8 @@ const StyledCanvasContainer = styled.div`
   justify-content: center;
   overflow: visible;
 
+  cursor: ${(props) => (props.isPanDisabled ? 'inherit' : 'grab')};
+
   .react-transform-component {
     width: 100% !important;
     height: 100% !important;
@@ -51,17 +53,39 @@ const WRAPPER_PROPS = {
 
 const Canvas = (props) => {
   const layersStore = useLayersStore()
+  const [isPanDisabled, setIsPanDisabled] = React.useState(true)
 
   useClickHandler('#CanvasContainer', (event) => {
-    const containsLayer = event.target.querySelector('.CanvasLayer')
-
-    if (containsLayer) {
+    if (event.which === 1 && event.target.querySelector('.CanvasLayer')) {
       layersStore.deselectAllLayers()
     }
   })
 
+  const onMouseDown = (event) => {
+    console.log('onMouseDown', event.which, event.button)
+    console.log(event.nativeEvent)
+    if (event.button === 1) {
+      console.log('setting to false')
+      setIsPanDisabled(false)
+    }
+  }
+
+  const onMouseUp = (event) => {
+    console.log('onMouseUp', event.which, event.button)
+    console.log(event.nativeEvent)
+    if (event.button === 1) {
+      console.log('setting to true')
+      setIsPanDisabled(true)
+    }
+  }
+
   return (
-    <StyledCanvasContainer id='CanvasContainer'>
+    <StyledCanvasContainer
+      isPanDisabled={isPanDisabled}
+      id='CanvasContainer'
+      onMouseUp={onMouseUp}
+      onMouseDown={onMouseDown}
+    >
       <TransformWrapper
         style={{ width: '100%', height: '100%' }}
         options={{
@@ -72,7 +96,7 @@ const Canvas = (props) => {
           centerContent: true,
         }}
         pan={{
-          disabled: false,
+          disabled: isPanDisabled,
           lockAxisX: false,
           lockAxisY: false,
           velocityEqualToMove: true,
@@ -86,11 +110,13 @@ const Canvas = (props) => {
           limitsOnWheel: false,
         }}
       >
-        <TransformComponent>
-          <StyledCanvas>
-            <CanvasLayers />
-          </StyledCanvas>
-        </TransformComponent>
+        {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+          <TransformComponent>
+            <StyledCanvas>
+              <CanvasLayers />
+            </StyledCanvas>
+          </TransformComponent>
+        )}
       </TransformWrapper>
     </StyledCanvasContainer>
   )

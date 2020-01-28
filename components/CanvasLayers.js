@@ -9,7 +9,12 @@ const CanvasLayers = (props) => {
 
   return (
     <For each='layer' of={layersStore.layers}>
-      <CanvasLayer layer={layer} key={layer.id} assetsStore={assetsStore} />
+      <CanvasLayer
+        layer={layer}
+        key={layer.id}
+        layersStore={layersStore}
+        assetsStore={assetsStore}
+      />
     </For>
   )
 }
@@ -18,23 +23,30 @@ const CanvasLayer = (props) => {
   return (
     <Choose>
       <When condition={props.layer.type === 'text'}>
-        <TextCanvasLayer layer={props.layer} />
+        <TextCanvasLayer layersStore={props.layersStore} layer={props.layer} />
       </When>
       <When condition={props.layer.type === 'image'}>
-        <ImageCanvasLayer layer={props.layer} assetsStore={props.assetsStore} />
+        <ImageCanvasLayer
+          layersStore={props.layersStore}
+          layer={props.layer}
+          assetsStore={props.assetsStore}
+        />
       </When>
       <When condition={props.layer.type === 'block'}>
-        <BlockCanvasLayer layer={props.layer} />
+        <BlockCanvasLayer layersStore={props.layersStore} layer={props.layer} />
       </When>
     </Choose>
   )
 }
 
 const TextCanvasLayer = (props) => {
-  const { layerRef } = useLayerClickHandlers(props.layer.id)
   const width = props.layer.style.width > 0 ? props.layer.style.width + 'in' : 'auto'
-
   const height = props.layer.style.height > 0 ? props.layer.style.height + 'in' : 'auto'
+
+  const onClick = (event) => {
+    props.layersStore.selectLayer(props.layer.id)
+    props.layersStore.enableLayerEditing(props.layer.id)
+  }
 
   const style = {
     ...props.layer.style,
@@ -47,12 +59,17 @@ const TextCanvasLayer = (props) => {
   }
 
   return (
-    <p ref={layerRef} className='CanvasLayer' data-is-selected={props.layer.isSelected} style={style}>
+    <p
+      onClick={onClick}
+      className='CanvasLayer'
+      data-is-selected={props.layer.isSelected}
+      style={style}
+    >
       <For each='line' of={props.layer.text.split('\n')}>
-        <>
+        <React.Fragment key={line}>
           {line}
           <br />
-        </>
+        </React.Fragment>
       </For>
     </p>
   )
@@ -70,7 +87,12 @@ const BlockCanvasLayer = (props) => {
   }
 
   return (
-    <div ref={layerRef} className='CanvasLayer' data-is-selected={props.layer.isSelected} style={style} />
+    <div
+      ref={layerRef}
+      className='CanvasLayer'
+      data-is-selected={props.layer.isSelected}
+      style={style}
+    />
   )
 }
 

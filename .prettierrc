@@ -4,5 +4,5 @@
   "jsxSingleQuote": true,
   "arrowParens": "always",
   "trailingComma": "all",
-  "printWidth": 110
+  "printWidth": 98
 }
