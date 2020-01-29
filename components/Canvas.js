@@ -66,6 +66,10 @@ const Canvas = (props) => {
   const [isPanDisabled, setIsPanDisabled] = React.useState(true)
 
   useClickHandler('#CanvasContainer', (event) => {
+    if (event.target.className === 'ResizeHandle') {
+      return
+    }
+
     if (event.which === 1 && event.target.querySelector('.CanvasLayer')) {
       layersStore.deselectAllLayers()
     }

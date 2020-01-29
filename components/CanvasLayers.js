@@ -6,6 +6,7 @@ import Draggable, { DraggableCore } from 'react-draggable' // Both at the same t
 import useScale from './useScaleState'
 import { Rnd } from 'react-rnd'
 import Icon from './Icon'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 const CanvasLayers = (props) => {
   const layersStore = useLayersStore()
@@ -26,6 +27,24 @@ const CanvasLayers = (props) => {
 const CanvasLayer = (props) => {
   const scale = useScale()
 
+  useHotkeys(
+    'delete,backspace',
+    (e) => {
+      e.preventDefault()
+      props.layer.isSelected && props.layersStore.removeLayer(props.layer.id)
+    },
+    [props.layer.isSelected],
+  )
+
+  useHotkeys(
+    'ctrl+d',
+    (e) => {
+      e.preventDefault()
+      props.layer.isSelected && props.layersStore.duplicateLayer(props.layer)
+    },
+    [props.layer.isSelected],
+  )
+
   return (
     <Choose>
       <When condition={props.layer.type === 'text'}>
@@ -43,6 +62,7 @@ const CanvasLayer = (props) => {
 
 const ResizeHandle = (
   <div
+    className='ResizeHandle'
     style={{
       width: 12,
       height: 12,
@@ -72,8 +92,6 @@ const TextCanvasLayer = (props) => {
   }
 
   const onDrop = (event, position) => {
-    console.log('onDrop', { position })
-    console.log({ x: position.x / 96, y: position.y / 96 })
     props.layersStore.setLayerStyle(props.layer.id, 'left', position.x / 96)
     props.layersStore.setLayerStyle(props.layer.id, 'top', position.y / 96)
   }
@@ -137,13 +155,11 @@ const BlockCanvasLayer = (props) => {
     ...props.layer.style,
     top: props.layer.style.top + 'in',
     left: props.layer.style.left + 'in',
-    width: props.layer.style.width + 'in',
-    height: props.layer.style.height + 'in',
+    width: '100%',
+    height: '100%',
   }
 
   const onDrop = (event, position) => {
-    console.log('onDrop', { position })
-    console.log({ x: position.x / 96, y: position.y / 96 })
     props.layersStore.setLayerStyle(props.layer.id, 'left', position.x / 96)
     props.layersStore.setLayerStyle(props.layer.id, 'top', position.y / 96)
   }
@@ -197,8 +213,6 @@ const ImageCanvasLayer = (props) => {
   }
 
   const onDrop = (event, position) => {
-    console.log('onDrop', { position })
-    console.log({ x: position.x / 96, y: position.y / 96 })
     props.layersStore.setLayerStyle(props.layer.id, 'left', position.x / 96)
     props.layersStore.setLayerStyle(props.layer.id, 'top', position.y / 96)
   }
@@ -225,7 +239,7 @@ const ImageCanvasLayer = (props) => {
     top: props.layer.style.top + 'in',
     left: props.layer.style.left + 'in',
     backgroundImage: `url("${props.layer.imageAsset.url}")`,
-    backgroundSize: `${width}in ${height}in`,
+    backgroundSize: '100%',
   }
 
   return (

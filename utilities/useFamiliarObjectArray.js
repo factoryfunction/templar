@@ -40,7 +40,8 @@ const useFamiliarObjectArray = (defaultArray = [], filerKey) => {
   const removeOne = React.useCallback((id) => {
     filerActions.remove(id)
     setArray((oldArray) => {
-      return oldArray.filter(idDoesNotMatch(id))
+      const newArray = oldArray.filter(idDoesNotMatch(id))
+      return newArray
     })
   }, [])
 

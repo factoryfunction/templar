@@ -52,18 +52,23 @@ const LayerRow = (props) => {
   }
 
   return (
-    <Styled.LayerRow onClick={onClick} isSelected={props.layer.isSelected}>
-      <Styled.LayerIconContainer>
-        <Icon name={iconName} size={iconSize} color='var(--subTextColor)' />
-      </Styled.LayerIconContainer>
-      <Styled.LayerNameText>{props.layer.name}</Styled.LayerNameText>
-      <Styled.LayerRemoveIcon
-        data-is-component-action
-        name='trash-alt'
-        size='18px'
-        color='var(--subTextColor)'
-        onClick={() => props.layersStore.removeLayer(props.layer.id)}
-      />
-    </Styled.LayerRow>
+    <>
+      <Styled.LayerRow onClick={onClick} isSelected={props.layer.isSelected}>
+        <Styled.LayerIconContainer>
+          <Icon name={iconName} size={iconSize} color='var(--subTextColor)' />
+        </Styled.LayerIconContainer>
+        <Styled.LayerNameText>{props.layer.name}</Styled.LayerNameText>
+        <Styled.LayerRemoveIcon
+          data-is-component-action
+          name='trash-alt'
+          size='18px'
+          color='var(--subTextColor)'
+          onClick={() => props.layersStore.removeLayer(props.layer.id)}
+        />
+      </Styled.LayerRow>
+      <If condition={props.layer.isSelected}>
+        <div></div>
+      </If>
+    </>
   )
 }

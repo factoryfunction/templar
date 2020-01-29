@@ -46,6 +46,18 @@ const useStoreCreator = () => {
     })
   }
 
+  const duplicateLayer = (layer) => {
+    layers.addOne(
+      JSON.parse(
+        JSON.stringify({
+          ...layer,
+          isSelected: false,
+          id: undefined,
+        }),
+      ),
+    )
+  }
+
   const onLayerDragDrop = (event, position) => {
     console.log({ event, position })
   }
@@ -172,8 +184,6 @@ const useStoreCreator = () => {
 
   global.layersList = layers.list
 
-  React.u
-
   return {
     layers: layers.list,
     removeLayer: layers.removeOne,
@@ -197,6 +207,7 @@ const useStoreCreator = () => {
     setLayerWidthRestrcted,
     setLayerFontAsset,
     onLayerDragDrop,
+    duplicateLayer,
   }
 }
 
