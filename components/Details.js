@@ -13,7 +13,7 @@ export const Details = styled.details`
 Details.Summary = styled.summary`
   font-family: var(--mainFont);
   letter-spacing: 0.5px;
-  font-size: 16px;
+  font-size: 14px;
   height: 36px;
   width: 90%;
   display: flex;
@@ -30,10 +30,5 @@ Details.Summary = styled.summary`
 Details.Contents = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 12px 24px;
   width: 90%;
-
-  > * {
-    margin-bottom: 12px;
-  }
 `

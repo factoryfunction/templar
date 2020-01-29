@@ -1,14 +1,14 @@
-import Link from "next/link";
+import * as React from 'react'
+import Link from 'next/link'
 
-const Index = () => (
-  <div>
-    <Link href="/home">
-      <a>Home</a>
-    </Link>
-    <Link href="/editor">
-      <a>Editor</a>
-    </Link>
-  </div>
-);
+import { LogIn } from './index/LogIn'
 
-export default Index;
+const Index = () => {
+  return (
+    <div>
+      <LogIn />
+    </div>
+  )
+}
+
+export default Index

@@ -58,7 +58,26 @@ export const PanelProjectNameText = styled.p`
   }
 `
 
+export const PanelTabLabelText = styled.p`
+  font-family: var(--mainFont);
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  position: relative;
+
+  &:hover {
+    color: var(--secondary);
+
+    &:after {
+      color: var(--secondary);
+    }
+  }
+`
+
 export const PanelTabLabel = styled.div`
+  ${PanelTabLabelText} {
+    ${(props) => (props.isActive ? activeTabStyles : inactiveTabStyles)};
+  }
+
   display: flex;
   align-items: center;
   margin: 0 0px;
@@ -82,7 +101,7 @@ const activeTabStyles = css`
     font-size: 20px;
     position: absolute;
     content: ' \\25CF';
-    bottom: -27px;
+    bottom: -25px;
     left: 33%;
   }
 `
@@ -92,48 +111,9 @@ const inactiveTabStyles = css`
   color: var(--night-gray);
 `
 
-export const PanelTabLabelText = styled.p`
-  font-family: var(--mainFont);
-  letter-spacing: 0.5px;
-  font-weight: 600;
-  position: relative;
-
-  &:hover {
-    color: var(--secondary);
-
-    &:after {
-      color: var(--secondary);
-    }
-  }
-
-  ${(props) => (props.isActive ? activeTabStyles : inactiveTabStyles)};
-`
-
 export const PanelBody = styled.div`
   width: 100%;
   height: calc(100% - 40px);
   max-height: calc(100% - 40px);
   overflow: auto;
-  scrollbar-gutter: auto;
 `
-
-// &:after {
-//   content: ' \\25BD';
-//   position: absolute;
-//   left: -20px;
-//   top: 0px;
-//   color: var(--secondary);
-//   display: ${(props) => (props.isActive ? 'inline' : 'none')};
-//   font-size: 20px;
-// }
-
-// &:before {
-//   color: var(--tertiary);
-//   display: ${(props) => (props.isActive ? 'inline' : 'none')};
-
-//   font-size: 28px;
-//   position: absolute;
-//   content: ' \\25CF';
-//   bottom: -30px;
-//   left: 28%;
-// }

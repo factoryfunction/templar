@@ -7,7 +7,7 @@ export const DOCUMENT_HEIGHT = 1104
 export const LAYER_TYPE_ICON_NAME_MAP = {
   text: 'text',
   image: 'scenery',
-  block: 'square-full',
+  block: 'vector-square',
 }
 
 export const LAYER_TYPE_ICON_SIZE_MAP = {

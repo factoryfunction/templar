@@ -17,7 +17,7 @@ const getFilerData = (filer) => {
   })
 }
 
-const useFamiliarObjectArray = (defaultArray, filerKey) => {
+const useFamiliarObjectArray = (defaultArray = [], filerKey) => {
   const [filer, filerActions] = useFiler(filerKey)
   const [list, setArray] = React.useState([...defaultArray, ...getFilerData(filer)])
 
@@ -73,6 +73,10 @@ const useFamiliarObjectArray = (defaultArray, filerKey) => {
     })
   }, [list])
 
+  const replaceState = (state) => {
+    setArray(state)
+  }
+
   return {
     list,
     addOne,
@@ -81,6 +85,7 @@ const useFamiliarObjectArray = (defaultArray, filerKey) => {
     updateAll,
     getOneById,
     repositionOne,
+    replaceState,
   }
 }
 

@@ -19,8 +19,6 @@ export const SelectedFontEditor = (props) => {
   const assetsStore = useAssetsStore()
   const options = assetsStore.getAssetsByType('font')
 
-  console.log({ options, assetsStore })
-
   return (
     <EditorContainer marginBottom={props.marginBottom}>
       <Small>Font:</Small>
@@ -87,7 +85,9 @@ export const ImageRatioLockEditor = (props) => {
       <Checkbox
         text='Use Original Image Ratio'
         isChecked={props.layer.isRatioLocked}
-        onClick={(event) => props.layersStore.setLayerRatioLocked(props.layer.id, !props.layer.isRatioLocked)}
+        onClick={(event) =>
+          props.layersStore.setLayerRatioLocked(props.layer.id, !props.layer.isRatioLocked)
+        }
       />
     </EditorContainer>
   )
@@ -101,7 +101,10 @@ export const WidthContainmentEditor = (props) => {
         text='Allow Width To Exceed Document'
         isChecked={props.layer.isWidthRestrictedToDocument}
         onClick={(event) =>
-          props.layersStore.setLayerWidthRestrcted(props.layer.id, !props.layer.isWidthRestrictedToDocument)
+          props.layersStore.setLayerWidthRestrcted(
+            props.layer.id,
+            !props.layer.isWidthRestrictedToDocument,
+          )
         }
       />
     </EditorContainer>
@@ -251,7 +254,9 @@ export const TopStyleEditor = (props) => {
         value={props.layer.style.top}
         type='number'
         step='0.1'
-        onChange={(event) => props.layersStore.setLayerStyle(props.layer.id, 'top', event.target.value)}
+        onChange={(event) =>
+          props.layersStore.setLayerStyle(props.layer.id, 'top', event.target.value)
+        }
       />
     </EditorContainer>
   )
@@ -266,7 +271,9 @@ export const LeftStyleEditor = (props) => {
         value={props.layer.style.left}
         type='number'
         step='0.1'
-        onChange={(event) => props.layersStore.setLayerStyle(props.layer.id, 'left', event.target.value)}
+        onChange={(event) =>
+          props.layersStore.setLayerStyle(props.layer.id, 'left', event.target.value)
+        }
       />
     </EditorContainer>
   )

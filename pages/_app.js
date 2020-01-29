@@ -1,17 +1,21 @@
 import GlobalStylesInjector from '../components/GlobalStylesInjector'
-import { AssetsStoreProvider } from '../stores/assetsStore'
-import { LayersStoreProvider } from '../stores/layersStore'
-// import { UserStoreProvider } from '../stores/userStore'
+
+import { AuthStoreProvider } from '../stores/authStore'
+
+import backend from '../utilities/backend'
+
+import 'filepond/dist/filepond.min.css'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 import 'react-power-select/dist/react-power-select.css'
+
+import '../public/styles/templar.css'
 
 const MyApp = (props) => {
   return (
-    <AssetsStoreProvider>
-      <LayersStoreProvider>
-        <GlobalStylesInjector />
-        <props.Component {...props.pageProps} />
-      </LayersStoreProvider>
-    </AssetsStoreProvider>
+    <AuthStoreProvider>
+      <GlobalStylesInjector />
+      <props.Component {...props.pageProps} />
+    </AuthStoreProvider>
   )
 }
 

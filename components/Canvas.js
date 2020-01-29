@@ -3,10 +3,12 @@ import styled from 'styled-components'
 import CanvasLayers from './CanvasLayers'
 import useClickHandler from '../utilities/useClickHandler'
 import useLayersStore from '../stores/layersStore'
+import { ScaleProvider } from './useScaleState'
 
 const StyledCanvasContainer = styled.div`
-  width: calc(100vw - 320px);
-  height: calc(100vh - 48px);
+  width: 100vw;
+  height: 100vh;
+  padding-left: 400px;
   display: flex;
   justify-content: center;
   overflow: visible;
@@ -46,6 +48,14 @@ const WRAPPER_PROPS = {
     centerContent: true,
   },
 
+  zoomIn: {
+    step: 15,
+  },
+
+  zoomOut: {
+    step: 15,
+  },
+
   // scalePadding: {
   //   size: 2.5,
   // },
@@ -62,19 +72,13 @@ const Canvas = (props) => {
   })
 
   const onMouseDown = (event) => {
-    console.log('onMouseDown', event.which, event.button)
-    console.log(event.nativeEvent)
     if (event.button === 1) {
-      console.log('setting to false')
       setIsPanDisabled(false)
     }
   }
 
   const onMouseUp = (event) => {
-    console.log('onMouseUp', event.which, event.button)
-    console.log(event.nativeEvent)
     if (event.button === 1) {
-      console.log('setting to true')
       setIsPanDisabled(true)
     }
   }
@@ -88,6 +92,12 @@ const Canvas = (props) => {
     >
       <TransformWrapper
         style={{ width: '100%', height: '100%' }}
+        zoomIn={{
+          step: 20,
+        }}
+        zoomOut={{
+          step: 20,
+        }}
         options={{
           limitToBounds: false,
           transformEnabled: true,
@@ -108,14 +118,17 @@ const Canvas = (props) => {
           wheelEnabled: true,
           touchPadEnabled: false,
           limitsOnWheel: false,
+          step: 20,
         }}
       >
         {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
-          <TransformComponent>
-            <StyledCanvas>
-              <CanvasLayers />
-            </StyledCanvas>
-          </TransformComponent>
+          <ScaleProvider scale={rest.scale}>
+            <TransformComponent>
+              <StyledCanvas id='DocumentCanvas'>
+                <CanvasLayers />
+              </StyledCanvas>
+            </TransformComponent>
+          </ScaleProvider>
         )}
       </TransformWrapper>
     </StyledCanvasContainer>

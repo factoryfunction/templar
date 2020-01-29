@@ -14,7 +14,18 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           {this.props.styleTags}
-          <link rel='stylesheet' href='https://unicons.iconscout.com/release/v2.0.1/css/unicons.css' />
+          {/* WebFont loader for Google fonts. */}
+          <script src='https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js'></script>
+
+          {/* Styles for Icons. */}
+          <link
+            rel='stylesheet'
+            href='https://unicons.iconscout.com/release/v2.0.1/css/unicons.css'
+          />
+
+          {/* Filepond (uploader) styles. */}
+          <link rel='stylesheet' href='/styles/filepond.css' />
+          <link rel='stylesheet' href='/styles/filepond-plugin-image-preview.css' />
         </Head>
         <body>
           <Main />

@@ -1,78 +1,95 @@
 import * as React from 'react'
+import { useRouter } from 'next/router'
+
 import createContextStore from '../utilities/createContextStore'
 import useFamiliarObjectArray from '../utilities/useFamiliarObjectArray'
-import prepareImageAsset, { prepareFontAsset, loadFont } from '../utilities/prepareImageAsset'
+import * as storage from '../utilities/backend/storage'
+import { useProjectAssets } from '../pages/editor/utilities/useProjectAssets'
+import { useGlobalProjectAssets } from '../pages/editor/utilities/useGlobalProjectAssets'
 
 import { DEFAULT_ASSETS } from '../consts/defaultAssets'
+
+const DEFAULT_ASSETS_ARRAY = Object.values(DEFAULT_ASSETS)
 
 const typeMatches = (type) => (option) => {
   return option.type === type
 }
 
-const DEFAULT_ASSETS_ARRAY = Object.values(DEFAULT_ASSETS)
+const sortAssetsByType = (assets) => {
+  const accumulator = { ...getAccumulator() }
+
+  const sorted = assets.reduce((final, asset) => {
+    final[asset.type].push(asset)
+    return final
+  }, accumulator)
+
+  return Object.entries(sorted)
+}
+
+const getAccumulator = () => {
+  return {
+    font: [],
+    image: [],
+  }
+}
 
 const useStoreCreator = () => {
+  const globalProjectAssets = useGlobalProjectAssets()
+  const projectAssets = useProjectAssets()
+
   const assets = useFamiliarObjectArray(DEFAULT_ASSETS_ARRAY, 'editorAssets')
 
-  const addAsset = React.useCallback((asset) => {
+  const reloadProjectAssets = () => {
+    projectAssets.reload()
+    globalProjectAssets.reload()
+  }
+
+  const addAsset = (asset) => {
     assets.addOne(asset)
-  }, [])
+  }
 
-  const removeAsset = React.useCallback((id) => {
+  const removeAsset = (id) => {
     assets.removeOne(id)
-  }, [])
+  }
 
-  const setAssetName = React.useCallback((id, name) => {
+  const setAssetName = (id, name) => {
     assets.updateOne(id, (asset) => {
       asset.name = name
       return asset
     })
-  }, [])
+  }
 
-  const assFontAsset = React.useCallback((file) => {
-    const prepare = async () => {
-      try {
-        const asset = await prepareFontAsset(file)
-        addAsset(asset)
-      } catch (error) {
-        throw error
-      }
-    }
+  const addFontAsset = (file) => {
+    // const prepare = async () => {
+    //   try {
+    //     const asset = await prepareFontAsset(file)
+    //     addAsset(asset)
+    //   } catch (error) {
+    //     throw error
+    //   }
+    // }
+    // prepare()
+  }
 
-    prepare()
-  }, [])
+  const addImageAsset = (file) => {
+    // const prepare = async () => {
+    //   try {
+    //     const asset = await prepareImageAsset(file)
+    //     addAsset(asset)
+    //   } catch (error) {
+    //     throw error
+    //   }
+    // }
+    // prepare()
+  }
 
-  const addImageAsset = React.useCallback((file) => {
-    const prepare = async () => {
-      try {
-        const asset = await prepareImageAsset(file)
-        addAsset(asset)
-      } catch (error) {
-        throw error
-      }
-    }
+  const getAssetsByType = (type) => {
+    return assets.list.filter(typeMatches(type))
+  }
 
-    prepare()
-  }, [])
-
-  const getAssetsByType = React.useCallback(
-    (type) => {
-      return assets.list.filter(typeMatches(type))
-    },
-    [assets.list.length],
-  )
-
-  React.useEffect(() => {
-    getAssetsByType('font').forEach((fontAsset) => {
-      // if (fontAsset.name === DEFAULT_ASSETS.defaultFontAsset.name) {
-      // return loadFont(DEFAULT_ASSETS.defaultFontAsset.name, DEFAULT_ASSETS.defaultFontAsset.url)
-      // }
-
-      loadFont(fontAsset.name, fontAsset.base64 || fontAsset.url)
-    })
-  })
-
-  global.assetsList = assets.list
+  const sortedAssetsByType = React.useMemo(() => {
+    return sortAssetsByType(assets.list)
+  }, [assets.list])
 
   return {
     defaultAssets: DEFAULT_ASSETS,
@@ -83,11 +100,17 @@ const useStoreCreator = () => {
     setAssetName,
     getAssetsByType,
     addImageAsset,
-    assFontAsset,
+    addFontAsset,
+    sortedAssetsByType,
+    globalProjectAssets,
+    projectAssets,
+    reloadProjectAssets,
   }
 }
 
-const [AssetsStoreProvider, useAssetsStore, AssetsStoreContext] = createContextStore(useStoreCreator)
+const [AssetsStoreProvider, useAssetsStore, AssetsStoreContext] = createContextStore(
+  useStoreCreator,
+)
 
 export { AssetsStoreProvider, AssetsStoreContext }
 export default useAssetsStore

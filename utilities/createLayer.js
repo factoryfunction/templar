@@ -16,11 +16,10 @@ const createTextLayer = () => {
     text: 'some text',
     fontAsset: null,
     style: {
-      position: 'absolute',
       top: 0,
       left: 0,
-      width: 0,
-      height: 0,
+      width: 2,
+      height: 2,
       fontFamily: 'Work Sans',
       fontSize: 24,
       letterSpacing: 0.5,
@@ -44,7 +43,7 @@ const createImageLayer = () => {
     style: {
       display: 'flex',
       backgroundSize: 'cover',
-      position: 'absolute',
+
       top: 0,
       left: 0,
     },
@@ -61,7 +60,6 @@ const createBlockLayer = () => {
     type: 'block',
     name: 'Block Layer',
     style: {
-      position: 'absolute',
       top: 0,
       left: 0,
       width: 2.5,
