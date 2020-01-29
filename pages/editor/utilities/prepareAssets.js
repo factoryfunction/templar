@@ -1,6 +1,8 @@
 import { organizeAssets } from './organizeAssets'
 import { DOCUMENT_WIDTH, DOCUMENT_HEIGHT } from '../../../consts'
 
+const FONT_FILE_EXTENSIONS = ['.otf', '.ttf', '.woff', '.woff2']
+
 const getInches = (pixels, maxPixels = Infinity) => {
   return pixels > maxPixels ? maxPixels / 96 : pixels / 96
 }
@@ -17,6 +19,18 @@ const getImage = (url) => {
     image.addEventListener('load', () => {
       resolve(image)
     })
+  })
+}
+
+const getFileType = (asset) => {
+  return FONT_FILE_EXTENSIONS.includes(asset.name.substr(asset.name.lastIndexOf('.')))
+    ? 'font'
+    : 'image'
+}
+
+const filterAssetsByType = (assets, type) => {
+  return assets.filter((asset) => {
+    return getFileType(asset) === type
   })
 }
 
@@ -44,10 +58,11 @@ export const prepareImageAsset = async (file) => {
   }
 
   return {
-    type: 'image',
+    id: file.fullPath,
     url: image.src,
     name: file.name,
     size: file.size,
+    type: 'image',
     canDelete: true,
     canEdit: true,
     canFile: true,
@@ -59,14 +74,14 @@ export const prepareImageAsset = async (file) => {
 }
 
 export const prepareFontAsset = async (file) => {
-  await loadFont(file)
+  loadFont(file)
 
   return {
-    type: 'font',
     id: file.fullPath,
     name: file.name,
     url: file.url,
     meta: file.meta,
+    type: 'font',
     canDelete: true,
     canEdit: true,
     canFile: true,
@@ -80,9 +95,13 @@ const loadFont = async (asset) => {
 }
 
 export const prepareAssets = async (assets) => {
-  const organizedAssets = organizeAssets(assets)
-  const images = await Promise.all(organizedAssets.images.map(prepareImageAsset))
-  const fonts = await Promise.all(organizedAssets.fonts.map(prepareFontAsset))
+  const imageAssets = filterAssetsByType(assets, 'image')
+  const fontAssets = filterAssetsByType(assets, 'font')
+
+  const images = await Promise.all(imageAssets.map(prepareImageAsset))
+  const fonts = await Promise.all(fontAssets.map(prepareFontAsset))
+
+  console.log({ images, fonts })
 
   return {
     images,

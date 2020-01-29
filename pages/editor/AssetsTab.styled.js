@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Details } from '../../components/Details'
+import Icon from '../../components/Icon'
 
 export const AssetsTabContainer = styled.div`
   width: 100%;
@@ -55,6 +56,8 @@ export const AssetFolderContents = styled(Details.Contents)``
 export const AssetInFolder = styled.p`
   font-size: 14px;
   padding: 12px 24px;
+  width: 100%;
+  display: flex;
 
   :hover {
     color: var(--highlight);
@@ -108,4 +111,15 @@ export const AccessoryText = styled.small`
   font-size: 11;
   color: var(--night-gray);
   margin-left: 8px;
+`
+
+export const AssetRemoveIcon = styled(Icon)`
+  margin-left: auto;
+  margin-bottom: 0px;
+  position: relative;
+  bottom: 2px;
+
+  :hover {
+    color: #fff;
+  }
 `

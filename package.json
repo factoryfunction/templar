@@ -48,6 +48,7 @@
     "react-resizable": "^1.10.1",
     "react-rnd": "^10.1.5",
     "react-select": "^3.0.8",
+    "react-spreadsheet": "^0.4.43",
     "react-zoom-pan-pinch": "^1.6.1",
     "set-value": "^3.0.1",
     "styled-components": "^5.0.0",

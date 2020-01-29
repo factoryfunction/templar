@@ -1,9 +1,9 @@
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import styled from 'styled-components'
 import CanvasLayers from './CanvasLayers'
-import useClickHandler from '../utilities/useClickHandler'
-import useLayersStore from '../stores/layersStore'
-import { ScaleProvider } from './useScaleState'
+import useClickHandler from '../../utilities/useClickHandler'
+import { ScaleProvider } from '../../components/useScaleState'
+import { useStoreActions } from 'easy-peasy'
 
 const StyledCanvasContainer = styled.div`
   width: 100vw;
@@ -61,8 +61,16 @@ const WRAPPER_PROPS = {
   // },
 }
 
+const useStore = () => {
+  const actions = useStoreActions((actions) => ({
+    deselectAllLayers: actions.deselectAllLayers,
+  }))
+
+  return { actions }
+}
+
 const Canvas = (props) => {
-  const layersStore = useLayersStore()
+  const store = useStore()
   const [isPanDisabled, setIsPanDisabled] = React.useState(true)
 
   useClickHandler('#CanvasContainer', (event) => {
@@ -71,7 +79,7 @@ const Canvas = (props) => {
     }
 
     if (event.which === 1 && event.target.querySelector('.CanvasLayer')) {
-      layersStore.deselectAllLayers()
+      store.actions.deselectAllLayers()
     }
   })
 

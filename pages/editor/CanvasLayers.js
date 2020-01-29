@@ -1,60 +1,70 @@
-import styled from 'styled-components'
-import useLayersStore from '../stores/layersStore'
-import useLayerClickHandlers from '../utilities/useLayerClickHandlers'
-import useAssetsStore from '../stores/assetsStore'
-import Draggable, { DraggableCore } from 'react-draggable' // Both at the same time
-import useScale from './useScaleState'
+import useScale from '../../components/useScaleState'
 import { Rnd } from 'react-rnd'
-import Icon from './Icon'
+import Icon from '../../components/Icon'
 import { useHotkeys } from 'react-hotkeys-hook'
+import { useStoreState, useStoreActions } from 'easy-peasy'
+
+const useStore = () => {
+  const state = useStoreState((state) => ({
+    layers: state.layers,
+    selectedLayers: state.selectedLayers,
+  }))
+
+  const actions = useStoreActions((actions) => ({
+    removeLayer: actions.removeLayer,
+    duplicateLayer: actions.duplicateLayer,
+    selectLayer: actions.selectLayer,
+    setLayerStyle: actions.setLayerStyle,
+  }))
+
+  return {
+    state,
+    actions,
+  }
+}
 
 const CanvasLayers = (props) => {
-  const layersStore = useLayersStore()
-  const assetsStore = useAssetsStore()
+  const store = useStore()
 
   return (
-    <For each='layer' of={layersStore.layers}>
-      <CanvasLayer
-        layer={layer}
-        key={layer.id}
-        layersStore={layersStore}
-        assetsStore={assetsStore}
-      />
+    <For each='layer' of={store.state.layers}>
+      <CanvasLayer layer={layer} key={layer.id} store={store} />
     </For>
   )
 }
 
 const CanvasLayer = (props) => {
   const scale = useScale()
+  const isSelected = props.store.state.selectedLayers.includes(props.layer.id)
 
   useHotkeys(
     'delete,backspace',
     (e) => {
       e.preventDefault()
-      props.layer.isSelected && props.layersStore.removeLayer(props.layer.id)
+      isSelected && props.store.actions.removeLayer(props.layer.id)
     },
-    [props.layer.isSelected],
+    [isSelected],
   )
 
   useHotkeys(
     'ctrl+d',
     (e) => {
       e.preventDefault()
-      props.layer.isSelected && props.layersStore.duplicateLayer(props.layer)
+      isSelected && props.store.actions.duplicateLayer(props.layer)
     },
-    [props.layer.isSelected],
+    [isSelected],
   )
 
   return (
     <Choose>
       <When condition={props.layer.type === 'text'}>
-        <TextCanvasLayer scale={scale} layersStore={props.layersStore} layer={props.layer} />
+        <TextCanvasLayer scale={scale} store={props.store} layer={props.layer} />
       </When>
       <When condition={props.layer.type === 'image'}>
-        <ImageCanvasLayer scale={scale} layersStore={props.layersStore} layer={props.layer} />
+        <ImageCanvasLayer scale={scale} store={props.store} layer={props.layer} />
       </When>
       <When condition={props.layer.type === 'block'}>
-        <BlockCanvasLayer scale={scale} layersStore={props.layersStore} layer={props.layer} />
+        <BlockCanvasLayer scale={scale} store={props.store} layer={props.layer} />
       </When>
     </Choose>
   )
@@ -64,21 +74,22 @@ const ResizeHandle = (
   <div
     className='ResizeHandle'
     style={{
-      width: 12,
-      height: 12,
+      width: 8,
+      height: 8,
       background: 'white',
       border: '1px solid black',
       borderRadius: 20,
-      margin: '2px 4px',
-      opacity: 0,
+      margin: '6px 6px',
+      opacity: 1,
     }}
   />
 )
 
 const TextCanvasLayer = (props) => {
+  const isSelected = props.store.state.selectedLayers.includes(props.layer.id)
+
   const onClick = (event) => {
-    props.layersStore.selectLayer(props.layer.id)
-    props.layersStore.enableLayerEditing(props.layer.id)
+    props.store.actions.selectLayer(props.layer.id)
   }
 
   const style = {
@@ -92,21 +103,22 @@ const TextCanvasLayer = (props) => {
   }
 
   const onDrop = (event, position) => {
-    props.layersStore.setLayerStyle(props.layer.id, 'left', position.x / 96)
-    props.layersStore.setLayerStyle(props.layer.id, 'top', position.y / 96)
+    props.store.actions.setLayerStyle([props.layer.id, 'left', position.x / 96])
+    props.store.actions.setLayerStyle([props.layer.id, 'top', position.y / 96])
   }
 
   const onResizeStop = (e, direction, ref, d) => {
-    props.layersStore.setLayerStyle(
+    props.store.actions.setLayerStyle([
       props.layer.id,
       'width',
       props.layer.style.width + d.width / 96,
-    )
-    props.layersStore.setLayerStyle(
+    ])
+
+    props.store.actions.setLayerStyle([
       props.layer.id,
       'height',
       props.layer.style.height + d.height / 96,
-    )
+    ])
   }
 
   return (
@@ -117,7 +129,7 @@ const TextCanvasLayer = (props) => {
         bottomRight: ResizeHandle,
         bottomLeft: ResizeHandle,
       }}
-      disableDragging={!props.layer.isSelected}
+      disableDragging={!isSelected}
       scale={props.scale}
       onDragStop={onDrop}
       onResizeStop={onResizeStop}
@@ -128,12 +140,7 @@ const TextCanvasLayer = (props) => {
         height: props.layer.style.height * 96,
       }}
     >
-      <p
-        onClick={onClick}
-        className='CanvasLayer'
-        data-is-selected={props.layer.isSelected}
-        style={style}
-      >
+      <p onClick={onClick} className='CanvasLayer' data-is-selected={isSelected} style={style}>
         <For each='line' of={props.layer.text.split('\n')}>
           <React.Fragment key={line}>
             {line}
@@ -146,9 +153,9 @@ const TextCanvasLayer = (props) => {
 }
 
 const BlockCanvasLayer = (props) => {
+  const isSelected = props.store.state.selectedLayers.includes(props.layer.id)
   const onClick = (event) => {
-    props.layersStore.selectLayer(props.layer.id)
-    props.layersStore.enableLayerEditing(props.layer.id)
+    props.store.actions.selectLayer(props.layer.id)
   }
 
   const style = {
@@ -160,21 +167,22 @@ const BlockCanvasLayer = (props) => {
   }
 
   const onDrop = (event, position) => {
-    props.layersStore.setLayerStyle(props.layer.id, 'left', position.x / 96)
-    props.layersStore.setLayerStyle(props.layer.id, 'top', position.y / 96)
+    props.store.actions.setLayerStyle([props.layer.id, 'left', position.x / 96])
+    props.store.actions.setLayerStyle([props.layer.id, 'top', position.y / 96])
   }
 
   const onResizeStop = (e, direction, ref, d) => {
-    props.layersStore.setLayerStyle(
+    props.store.actions.setLayerStyle([
       props.layer.id,
       'width',
       props.layer.style.width + d.width / 96,
-    )
-    props.layersStore.setLayerStyle(
+    ])
+
+    props.store.actions.setLayerStyle([
       props.layer.id,
       'height',
       props.layer.style.height + d.height / 96,
-    )
+    ])
   }
 
   return (
@@ -185,7 +193,7 @@ const BlockCanvasLayer = (props) => {
         bottomRight: ResizeHandle,
         bottomLeft: ResizeHandle,
       }}
-      disableDragging={!props.layer.isSelected}
+      disableDragging={!isSelected}
       scale={props.scale}
       onDragStop={onDrop}
       onResizeStop={onResizeStop}
@@ -199,7 +207,7 @@ const BlockCanvasLayer = (props) => {
       <div
         onClick={onClick}
         className='CanvasLayer'
-        data-is-selected={props.layer.isSelected}
+        data-is-selected={isSelected}
         style={style}
       />
     </Rnd>
@@ -207,27 +215,29 @@ const BlockCanvasLayer = (props) => {
 }
 
 const ImageCanvasLayer = (props) => {
+  const isSelected = props.store.state.selectedLayers.includes(props.layer.id)
+
   const onClick = (event) => {
-    props.layersStore.selectLayer(props.layer.id)
-    props.layersStore.enableLayerEditing(props.layer.id)
+    props.store.actions.selectLayer(props.layer.id)
   }
 
   const onDrop = (event, position) => {
-    props.layersStore.setLayerStyle(props.layer.id, 'left', position.x / 96)
-    props.layersStore.setLayerStyle(props.layer.id, 'top', position.y / 96)
+    props.store.actions.setLayerStyle([props.layer.id, 'left', position.x / 96])
+    props.store.actions.setLayerStyle([props.layer.id, 'top', position.y / 96])
   }
 
   const onResizeStop = (e, direction, ref, d) => {
-    props.layersStore.setLayerStyle(
+    props.store.actions.setLayerStyle([
       props.layer.id,
       'width',
       props.layer.style.width + d.width / 96,
-    )
-    props.layersStore.setLayerStyle(
+    ])
+
+    props.store.actions.setLayerStyle([
       props.layer.id,
       'height',
       props.layer.style.height + d.height / 96,
-    )
+    ])
   }
 
   const { width, height, ...layerStyle } = props.layer.style
@@ -251,7 +261,7 @@ const ImageCanvasLayer = (props) => {
         bottomLeft: ResizeHandle,
       }}
       lockAspectRatio={true}
-      disableDragging={!props.layer.isSelected}
+      disableDragging={!isSelected}
       scale={props.scale}
       onDragStop={onDrop}
       onResizeStop={onResizeStop}
@@ -265,7 +275,7 @@ const ImageCanvasLayer = (props) => {
       <div
         onClick={onClick}
         className='CanvasLayer'
-        data-is-selected={String(props.layer.isSelected)}
+        data-is-selected={String(isSelected)}
         style={style}
       />
     </Rnd>

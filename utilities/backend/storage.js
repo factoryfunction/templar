@@ -19,16 +19,26 @@ export const getFiles = async (options) => {
   const storagePath = getStoragePath(options)
   const { items } = await base.storage.child(storagePath).listAll()
 
-  const cleanItems = []
-
-  for (const item of items) {
-    cleanItems.push({
+  const final = items.map(async (item) => {
+    return {
       name: item.name,
       fullPath: item.fullPath,
       url: await item.getDownloadURL(),
       meta: await item.getMetadata(),
-    })
-  }
+    }
+  })
 
-  return cleanItems
+  return Promise.all(final)
+}
+
+export const deleteFile = async (options) => {
+  const storagePath = getStoragePath(options)
+
+  try {
+    const deleteIt = await base.storage.child(storagePath).delete()
+    return true
+  } catch (error) {
+    console.error(error)
+    return false
+  }
 }

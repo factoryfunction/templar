@@ -1,11 +1,14 @@
-import Canvas from '../components/Canvas'
+import Canvas from './editor/Canvas'
 import styled from 'styled-components'
+import { StoreProvider, useStoreActions } from 'easy-peasy'
 
 import { LayersStoreProvider } from '../stores/layersStore'
 import { AssetsProvider } from './editor/utilities/useAssets'
 import { useEditorAccessCheck } from './editor/utilities/useEditorAccessCheck'
 
 import { LeftPanel } from './editor/LeftPanel'
+import { layersStore } from './editor/utilities/editorStore'
+import { windowLocation } from './editor/utilities/windowLocation'
 
 const StyledContainer = styled.div`
   display: flex;
@@ -35,19 +38,33 @@ const StyledContainer = styled.div`
   }
 `
 
-const Editor = () => {
+const EditorContainer = () => {
   useEditorAccessCheck()
 
   return (
-    <AssetsProvider>
-      <LayersStoreProvider>
-        <StyledContainer>
-          <Canvas />
-          <LeftPanel />
-        </StyledContainer>
-      </LayersStoreProvider>
-    </AssetsProvider>
+    <StoreProvider store={layersStore}>
+      <AssetsProvider>
+        <LayersStoreProvider>
+          <Editor />
+        </LayersStoreProvider>
+      </AssetsProvider>
+    </StoreProvider>
   )
 }
 
-export default Editor
+const Editor = (props) => {
+  const initializeAssets = useStoreActions((actions) => actions.initializeAssets)
+
+  React.useEffect(() => {
+    initializeAssets(windowLocation.params)
+  }, [])
+
+  return (
+    <StyledContainer>
+      <Canvas />
+      <LeftPanel />
+    </StyledContainer>
+  )
+}
+
+export default EditorContainer
