@@ -175,11 +175,13 @@ const setProjectId = action((state, projectId) => {
 })
 
 const initializeProject = thunk(async (actions, options) => {
-  const assetsInitializing = actions.initializeAssets(options)
-  const projectData = await base.getProjectData('root-and-roam-creative-studio_sell-sheet')
+  const initializeAssets = actions.initializeAssets(options)
+  const projectData = await base.getProjectData(`${options.owner}_${options.project}`)
+
   actions.setLayers(projectData.layers)
   actions.setProjectId(projectData.projectId)
-  await assetsInitializing
+
+  await initializeAssets
   actions.setIsProjectReady(true)
 })
 
@@ -201,9 +203,8 @@ const setIsLoadingAssets = action((state, value) => {
 
 const initializeAssets = thunk(async (actions, options) => {
   actions.setIsLoadingAssets(true)
-  const projectAssets = loadAssets(options)
-  const project = await projectAssets
-  await actions.registerAssets([...project.fonts, ...project.images])
+  const assets = await loadAssets(options)
+  await actions.registerAssets([...assets.fonts, ...assets.images])
   actions.setIsLoadingAssets(false)
 })
 

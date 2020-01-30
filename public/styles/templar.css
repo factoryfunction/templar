@@ -56,6 +56,14 @@ h4 {
   font-family: var(--monoFont);
 }
 
+p {
+  font-weight: 400;
+  font-family: var(--mainFont);
+  line-height: 150%;
+  letter-spacing: 0.5px;
+  font-size: 16px;
+}
+
 .PowerSelect__Option {
   padding-left: 12px;
   font-size: 14px;

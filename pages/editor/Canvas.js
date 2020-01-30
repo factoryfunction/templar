@@ -1,9 +1,12 @@
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import styled from 'styled-components'
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
+import { useStoreActions } from 'easy-peasy'
+import { useHotkeys } from 'react-hotkeys-hook'
+
 import CanvasLayers from './CanvasLayers'
 import useClickHandler from '../../utilities/useClickHandler'
 import { ScaleProvider } from '../../components/useScaleState'
-import { useStoreActions } from 'easy-peasy'
+import { useKeyPress } from '../../utilities/useKeyPress'
 
 const StyledCanvasContainer = styled.div`
   width: 100vw;
@@ -76,6 +79,10 @@ const useStore = () => {
 const Canvas = (props) => {
   const store = useStore()
   const [isPanDisabled, setIsPanDisabled] = React.useState(true)
+
+  useKeyPress('h', (direction) => {
+    direction === 'down' ? setIsPanDisabled(false) : setIsPanDisabled(true)
+  })
 
   useClickHandler('#CanvasContainer', (event) => {
     if (event.target.className === 'ResizeHandle') {
