@@ -10,9 +10,7 @@ export const Uploader = (props) => {
   const [files, setFiles] = React.useState([])
   const filepondRef = React.useRef()
 
-  const onFilepondInit = () => {
-    console.log('FilePond instance has initialised', filepondRef.current)
-  }
+  const onFilepondInit = () => {}
 
   return (
     <FilePond

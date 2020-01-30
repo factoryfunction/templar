@@ -58,9 +58,7 @@ const useStoreCreator = () => {
     )
   }
 
-  const onLayerDragDrop = (event, position) => {
-    console.log({ event, position })
-  }
+  const onLayerDragDrop = (event, position) => {}
 
   const setLayerName = (id, name) => {
     layers.updateOne(id, (layer) => {

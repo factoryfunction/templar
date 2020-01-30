@@ -1,15 +1,26 @@
 import * as React from 'react'
 import * as Styled from './LeftPanel.styled'
 import { useTabsState } from './utilities/useTabsState'
+import { useStoreState, useStoreActions } from 'easy-peasy'
 
 export const LeftPanel = (props) => {
+  const saveProject = useStoreActions((actions) => actions.saveProject)
+
   const tabs = useTabsState()
 
   return (
     <Styled.PanelContainer>
       <Styled.PanelHeaderContainer>
         <Styled.PanelTitleContainer>
-          <Styled.PanelTitleText>Workbench</Styled.PanelTitleText>
+          <Styled.PanelTitleText>
+            Workbench{' '}
+            <small
+              style={{ fontSize: 14, fontWeight: 400, marginLeft: 24 }}
+              onClick={() => saveProject()}
+            >
+              save
+            </small>
+          </Styled.PanelTitleText>
           <Styled.PanelProjectNameText>sell-sheet</Styled.PanelProjectNameText>
         </Styled.PanelTitleContainer>
 

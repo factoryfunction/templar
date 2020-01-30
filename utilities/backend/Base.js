@@ -40,8 +40,8 @@ class Base {
   }
 
   async updateUserData(userId, updater) {
-    const userDocument = this.getUserDocument()
-    const userData = await this.getUserData()
+    const userDocument = this.getUserDocument(userId)
+    const userData = await this.getUserData(userId)
     userDocument.update(updater(userData))
   }
 
@@ -60,8 +60,14 @@ class Base {
   }
 
   async getProjectData(documentId) {
-    const user = await base.$projects.doc(documentId).get()
-    return user.data()
+    const project = await base.$projects.doc(documentId).get()
+    return project.data()
+  }
+
+  async updateProjectData(projectId, updater) {
+    const userDocument = this.getProjectDocument(projectId)
+    const userData = await this.getProjectData(projectId)
+    userDocument.update(updater(userData))
   }
 
   getOrganizationDocument(docId) {

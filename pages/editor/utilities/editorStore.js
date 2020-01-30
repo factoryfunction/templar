@@ -1,8 +1,10 @@
 import { createStore, action, thunk, computed } from 'easy-peasy'
-import nanoid from 'nanoid'
 import * as storage from '../../../utilities/backend/storage'
 import { prepareAssets } from './prepareAssets'
 import { windowLocation } from './windowLocation'
+import { base } from '../../../utilities/backend/Base'
+import nanoid from 'nanoid'
+import arrayMove from 'array-move'
 
 // getFromListById: utility, not part of store.
 const getFromListById = (list, id) => {
@@ -160,23 +162,32 @@ const setLayerWidthRestrcted = action((state, options) => {
   layer.isWidthRestricted = options.value
 })
 
+const setIsProjectReady = action((state, value) => {
+  state.isProjectReady = value
+})
+
+const setLayers = action((state, layers) => {
+  state.layers = layers
+})
+
+const setProjectId = action((state, projectId) => {
+  state.projectId = projectId
+})
+
+const initializeProject = thunk(async (actions, options) => {
+  const assetsInitializing = actions.initializeAssets(options)
+  const projectData = await base.getProjectData('root-and-roam-creative-studio_sell-sheet')
+  actions.setLayers(projectData.layers)
+  actions.setProjectId(projectData.projectId)
+  await assetsInitializing
+  actions.setIsProjectReady(true)
+})
+
 // loadAssets: utility, not part of store.
 const loadAssets = async (options) => {
   const assets = await storage.getFiles(options)
   return await prepareAssets(assets)
 }
-
-// const markAsGlobalAsset = (asset) => {
-//   asset.isGlobal = true
-//   return asset
-// }
-
-// // loadGlobalAssets: utility, not part of store.
-// const loadGlobalAssets = async () => {
-//   const assets = await storage.getFiles('/global-project-assets')
-//   const globalAssets = assets.map(markAsGlobalAsset)
-//   return await prepareAssets(globalAssets)
-// }
 
 const registerAssets = action((state, assets) => {
   state.assets = [...assets]
@@ -198,11 +209,9 @@ const initializeAssets = thunk(async (actions, options) => {
 
 const refreshProjectAssets = thunk(async (actions) => {
   actions.setIsLoadingAssets(true)
-  console.log('loading...')
   const options = windowLocation.params
   const projectAssets = loadAssets(options)
   const project = await projectAssets
-  console.log('done loading...')
   actions.setIsLoadingAssets(false)
   await actions.registerAssets([...project.fonts, ...project.images])
 })
@@ -217,14 +226,57 @@ const deleteAsset = thunk(async (actions, id, { getState }) => {
   !wasSuccessful && actions.registerAssets(oldAssets)
 })
 
+const prepareLayersForSave = (layers) => {
+  return layers.map((layer) => {
+    const asset = layer.imageAsset || layer.fontAsset || {}
+
+    const data =
+      layer.type === 'image'
+        ? { imageAsset: undefined, imageAssetId: asset.id }
+        : layer.type === 'font'
+        ? { fontAsset: undefined, fontAssetId: asset.id }
+        : {}
+
+    return {
+      ...layer,
+      ...data,
+    }
+  })
+}
+
+const saveProject = thunk(async (actions, options, { getState }) => {
+  const state = getState()
+  const layers = prepareLayersForSave(state.layers)
+
+  base.updateProjectData('root-and-roam-creative-studio_sell-sheet', (data) => {
+    return {
+      layers: layers || [],
+      projectId: 'root-and-roam-creative-studio_sell-sheet',
+    }
+  })
+})
+
+const reorderLayer = action((state, { oldIndex, newIndex }) => {
+  const layers = [...state.layers].reverse()
+  const reorderedLayers = arrayMove(layers, oldIndex, newIndex)
+  state.layers = [...reorderedLayers].reverse()
+})
+
 const store = {
   assets: [],
   selectedLayers: [],
   layers: [],
   isLoadingAssets: false,
+  isProjectReady: true,
   projectFontAssets: [],
   projectImageAssets: [],
+  projectId: '',
 
+  reorderLayer,
+  setLayers,
+  setProjectId,
+  setIsProjectReady,
+  saveProject,
   addTextLayer,
   addImageLayer,
   addBoxLayer,
@@ -244,6 +296,7 @@ const store = {
   refreshProjectAssets,
   setIsLoadingAssets,
   deleteAsset,
+  initializeProject,
 }
 
 export const layersStore = createStore(store)

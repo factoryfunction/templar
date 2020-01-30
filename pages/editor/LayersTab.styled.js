@@ -24,6 +24,14 @@ export const AddLayerActions = styled.div`
   }
 `
 
+export const LayerList = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
 export const LayerNameText = styled.p`
   font-family: var(--mainFont);
   color: var(--night-white);
@@ -57,6 +65,7 @@ export const LayerRow = styled.div`
   margin-bottom: 8px;
   width: 90%;
   padding: 0px 24px;
+  z-index: 60;
 
   :hover {
     ${LayerNameText}, ${LayerIconContainer} i {

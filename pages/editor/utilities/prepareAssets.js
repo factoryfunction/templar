@@ -101,8 +101,6 @@ export const prepareAssets = async (assets) => {
   const images = await Promise.all(imageAssets.map(prepareImageAsset))
   const fonts = await Promise.all(fontAssets.map(prepareFontAsset))
 
-  console.log({ images, fonts })
-
   return {
     images,
     fonts,

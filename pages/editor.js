@@ -2,8 +2,6 @@ import Canvas from './editor/Canvas'
 import styled from 'styled-components'
 import { StoreProvider, useStoreActions } from 'easy-peasy'
 
-import { LayersStoreProvider } from '../stores/layersStore'
-import { AssetsProvider } from './editor/utilities/useAssets'
 import { useEditorAccessCheck } from './editor/utilities/useEditorAccessCheck'
 
 import { LeftPanel } from './editor/LeftPanel'
@@ -43,20 +41,16 @@ const EditorContainer = () => {
 
   return (
     <StoreProvider store={layersStore}>
-      <AssetsProvider>
-        <LayersStoreProvider>
-          <Editor />
-        </LayersStoreProvider>
-      </AssetsProvider>
+      <Editor />
     </StoreProvider>
   )
 }
 
 const Editor = (props) => {
-  const initializeAssets = useStoreActions((actions) => actions.initializeAssets)
+  const initializeProject = useStoreActions((actions) => actions.initializeProject)
 
   React.useEffect(() => {
-    initializeAssets(windowLocation.params)
+    initializeProject(windowLocation.params)
   }, [])
 
   return (

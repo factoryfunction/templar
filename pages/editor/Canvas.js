@@ -19,6 +19,10 @@ const StyledCanvasContainer = styled.div`
     width: 100% !important;
     height: 100% !important;
   }
+
+  .SelectedCanvasLayer .ResizeHandle {
+    opacity: 1 !important;
+  }
 `
 
 const StyledCanvas = styled.div`
