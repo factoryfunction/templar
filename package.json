@@ -35,6 +35,7 @@
     "react": "^16.12.0",
     "react-beautiful-dnd": "^12.2.0",
     "react-contextmenu": "^2.13.0",
+    "react-datasheet": "^1.4.0",
     "react-dom": "^16.12.0",
     "react-draggable": "^4.2.0",
     "react-dropdown": "^1.6.4",

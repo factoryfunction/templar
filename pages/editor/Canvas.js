@@ -45,8 +45,6 @@ const StyledCanvas = styled.div`
 
 const WRAPPER_PROPS = {
   defaultScale: 1,
-  // defaultPositionX: 96,
-  // defaultPositionY: 48,
   options: {
     minScale: 1,
     maxScale: 2,
@@ -62,10 +60,6 @@ const WRAPPER_PROPS = {
   zoomOut: {
     step: 15,
   },
-
-  // scalePadding: {
-  //   size: 2.5,
-  // },
 }
 
 const useStore = () => {

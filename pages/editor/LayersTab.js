@@ -1,13 +1,17 @@
 import * as React from 'react'
 import * as Styled from './LayersTab.styled'
 import { useStoreState, useStoreActions } from 'easy-peasy'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc'
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 
 import Icon from '../../components/Icon'
 import { LeftPanelView } from './LeftPanelView'
 
 import { LAYER_TYPE_ICON_NAME_MAP, LAYER_TYPE_ICON_SIZE_MAP } from '../../consts'
+import { GOOGLE_FONTS_MAP, GOOGLE_FONTS_LIST, GOOGLE_FONT_NAMES } from '../../consts/googleFonts'
+
+import { TextField } from '../../components/TextField'
+import Select from '../../components/Select'
 
 const useLayers = () => {
   const layers = useStoreState((store) => {
@@ -26,6 +30,8 @@ const useLayers = () => {
       addBoxLayer: store.addBoxLayer,
       selectLayer: store.selectLayer,
       reorderLayer: store.reorderLayer,
+      setLayerStyle: store.setLayerStyle,
+      setLayerFontFamily: store.setLayerFontFamily,
     }
   })
 
@@ -48,7 +54,14 @@ export const LayersTab = () => {
           </p>
         </When>
         <Otherwise>
-          <LayerList hideSortableGhost={true} onSortEnd={onSortEnd} layersState={layersState} />
+          <LayerList
+            lockAxis='y'
+            pressDelay={350}
+            lockToContainerEdges
+            hideSortableGhost
+            onSortEnd={onSortEnd}
+            layersState={layersState}
+          />
         </Otherwise>
       </Choose>
     </LeftPanelView>
@@ -91,31 +104,55 @@ const AddLayerActions = (props) => {
 }
 
 const LayerRow = SortableElement((props) => {
+  const [isEditing, setIsEditing] = React.useState(false)
   const isSelected = props.layersState.layers.selectedLayers.includes(props.layer.id)
   const iconName = LAYER_TYPE_ICON_NAME_MAP[props.layer.type]
   const iconSize = LAYER_TYPE_ICON_SIZE_MAP[props.layer.type]
 
-  const onClick = () => {
+  const onRowClick = () => {
     props.layersState.actions.selectLayer(props.layer.id)
   }
 
+  const onDeleteClick = () => {
+    props.layersState.actions.removeLayer(props.layer.id)
+  }
+
+  const onEllipsisClick = () => {
+    setIsEditing(!isEditing)
+  }
+
   return (
-    <Styled.LayerRow onClick={onClick} isSelected={isSelected}>
-      <Styled.LayerIconContainer>
-        <Icon name={iconName} size={iconSize} color='var(--subTextColor)' />
-      </Styled.LayerIconContainer>
-      <Styled.LayerNameText>{props.layer.name}</Styled.LayerNameText>
-      <Styled.LayerRemoveIcon
-        data-is-component-action
-        name='trash-alt'
-        size='18px'
-        color='var(--subTextColor)'
-        onClick={(event) => {
-          event.preventDefault()
-          event.stopPropagation()
-          props.layersState.actions.removeLayer(props.layer.id)
-        }}
-      />
-    </Styled.LayerRow>
+    <>
+      <Styled.LayerRow onClick={onRowClick} isSelected={isSelected}>
+        <Styled.LayerIconContainer>
+          <Icon name={iconName} size={iconSize} color='var(--night-gray)' />
+        </Styled.LayerIconContainer>
+        <Styled.LayerNameText>{props.layer.name}</Styled.LayerNameText>
+        <Styled.LayerEditIcon
+          isEditing={isEditing}
+          data-is-component-action
+          name='angle-down'
+          size='18px'
+          color='var(--night-gray)'
+          onClick={onEllipsisClick}
+        />
+      </Styled.LayerRow>
+      <If condition={isEditing}>
+        <Styled.LayerEditorContainer>
+          <Select
+            showClear={false}
+            searchEnabled={true}
+            searchInputAutoFocus={false}
+            selected={GOOGLE_FONTS_MAP.get(props.layer.style.fontFamily).family}
+            options={GOOGLE_FONT_NAMES}
+            onChange={({ option }) => {
+              const fontFamily = GOOGLE_FONTS_MAP.get(option)
+              props.layersState.actions.setLayerFontFamily([props.layer.id, fontFamily])
+            }}
+          />
+          {/* <TextField label='Font' value={props.layer.style.fontFamily} /> */}
+        </Styled.LayerEditorContainer>
+      </If>
+    </>
   )
 })

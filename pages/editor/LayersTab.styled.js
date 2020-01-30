@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import Icon from '../../components/Icon'
 
 export const AddLayerActions = styled.div`
@@ -34,7 +34,7 @@ export const LayerList = styled.div`
 
 export const LayerNameText = styled.p`
   font-family: var(--mainFont);
-  color: var(--night-white);
+
   font-size: 14px;
   margin-left: 8px;
   margin-bottom: 1px;
@@ -52,44 +52,54 @@ export const LayerIconContainer = styled.div`
   justify-content: center;
 `
 
+export const LayerEditIcon = styled(Icon)`
+  margin-left: auto;
+  transition: transform 0.23s;
+  transform: ${(props) => (props.isEditing ? 'rotate(180deg)' : 'rotate(0deg)')};
+`
+
+export const LayerDeleteIcon = styled(Icon)``
+
+const selectedLayerRowStyles = css`
+  ${LayerNameText}, ${LayerIconContainer} i {
+    color: var(--night-white);
+  }
+`
+
 export const LayerRow = styled.div`
   font-family: var(--mainFont);
   font-size: 14px;
   font-weight: 400;
-  height: 36px;
   width: 90%;
   display: flex;
   align-items: center;
   cursor: pointer;
   outline: none;
   margin-bottom: 8px;
-  width: 90%;
   padding: 0px 24px;
   z-index: 60;
+  color: var(--night-gray);
+
+  min-height: ${(props) => (props.isEditorOpen ? 'fit-content' : '40px')};
 
   :hover {
     ${LayerNameText}, ${LayerIconContainer} i {
-      color: var(--secondary);
-      font-weight: 600;
+      color: var(--night-white);
+    }
+
+    i {
+      color: #fff;
     }
   }
 
-  ${(props) =>
-    props.isSelected
-      ? `
-  ${LayerNameText}, ${LayerIconContainer} i {
-      color: var(--secondary);
-      font-weight: 600;
-    }
-  
-  `
-      : ''};
+  ${(props) => (props.isSelected ? selectedLayerRowStyles : '')};
 `
 
-export const LayerRemoveIcon = styled(Icon)`
-  margin-left: auto;
-
-  :hover {
-    color: #fff;
-  }
+export const LayerEditorContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  padding: 0 36px;
 `

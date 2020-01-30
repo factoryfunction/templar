@@ -64,9 +64,51 @@ p {
   font-size: 16px;
 }
 
+::-webkit-scrollbar {
+  background: transparent;
+  width: 12px;
+  border-right: 2px solid transparent;
+  margin-right: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-right: 2px solid transparent;
+  margin-right: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--night-gray);
+  border-right: 2px solid transparent;
+  margin-right: 2px;
+}
+
 .PowerSelect__Option {
   padding-left: 12px;
   font-size: 14px;
   letter-spacing: 0.5px;
   font-family: var(--mainFont);
+  color: var(--night-white);
+}
+
+.PowerSelect__Option--highlighted {
+  background: var(--night-purple0);
+  color: var(--night-white);
+}
+
+.PowerSelect__Tether {
+  z-index: 500;
+}
+
+.PowerSelect__Menu {
+  background: var(--night-purple0) !important;
+}
+
+.PowerSelect__Option:not(.PowerSelect__Option--disabled):hover {
+  background: var(--night-purple0);
+}
+
+.PowerSelect__SearchInput {
+  background: transparent;
+  color: var(--night-white);
 }

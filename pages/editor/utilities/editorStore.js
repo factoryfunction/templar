@@ -1,6 +1,6 @@
 import { createStore, action, thunk, computed } from 'easy-peasy'
 import * as storage from '../../../utilities/backend/storage'
-import { prepareAssets } from './prepareAssets'
+import { prepareAssets, loadFont } from './prepareAssets'
 import { windowLocation } from './windowLocation'
 import { base } from '../../../utilities/backend/Base'
 import nanoid from 'nanoid'
@@ -97,7 +97,7 @@ const addBoxLayer = action((state) => {
       left: 0,
       width: 2.5,
       height: 1.5,
-      backgroundColor: 'rgba(0,0,0,0.75)',
+      backgroundColor: 'rgba(0,0,0,1)',
     },
   })
 })
@@ -130,6 +130,15 @@ const setLayerText = action((state, [id, value]) => {
 const setLayerStyle = action((state, [id, property, value]) => {
   const layer = getFromListById(state.layers, id)
   layer.style[property] = value
+})
+
+const setLayerFontFamily = action((state, [id, value]) => {
+  const layer = getFromListById(state.layers, id)
+  layer.style.fontFamily = value.family
+  loadFont({
+    name: value.family,
+    url: value.files.regular,
+  })
 })
 
 const selectLayer = action((state, id) => {
@@ -178,10 +187,9 @@ const initializeProject = thunk(async (actions, options) => {
   const initializeAssets = actions.initializeAssets(options)
   const projectData = await base.getProjectData(`${options.owner}_${options.project}`)
 
+  await initializeAssets
   actions.setLayers(projectData.layers)
   actions.setProjectId(projectData.projectId)
-
-  await initializeAssets
   actions.setIsProjectReady(true)
 })
 
@@ -263,10 +271,21 @@ const reorderLayer = action((state, { oldIndex, newIndex }) => {
   state.layers = [...reorderedLayers].reverse()
 })
 
+// SOURCES
+
+const setIsConfiguringSources = action((state, value) => {
+  state.isConfiguringSources = value
+})
+
 const store = {
+  sources: {},
+  isSourcesConfigured: false,
+  isConfiguringSources: false,
+  setIsConfiguringSources,
+
   assets: [],
-  selectedLayers: [],
   layers: [],
+  selectedLayers: [],
   isLoadingAssets: false,
   isProjectReady: true,
   projectFontAssets: [],
@@ -279,6 +298,7 @@ const store = {
   setIsProjectReady,
   saveProject,
   addTextLayer,
+  setLayerFontFamily,
   addImageLayer,
   addBoxLayer,
   removeLayer,

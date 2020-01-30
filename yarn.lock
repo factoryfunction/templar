@@ -5968,6 +5968,11 @@ react-contextmenu@^2.13.0:
     classnames "^2.2.5"
     object-assign "^4.1.0"
 
+react-datasheet@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-datasheet/-/react-datasheet-1.4.0.tgz#da251307137a12de3b113c0a1ef62baf114bc3fc"
+  integrity sha512-MiBYQtvZYAEWN/2gJS84SEL4jNAOIJjdFI5i7AZ7BIx06p2PbjUMN7wgT9QTlhrfgFHAfM5tfgBA6ibDLMyVvA==
+
 react-dom@^16.12.0:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.12.0.tgz#0da4b714b8d13c2038c9396b54a92baea633fe11"

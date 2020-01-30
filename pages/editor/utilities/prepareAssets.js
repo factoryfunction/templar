@@ -88,7 +88,7 @@ export const prepareFontAsset = async (file) => {
   }
 }
 
-const loadFont = async (asset) => {
+export const loadFont = async (asset) => {
   const font = new FontFace(asset.name, `url("${asset.url}")`)
   await font.load()
   document.fonts.add(font)

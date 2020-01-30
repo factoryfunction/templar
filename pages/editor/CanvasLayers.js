@@ -23,62 +23,63 @@ const useStore = () => {
   }
 }
 
+// Functions used to choose static, constant
+// values for providing to react-rnd.
+
+const RESIZE_HANDLE_SELECTED_STYLE = {
+  display: 'inherit',
+}
+
+const RESIZE_HANDLE_NOT_SELECTED_STYLE = {
+  display: 'none',
+}
+
+const getResizeHandleWrapperStyle = (isSelected) => {
+  return isSelected ? RESIZE_HANDLE_SELECTED_STYLE : RESIZE_HANDLE_NOT_SELECTED_STYLE
+}
+
 const CanvasLayers = (props) => {
   const store = useStore()
+  const scale = useScale()
 
   return (
     <For each='layer' of={store.state.layers}>
-      <CanvasLayer layer={layer} key={layer.id} store={store} />
+      <CanvasLayer scale={scale} layer={layer} key={layer.id} store={store} />
     </For>
   )
 }
 
 const CanvasLayer = (props) => {
-  const scale = useScale()
   const isSelected = props.store.state.selectedLayers.includes(props.layer.id)
-
-  useHotkeys(
-    'delete,backspace',
-    (e) => {
-      e.preventDefault()
-      isSelected && props.store.actions.removeLayer(props.layer.id)
-    },
-    [isSelected],
-  )
-
-  useHotkeys(
-    'ctrl+d',
-    (e) => {
-      e.preventDefault()
-      isSelected && props.store.actions.duplicateLayer(props.layer)
-    },
-    [isSelected],
-  )
+  const resizeHandleWrapperStyle = getResizeHandleWrapperStyle(isSelected)
 
   return (
     <Choose>
       <When condition={props.layer.type === 'text'}>
         <TextCanvasLayer
-          scale={scale}
+          scale={props.scale}
           store={props.store}
           isSelected={isSelected}
           layer={props.layer}
+          resizeHandleWrapperStyle={resizeHandleWrapperStyle}
         />
       </When>
       <When condition={props.layer.type === 'image'}>
         <ImageCanvasLayer
-          scale={scale}
+          scale={props.scale}
           store={props.store}
           isSelected={isSelected}
           layer={props.layer}
+          resizeHandleWrapperStyle={resizeHandleWrapperStyle}
         />
       </When>
       <When condition={props.layer.type === 'block'}>
         <BlockCanvasLayer
-          scale={scale}
+          scale={props.scale}
           store={props.store}
           isSelected={isSelected}
           layer={props.layer}
+          resizeHandleWrapperStyle={resizeHandleWrapperStyle}
         />
       </When>
     </Choose>
@@ -99,6 +100,13 @@ const ResizeHandle = (
     }}
   />
 )
+
+const resizeHandleComponents = {
+  topLeft: ResizeHandle,
+  topRight: ResizeHandle,
+  bottomRight: ResizeHandle,
+  bottomLeft: ResizeHandle,
+}
 
 const TextCanvasLayer = (props) => {
   const onClick = (event) => {
@@ -136,12 +144,8 @@ const TextCanvasLayer = (props) => {
 
   return (
     <Rnd
-      resizeHandleComponent={{
-        topLeft: ResizeHandle,
-        topRight: ResizeHandle,
-        bottomRight: ResizeHandle,
-        bottomLeft: ResizeHandle,
-      }}
+      resizeHandleComponent={resizeHandleComponents}
+      resizeHandleWrapperStyle={props.resizeHandleWrapperStyle}
       disableDragging={!props.isSelected}
       scale={props.scale}
       onDragStop={onDrop}
@@ -206,12 +210,8 @@ const BlockCanvasLayer = (props) => {
   return (
     <Rnd
       className={props.isSelected ? 'SelectedCanvasLayer' : ''}
-      resizeHandleComponent={{
-        topLeft: ResizeHandle,
-        topRight: ResizeHandle,
-        bottomRight: ResizeHandle,
-        bottomLeft: ResizeHandle,
-      }}
+      resizeHandleComponent={resizeHandleComponents}
+      resizeHandleWrapperStyle={props.resizeHandleWrapperStyle}
       disableDragging={!props.isSelected}
       scale={props.scale}
       onDragStop={onDrop}
@@ -273,12 +273,8 @@ const ImageCanvasLayer = (props) => {
   return (
     <Rnd
       className={props.isSelected ? 'SelectedCanvasLayer' : ''}
-      resizeHandleComponent={{
-        topLeft: ResizeHandle,
-        topRight: ResizeHandle,
-        bottomRight: ResizeHandle,
-        bottomLeft: ResizeHandle,
-      }}
+      resizeHandleComponent={resizeHandleComponents}
+      resizeHandleWrapperStyle={props.resizeHandleWrapperStyle}
       lockAspectRatio={true}
       disableDragging={!props.isSelected}
       scale={props.scale}

@@ -1,25 +1,23 @@
 import styled, { css } from 'styled-components'
 
-const panelCSS = css`
-  width: 520px;
+export const PanelContainer = styled.div`
   background: var(--night-black);
   transform: var(--paneTransform);
   height: 100%;
-  max-height: calc(100vh - 144px);
   display: flex;
   flex-direction: column;
   z-index: 20;
-  top: 80px;
   position: absolute;
   border-radius: 0 3px 3px 0;
   box-shadow: var(--boxShadow0);
-`
-
-export const PanelContainer = styled.div`
-  ${panelCSS}
+  transition: all 0.35s;
   left: 0px;
   bottom: 0px;
   color: var(--night-white);
+  width: ${(props) => (props.isConfiguringSources ? '100%' : '520px')};
+  max-height: ${(props) => (props.isConfiguringSources ? '100%' : 'calc(100vh - 144px)')};
+  top: ${(props) => (props.isConfiguringSources ? '0px' : '80px')};
+  border-radius: ${(props) => (props.isConfiguringSources ? '0px' : '0 3px 3px 0')};
 `
 
 export const PanelHeaderContainer = styled.div`
@@ -62,7 +60,7 @@ export const PanelTabLabelText = styled.p`
   font-family: var(--mainFont);
   letter-spacing: 0.5px;
   font-weight: 600;
-  position: relative;
+  font-size: inherit;
 
   &:hover {
     color: var(--secondary);
@@ -74,15 +72,23 @@ export const PanelTabLabelText = styled.p`
 `
 
 export const PanelTabLabel = styled.div`
-  ${PanelTabLabelText} {
-    ${(props) => (props.isActive ? activeTabStyles : inactiveTabStyles)};
-  }
-
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin: 0 0px;
   padding-right: 40px;
   cursor: pointer;
+  position: relative;
+
+  ${(props) => (props.isActive ? activeTabStyles : inactiveTabStyles)};
+
+  &:hover {
+    color: var(--secondary);
+
+    &:after {
+      color: var(--secondary);
+    }
+  }
 `
 
 export const PanelTabsContainer = styled.div`
@@ -101,8 +107,8 @@ const activeTabStyles = css`
     font-size: 20px;
     position: absolute;
     content: ' \\25CF';
-    bottom: -25px;
-    left: 33%;
+    bottom: -11px;
+    left: 18%;
   }
 `
 

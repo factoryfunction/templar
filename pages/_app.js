@@ -9,6 +9,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 import 'react-power-select/dist/react-power-select.css'
 
 import '../public/styles/templar.css'
+import '../public/styles/react-datasheet.css'
 
 const MyApp = (props) => {
   return (
