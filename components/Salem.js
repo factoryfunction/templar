@@ -30,6 +30,13 @@ export const H3 = styled.h3`
   line-height: 130%;
 `
 
+export const Small = styled.small`
+  font-family: var(--mainFont);
+  font-size: 12px;
+  color: var(--night-gray);
+  font-weight: 400;
+`
+
 export const BlockQuote = styled.h3`
   font-family: var(--monoFont);
   box-shadow: -4px 0px 0px 0px var(--color2);

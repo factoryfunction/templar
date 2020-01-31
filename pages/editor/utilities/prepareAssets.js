@@ -88,10 +88,22 @@ export const prepareFontAsset = async (file) => {
   }
 }
 
+const loadedFonts = []
+
 export const loadFont = async (asset) => {
-  const font = new FontFace(asset.name, `url("${asset.url}")`)
-  await font.load()
-  document.fonts.add(font)
+  if (loadedFonts.includes(asset.name)) {
+    return
+  }
+
+  try {
+    console.log({ asset })
+    const font = new FontFace(asset.name, `url("${asset.url}")`)
+    await font.load()
+    document.fonts.add(font)
+    loadedFonts.push(asset.name)
+  } catch (error) {
+    throw error
+  }
 }
 
 export const prepareAssets = async (assets) => {

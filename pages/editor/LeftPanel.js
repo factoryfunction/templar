@@ -1,15 +1,35 @@
 import * as React from 'react'
 import * as Styled from './LeftPanel.styled'
-import { useTabsState } from './utilities/useTabsState'
-import { useStoreState, useStoreActions } from 'easy-peasy'
+import { EditorStore } from './utilities/editorStore'
+import { AssetsTab } from './AssetsTab'
+import { SourcesTab } from './SourcesTab'
+import { LayersTab } from './LayersTab'
+import { HelpTab } from './HelpTab'
+
+const tabNames = ['Assets', 'Sources', 'Layers', 'Help']
+
+const tabsMap = {
+  Assets: AssetsTab,
+  Sources: SourcesTab,
+  Layers: LayersTab,
+  Help: HelpTab,
+}
 
 const useStore = () => {
-  const state = useStoreState((state) => ({
+  const state = EditorStore.useStoreState((state) => ({
     isConfiguringSources: state.isConfiguringSources,
+    isWorkbenchExpaneded: state.isWorkbenchExpanded,
+    workbenchActiveTab: state.workbenchActiveTab,
   }))
 
-  const actions = useStoreActions((actions) => ({
+  const actions = EditorStore.useStoreActions((actions) => ({
     saveProject: actions.saveProject,
+
+    onTabLabelClick: (event) => {
+      const isSourcesTab = event.target.innerText == 'Sources'
+      !isSourcesTab && actions.setIsConfiguringSources(false)
+      actions.setWorkbenchActiveTab(event.target.innerText)
+    },
   }))
 
   return { state, actions }
@@ -17,7 +37,7 @@ const useStore = () => {
 
 export const LeftPanel = (props) => {
   const store = useStore()
-  const tabs = useTabsState()
+  const ActiveTabView = tabsMap[store.state.workbenchActiveTab]
 
   return (
     <Styled.PanelContainer isConfiguringSources={store.state.isConfiguringSources}>
@@ -36,11 +56,11 @@ export const LeftPanel = (props) => {
         </Styled.PanelTitleContainer>
 
         <Styled.PanelTabsContainer>
-          <For each='tabName' of={tabs.tabNames}>
+          <For each='tabName' of={tabNames}>
             <Styled.PanelTabLabel
               key={tabName}
-              onClick={tabs.onTabLabelClick}
-              isActive={tabs.current === tabName}
+              onClick={store.actions.onTabLabelClick}
+              isActive={store.state.workbenchActiveTab === tabName}
             >
               <Styled.PanelTabLabelText>{tabName}</Styled.PanelTabLabelText>
             </Styled.PanelTabLabel>
@@ -49,7 +69,7 @@ export const LeftPanel = (props) => {
       </Styled.PanelHeaderContainer>
 
       <Styled.PanelBody>
-        <tabs.ActiveTabView />
+        <ActiveTabView />
       </Styled.PanelBody>
     </Styled.PanelContainer>
   )

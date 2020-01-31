@@ -2,15 +2,15 @@ import useScale from '../../components/useScaleState'
 import { Rnd } from 'react-rnd'
 import Icon from '../../components/Icon'
 import { useHotkeys } from 'react-hotkeys-hook'
-import { useStoreState, useStoreActions } from 'easy-peasy'
+import { EditorStore } from './utilities/editorStore'
 
 const useStore = () => {
-  const state = useStoreState((state) => ({
+  const state = EditorStore.useStoreState((state) => ({
     layers: state.layers,
     selectedLayers: state.selectedLayers,
   }))
 
-  const actions = useStoreActions((actions) => ({
+  const actions = EditorStore.useStoreActions((actions) => ({
     removeLayer: actions.removeLayer,
     duplicateLayer: actions.duplicateLayer,
     selectLayer: actions.selectLayer,
@@ -120,6 +120,7 @@ const TextCanvasLayer = (props) => {
     top: props.layer.style.top + 'in',
     left: props.layer.style.left + 'in',
     fontFamily: `"${props.layer.style.fontFamily}"`,
+    lineHeight: `${props.layer.style.lineHeight}%`,
     overflow: 'hidden',
   }
 

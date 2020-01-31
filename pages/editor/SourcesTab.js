@@ -6,16 +6,16 @@ import Icon from '../../components/Icon'
 import Spacer from '../../components/Spacer'
 import { LeftPanelView } from './LeftPanelView'
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu'
-import { useStoreState, useStoreActions } from 'easy-peasy'
+import { EditorStore } from './utilities/editorStore'
 
 const useStore = () => {
-  const state = useStoreState((state) => ({
+  const state = EditorStore.useStoreState((state) => ({
     isConfiguringSources: state.isConfiguringSources,
     isSourcesConfigured: state.isSourcesConfigured,
     sources: state.sources,
   }))
 
-  const actions = useStoreActions((actions) => ({
+  const actions = EditorStore.useStoreActions((actions) => ({
     setIsConfiguringSources: actions.setIsConfiguringSources,
   }))
 

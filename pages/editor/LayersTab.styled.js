@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import Icon from '../../components/Icon'
+import { ColorSwatch } from '../../components/ColorSwatch'
 
 export const AddLayerActions = styled.div`
   display: flex;
@@ -60,6 +61,12 @@ export const LayerEditIcon = styled(Icon)`
 
 export const LayerDeleteIcon = styled(Icon)``
 
+export const LayerEditorIconsContainer = styled.div`
+  padding-bottom: 24px;
+  display: flex;
+  align-items: center;
+`
+
 const selectedLayerRowStyles = css`
   ${LayerNameText}, ${LayerIconContainer} i {
     color: var(--night-white);
@@ -102,4 +109,19 @@ export const LayerEditorContainer = styled.div`
   flex-direction: column;
   width: 80%;
   padding: 0 36px;
+`
+
+export const DisplayColorSwatch = styled(ColorSwatch)`
+  width: 40px;
+  height: 40px;
+  top: -3px;
+  position: absolute;
+  left: -2px;
+  border: 1px solid var(--night-black1);
+`
+
+export const DisplayColorValue = styled.span`
+  position: absolute;
+  top: 9px;
+  left: 51px;
 `

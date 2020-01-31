@@ -1,11 +1,10 @@
 import Canvas from './editor/Canvas'
 import styled from 'styled-components'
-import { StoreProvider, useStoreActions } from 'easy-peasy'
 
 import { useEditorAccessCheck } from './editor/utilities/useEditorAccessCheck'
 
 import { LeftPanel } from './editor/LeftPanel'
-import { layersStore } from './editor/utilities/editorStore'
+import { EditorStore } from './editor/utilities/editorStore'
 import { windowLocation } from './editor/utilities/windowLocation'
 
 const StyledContainer = styled.div`
@@ -40,14 +39,14 @@ const EditorContainer = () => {
   useEditorAccessCheck()
 
   return (
-    <StoreProvider store={layersStore}>
+    <EditorStore.Provider>
       <Editor />
-    </StoreProvider>
+    </EditorStore.Provider>
   )
 }
 
 const Editor = (props) => {
-  const initializeProject = useStoreActions((actions) => actions.initializeProject)
+  const initializeProject = EditorStore.useStoreActions((actions) => actions.initializeProject)
 
   React.useEffect(() => {
     initializeProject(windowLocation.params)

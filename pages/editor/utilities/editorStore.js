@@ -1,10 +1,12 @@
-import { createStore, action, thunk, computed } from 'easy-peasy'
+import { action, thunk, computed, createContextStore } from 'easy-peasy'
 import * as storage from '../../../utilities/backend/storage'
 import { prepareAssets, loadFont } from './prepareAssets'
 import { windowLocation } from './windowLocation'
 import { base } from '../../../utilities/backend/Base'
 import nanoid from 'nanoid'
 import arrayMove from 'array-move'
+
+import { fontsManager } from './fontsManager'
 
 // getFromListById: utility, not part of store.
 const getFromListById = (list, id) => {
@@ -52,9 +54,11 @@ const addTextLayer = action((state) => {
       width: 2,
       height: 2,
       fontFamily: 'Work Sans',
+      fontWeight: 400,
+      color: '#000000',
       fontSize: 24,
       letterSpacing: 0.5,
-      lineHeight: '140%',
+      lineHeight: 140,
     },
   })
 })
@@ -134,10 +138,11 @@ const setLayerStyle = action((state, [id, property, value]) => {
 
 const setLayerFontFamily = action((state, [id, value]) => {
   const layer = getFromListById(state.layers, id)
-  layer.style.fontFamily = value.family
+  layer.style.fontFamily = value
+
   loadFont({
-    name: value.family,
-    url: value.files.regular,
+    name: value,
+    url: fontsManager.getFontUrl(value, 400, 'normal'),
   })
 })
 
@@ -153,6 +158,14 @@ const deselectLayer = action((state, id) => {
 
 const deselectAllLayers = action((state) => {
   state.selectedLayers = []
+})
+
+const fontAssets = computed((state) => {
+  return state.assets.filter((asset) => asset.type === 'font')
+})
+
+const imageAssets = computed((state) => {
+  return state.assets.filter((asset) => asset.type === 'image')
 })
 
 const setLayerAsset = action((state, options) => {
@@ -201,8 +214,6 @@ const loadAssets = async (options) => {
 
 const registerAssets = action((state, assets) => {
   state.assets = [...assets]
-  state.projectFontAssets = filterListByType(assets, 'font')
-  state.projectImageAssets = filterListByType(assets, 'image')
 })
 
 const setIsLoadingAssets = action((state, value) => {
@@ -277,32 +288,52 @@ const setIsConfiguringSources = action((state, value) => {
   state.isConfiguringSources = value
 })
 
+const setWorkbenchActiveTab = action((state, value) => {
+  state.workbenchActiveTab = value
+})
+
+const setIsWorkbenchExpanded = action((state, value) => {
+  state.isWorkbenchExpanded = value
+})
+
 const store = {
+  workbenchActiveTab: 'Assets',
+  isWorkbenchExpanded: false,
+  setWorkbenchActiveTab,
+  setIsWorkbenchExpanded,
+
+  projectId: '',
+  isProjectReady: true,
+  setProjectId,
+  setIsProjectReady,
+  saveProject,
+  refreshProjectAssets,
+  initializeProject,
+
+  assets: [],
+  isLoadingAssets: false,
+  fontAssets,
+  imageAssets,
+  initializeAssets,
+  registerAssets,
+  setIsLoadingAssets,
+  deleteAsset,
+
   sources: {},
   isSourcesConfigured: false,
   isConfiguringSources: false,
   setIsConfiguringSources,
 
-  assets: [],
   layers: [],
   selectedLayers: [],
-  isLoadingAssets: false,
-  isProjectReady: true,
-  projectFontAssets: [],
-  projectImageAssets: [],
-  projectId: '',
-
   reorderLayer,
   setLayers,
-  setProjectId,
-  setIsProjectReady,
-  saveProject,
   addTextLayer,
-  setLayerFontFamily,
   addImageLayer,
   addBoxLayer,
   removeLayer,
   duplicateLayer,
+  setLayerFontFamily,
   setLayerName,
   setLayerText,
   setLayerStyle,
@@ -312,12 +343,6 @@ const store = {
   setLayerAsset,
   setLayerRatioLocked,
   setLayerWidthRestrcted,
-  initializeAssets,
-  registerAssets,
-  refreshProjectAssets,
-  setIsLoadingAssets,
-  deleteAsset,
-  initializeProject,
 }
 
-export const layersStore = createStore(store)
+export const EditorStore = createContextStore(store)

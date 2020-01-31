@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
-import { useStoreActions } from 'easy-peasy'
 import { useHotkeys } from 'react-hotkeys-hook'
-
+import { EditorStore } from './utilities/editorStore'
 import CanvasLayers from './CanvasLayers'
 import useClickHandler from '../../utilities/useClickHandler'
 import { ScaleProvider } from '../../components/useScaleState'
@@ -16,7 +15,14 @@ const StyledCanvasContainer = styled.div`
   justify-content: center;
   overflow: visible;
 
+  /* If panning is disabled we want to disable the grab cursor. */
   cursor: ${(props) => (props.isPanDisabled ? 'inherit' : 'grab')};
+
+  /* When LeftPanel expands, we hide the canvas. When it contracts, we */
+  /* want to reveal it in a pleasant way. -- This is that way. =P */
+  transition: opacity 0.5s;
+  transition-delay: 0.5s;
+  opacity: ${(props) => (props.isCanvasInvisible ? 0 : 1)};
 
   .react-transform-component {
     width: 100% !important;
@@ -35,57 +41,68 @@ const StyledCanvas = styled.div`
   box-shadow: 0px 2px 16px -4px rgba(0, 0, 0, 0.05);
   outline: 1px solid var(--whiteBorderColor);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 
   [data-is-selected='true'] {
-    background: #d5a0f836;
-    outline: 1px solid #60189099;
+    /* background: #ff89061c; */
+    outline: 2px solid var(--highlight);
   }
 `
 
 const WRAPPER_PROPS = {
-  defaultScale: 1,
+  style: { width: '100%', height: '100%' },
+  zoomIn: {
+    step: 20,
+  },
+  zoomOut: {
+    step: 20,
+  },
   options: {
-    minScale: 1,
-    maxScale: 2,
-    limitToWrapper: false,
     limitToBounds: false,
+    transformEnabled: true,
+    disabled: false,
+    limitToWrapper: true,
     centerContent: true,
   },
-
-  zoomIn: {
-    step: 15,
-  },
-
-  zoomOut: {
-    step: 15,
+  pinch: { disabled: true },
+  doubleClick: { disabled: true },
+  wheel: {
+    wheelEnabled: true,
+    touchPadEnabled: false,
+    limitsOnWheel: false,
+    step: 20,
   },
 }
 
 const useStore = () => {
-  const actions = useStoreActions((actions) => ({
+  const state = EditorStore.useStoreState((state) => ({
+    isCanvasInvisible: state.isConfiguringSources,
+  }))
+
+  const actions = EditorStore.useStoreActions((actions) => ({
     deselectAllLayers: actions.deselectAllLayers,
   }))
 
-  return { actions }
+  return { state, actions }
 }
 
+// TODO: Wrap Canvas with an HOC that will unmount Canvas after
+// it goes invisible and re-mount it after it becomes visible.
 const Canvas = (props) => {
   const store = useStore()
+  const isCanvasInvisible = store.state.isCanvasInvisible
   const [isPanDisabled, setIsPanDisabled] = React.useState(true)
 
   useKeyPress('h', (direction) => {
-    direction === 'down' ? setIsPanDisabled(false) : setIsPanDisabled(true)
+    !isCanvasInvisible && direction === 'down' ? setIsPanDisabled(false) : setIsPanDisabled(true)
   })
 
   useClickHandler('#CanvasContainer', (event) => {
-    if (event.target.className === 'ResizeHandle') {
-      return
-    }
-
-    if (event.which === 1 && event.target.querySelector('.CanvasLayer')) {
-      store.actions.deselectAllLayers()
-    }
+    const { target, which } = event
+    const isClick = which === 1
+    const isDismissableClick = isCanvasInvisible || event.target.className === 'ResizeHandle'
+    const isDeselectClick = !isCanvasInvisible && isClick && target.querySelector('.CanvasLayer')
+    !isDismissableClick && isDeselectClick && store.actions.deselectAllLayers()
   })
 
   const onMouseDown = (event) => {
@@ -102,40 +119,20 @@ const Canvas = (props) => {
 
   return (
     <StyledCanvasContainer
+      isCanvasInvisible={isCanvasInvisible}
       isPanDisabled={isPanDisabled}
       id='CanvasContainer'
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDown}
     >
       <TransformWrapper
-        style={{ width: '100%', height: '100%' }}
-        zoomIn={{
-          step: 20,
-        }}
-        zoomOut={{
-          step: 20,
-        }}
-        options={{
-          limitToBounds: false,
-          transformEnabled: true,
-          disabled: false,
-          limitToWrapper: true,
-          centerContent: true,
-        }}
+        {...WRAPPER_PROPS}
         pan={{
           disabled: isPanDisabled,
           lockAxisX: false,
           lockAxisY: false,
           velocityEqualToMove: true,
           velocity: true,
-        }}
-        pinch={{ disabled: true }}
-        doubleClick={{ disabled: true }}
-        wheel={{
-          wheelEnabled: true,
-          touchPadEnabled: false,
-          limitsOnWheel: false,
-          step: 20,
         }}
       >
         {({ zoomIn, zoomOut, resetTransform, ...rest }) => (

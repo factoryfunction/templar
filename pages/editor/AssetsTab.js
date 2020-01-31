@@ -1,8 +1,7 @@
 import * as React from 'react'
 import * as Styled from './AssetsTab.styled'
-import { useStoreState, useStoreActions, useStore } from 'easy-peasy'
 import { useDropzone } from 'react-dropzone'
-
+import { EditorStore } from './utilities/editorStore'
 import Icon from '../../components/Icon'
 import Spacer from '../../components/Spacer'
 import { LeftPanelView } from './LeftPanelView'
@@ -13,13 +12,13 @@ import * as storage from '../../utilities/backend/storage'
 import { windowLocation } from './utilities/windowLocation'
 
 export const AssetsTab = () => {
-  const store = useStoreState((store) => ({
-    fontAssets: store.projectFontAssets,
-    imageAssets: store.projectImageAssets,
+  const store = EditorStore.useStoreState((store) => ({
     isLoadingAssets: store.isLoadingAssets,
+    fontAssets: store.fontAssets,
+    imageAssets: store.imageAssets,
   }))
 
-  const storeActions = useStoreActions((store) => ({
+  const storeActions = EditorStore.useStoreActions((store) => ({
     refreshProjectAssets: store.refreshProjectAssets,
     deleteAsset: store.deleteAsset,
   }))
@@ -123,3 +122,5 @@ const AssetsUpload = (props) => {
     </Styled.AssetUploadContainer>
   )
 }
+
+export default AssetsTab

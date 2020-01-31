@@ -18,6 +18,8 @@
   --night-white: #fffffe;
   --night-black: #0f0e17;
   --night-purple0: #1f1d30;
+  --night-black1: #1a1825;
+  --night-black2: #252331;
   --night-gray: #a7a9be;
 
   --day-gray: #ececed;
@@ -67,20 +69,27 @@ p {
 ::-webkit-scrollbar {
   background: transparent;
   width: 12px;
-  border-right: 2px solid transparent;
   margin-right: 2px;
 }
 
 ::-webkit-scrollbar-track {
   background: transparent;
-  border-right: 2px solid transparent;
   margin-right: 2px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--night-gray);
-  border-right: 2px solid transparent;
   margin-right: 2px;
+}
+
+.PowerSelect {
+  border: none;
+  border-radius: 4px;
+  background: transparent !important;
+}
+
+.PowerSelect--open .PowerSelect__Trigger {
+  border-bottom: 1px solid var(--night-black);
 }
 
 .PowerSelect__Option {
@@ -88,11 +97,11 @@ p {
   font-size: 14px;
   letter-spacing: 0.5px;
   font-family: var(--mainFont);
-  color: var(--night-white);
+  color: var(--night-gray);
 }
 
 .PowerSelect__Option--highlighted {
-  background: var(--night-purple0);
+  background: var(--night-black2);
   color: var(--night-white);
 }
 
@@ -101,14 +110,42 @@ p {
 }
 
 .PowerSelect__Menu {
-  background: var(--night-purple0) !important;
+  /* background: var(--night-black2) !important; */
+  background: #393747 !important;
+  box-shadow: 0px 1px 8px -2px rgba(0, 0, 0, 0.125);
+  border: none;
 }
 
 .PowerSelect__Option:not(.PowerSelect__Option--disabled):hover {
-  background: var(--night-purple0);
+  background: var(--night-black2);
+  color: var(--night-white);
 }
 
 .PowerSelect__SearchInput {
   background: transparent;
   color: var(--night-white);
+  background: var(--night-gray);
+  border: 1px solid #2a2839;
+}
+
+.PowerSelect--focused {
+  border: none;
+}
+
+.PowerSelect__Trigger {
+  margin-top: 6px;
+  background: var(--night-black2);
+  border-radius: 3px;
+}
+
+.PowerSelect__TriggerLabel {
+  padding-left: 12px;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  font-family: var(--mainFont);
+  color: var(--night-white);
+}
+
+.PowerSelect__Options {
+  margin-top: 2px;
 }

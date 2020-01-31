@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "loc": "sloc ./components ./pages ./stores ./utilities"
   },
   "dependencies": {
     "@authpack/react": "^0.5.14",
@@ -23,17 +24,20 @@
     "filereader": "^0.10.3",
     "firebase": "^7.7.0",
     "get-value": "^3.0.1",
+    "hex-and-rgba": "^1.4.2",
     "image-to-uri": "^1.0.0",
     "mobx": "^5.15.3",
     "mobx-react-lite": "^1.5.2",
     "nanoid": "^2.1.10",
     "next": "^9.2.1",
     "node-fetch": "^2.6.0",
+    "node-loc": "^1.1.7",
     "qs": "^6.9.1",
     "rc-checkbox": "^2.1.8",
     "re-resizable": "^6.1.1",
     "react": "^16.12.0",
     "react-beautiful-dnd": "^12.2.0",
+    "react-color": "2.17.3",
     "react-contextmenu": "^2.13.0",
     "react-datasheet": "^1.4.0",
     "react-dom": "^16.12.0",
@@ -54,6 +58,7 @@
     "react-spreadsheet": "^0.4.43",
     "react-zoom-pan-pinch": "^1.6.1",
     "set-value": "^3.0.1",
+    "sloc": "^0.2.1",
     "styled-components": "^5.0.0",
     "ui-box": "^2.1.3",
     "url-parse": "^1.4.7",

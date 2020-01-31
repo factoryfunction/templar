@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as Styled from './LayersTab.styled'
-import { useStoreState, useStoreActions } from 'easy-peasy'
+import { EditorStore } from './utilities/editorStore'
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 
@@ -13,8 +13,16 @@ import { GOOGLE_FONTS_MAP, GOOGLE_FONTS_LIST, GOOGLE_FONT_NAMES } from '../../co
 import { TextField } from '../../components/TextField'
 import Select from '../../components/Select'
 
+import { SketchPicker } from 'react-color'
+import Spacer from '../../components/Spacer'
+import { rgbaToHex } from 'hex-and-rgba'
+import { fontsManager } from './utilities/fontsManager'
+import { ColorPicker } from '../../components/ColorPicker'
+import { ColorSwatch } from '../../components/ColorSwatch'
+import * as Salem from '../../components/Salem'
+
 const useLayers = () => {
-  const layers = useStoreState((store) => {
+  const layers = EditorStore.useStoreState((store) => {
     return {
       list: [...store.layers].reverse(),
       isLayersEmpty: store.layers.length === 0,
@@ -22,7 +30,7 @@ const useLayers = () => {
     }
   })
 
-  const actions = useStoreActions((store) => {
+  const actions = EditorStore.useStoreActions((store) => {
     return {
       removeLayer: store.removeLayer,
       addTextLayer: store.addTextLayer,
@@ -138,21 +146,154 @@ const LayerRow = SortableElement((props) => {
         />
       </Styled.LayerRow>
       <If condition={isEditing}>
-        <Styled.LayerEditorContainer>
-          <Select
-            showClear={false}
-            searchEnabled={true}
-            searchInputAutoFocus={false}
-            selected={GOOGLE_FONTS_MAP.get(props.layer.style.fontFamily).family}
-            options={GOOGLE_FONT_NAMES}
-            onChange={({ option }) => {
-              const fontFamily = GOOGLE_FONTS_MAP.get(option)
-              props.layersState.actions.setLayerFontFamily([props.layer.id, fontFamily])
-            }}
-          />
-          {/* <TextField label='Font' value={props.layer.style.fontFamily} /> */}
-        </Styled.LayerEditorContainer>
+        <TextLayerEditor layer={props.layer} />
       </If>
     </>
   )
 })
+
+const useLayerActions = (layer) => {
+  const actions = EditorStore.useStoreActions((actions) => ({
+    setFontColor: (value) => actions.setLayerStyle([layer.id, 'color', value]),
+    setFontLineHeight: (value) => actions.setLayerStyle([layer.id, 'lineHeight', value]),
+    setFontLetterSpacing: (value) => actions.setLayerStyle([layer.id, 'letterSpacing', value]),
+    setFontWeight: (value) => actions.setLayerStyle([layer.id, 'fontWeight', value]),
+    setFontColor: (value) => actions.setLayerStyle([layer.id, 'color', value]),
+    setFontFamily: (value) => actions.setLayerFontFamily([layer.id, value]),
+    setName: (value) => actions.setLayerName([layer.id, value]),
+    setText: (value) => actions.setLayerText([layer.id, value]),
+    removeLayer: () => actions.removeLayer(layer.id),
+  }))
+
+  return actions
+}
+
+const TextLayerEditor = (props) => {
+  const actions = useLayerActions(props.layer)
+
+  const layerStyles = props.layer.style
+  const fontFamilyOptions = fontsManager.fontNames
+  const fontWeightOptions = fontsManager.getFontWeights(layerStyles.fontFamily)
+
+  const fontStyleOptions = fontsManager.getFontWeightStyles(
+    layerStyles.fontFamily,
+    layerStyles.fontWeight,
+  )
+
+  return (
+    <Styled.LayerEditorContainer>
+      <Styled.LayerEditorIconsContainer>
+        <Styled.LayerDeleteIcon
+          data-is-component-action
+          name='trash-alt'
+          size='18px'
+          color='var(--night-gray)'
+          onClick={actions.removeLayer}
+        />
+        <Salem.Small style={{ marginLeft: 2, marginTop: 1 }}>Delete</Salem.Small>
+      </Styled.LayerEditorIconsContainer>
+      <FontFamily
+        options={fontFamilyOptions}
+        current={layerStyles.fontFamily}
+        onChange={actions.setFontFamily}
+      />
+      <Spacer size='24px' />
+      <FontColor current={layerStyles.color} onChange={actions.setFontColor} />
+      <Spacer size='24px' />
+      <FontWeight
+        options={fontWeightOptions}
+        current={layerStyles.fontWeight}
+        onChange={actions.setFontWeight}
+      />
+    </Styled.LayerEditorContainer>
+  )
+}
+
+const FontFamily = (props) => {
+  const onChange = ({ option }) => {
+    props.onChange(option)
+  }
+
+  return (
+    <Select
+      label='Font'
+      showClear={false}
+      searchEnabled={false}
+      searchInputAutoFocus={false}
+      options={props.options}
+      selected={props.current}
+      onChange={onChange}
+    />
+  )
+}
+
+const FontWeight = (props) => {
+  const onChange = ({ option }) => {
+    props.onChange(option)
+  }
+
+  return (
+    <Select
+      label='Font'
+      showClear={false}
+      searchEnabled={false}
+      searchInputAutoFocus={false}
+      options={props.options}
+      selected={props.current}
+      onChange={onChange}
+    />
+  )
+}
+
+const FontSize = (props) => {
+  const onChange = ({ option }) => {
+    props.onChange([props.layer.id, option])
+  }
+
+  return (
+    <Select
+      label='Font'
+      showClear={false}
+      searchEnabled={false}
+      searchInputAutoFocus={false}
+      options={props.options}
+      selected={props.selected}
+      onChange={onChange}
+    />
+  )
+}
+
+const FontColor = (props) => {
+  const onChange = (color) => {
+    const { r, g, b, a } = color.rgb
+    const hexa = rgbaToHex(r, g, b, a)
+    console.log({ color, hexa })
+    props.onChange(hexa)
+  }
+
+  return (
+    <>
+      <Select
+        label='Font Color'
+        showClear={false}
+        searchEnabled={false}
+        searchInputAutoFocus={false}
+        options={[]}
+        onChange={() => {}}
+        selected={props.current}
+        optionComponent={Select.HiddenOption}
+        beforeOptionsComponent={() => (
+          <ColorPicker width={324} current={props.current} onChange={onChange} />
+        )}
+        selectedOptionComponent={({ option }) => {
+          return (
+            <div style={{ display: 'flex' }}>
+              <Styled.DisplayColorSwatch color={option} />
+              <Styled.DisplayColorValue>{option}</Styled.DisplayColorValue>
+            </div>
+          )
+        }}
+      />
+    </>
+  )
+}
