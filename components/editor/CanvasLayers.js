@@ -73,7 +73,7 @@ const CanvasLayer = (props) => {
           resizeHandleWrapperStyle={resizeHandleWrapperStyle}
         />
       </When>
-      <When condition={props.layer.type === 'block'}>
+      <When condition={props.layer.type === 'box'}>
         <BlockCanvasLayer
           scale={props.scale}
           store={props.store}

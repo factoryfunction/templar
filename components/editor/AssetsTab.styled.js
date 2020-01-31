@@ -54,13 +54,31 @@ export const AssetFolderContainer = styled(Details)`
 export const AssetFolderContents = styled(Details.Contents)``
 
 export const AssetInFolder = styled.p`
-  font-size: 14px;
-  padding: 12px 24px;
+  padding: 4px 24px;
   width: 100%;
   display: flex;
 
   :hover {
-    color: var(--highlight);
+    color: var(--night-white);
+  }
+`
+
+export const AssetName = styled.p`
+  font-family: var(--mainFont);
+  color: var(--night-gray);
+  font-size: 14px;
+  margin-left: 8px;
+  margin-bottom: 1px;
+  cursor: pointer;
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+  position: relative;
+
+  &:hover {
+    color: var(--night-white);
   }
 `
 

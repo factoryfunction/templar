@@ -14,6 +14,8 @@
   --secondary: #f25f4c;
   --tertiary: #e53170;
 
+  --danger: #f02c2c;
+
   /* Dark theme. */
   --night-white: #fffffe;
   --night-black: #0f0e17;
@@ -78,7 +80,7 @@ p {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--night-gray);
+  background: var(--night-black2);
   margin-right: 2px;
 }
 

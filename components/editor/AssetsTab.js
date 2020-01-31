@@ -39,6 +39,7 @@ export const AssetsTab = () => {
         assets={store.fontAssets}
         storeActions={storeActions}
       />
+      <Spacer size='36px' />
     </LeftPanelView>
   )
 }
@@ -66,27 +67,17 @@ export const AssetFolder = (props) => {
 
 const AssetFile = (props) => {
   return (
-    <>
-      <ContextMenuTrigger id={props.asset.id} posX={-2} posY={64}>
-        <Styled.AssetInFolder>
-          {props.asset.name}
+    <Styled.AssetInFolder>
+      <Styled.AssetName>{props.asset.name}</Styled.AssetName>
 
-          <Styled.AssetRemoveIcon
-            data-is-component-action
-            name='trash-alt'
-            size='18px'
-            color='var(--subTextColor)'
-            onClick={() => props.storeActions.deleteAsset(props.asset.id)}
-          />
-        </Styled.AssetInFolder>
-      </ContextMenuTrigger>
-      <ContextMenu id={props.asset.id}>
-        <MenuItem data={{ foo: 'bar' }}>ContextMenu Item 1</MenuItem>
-        <MenuItem data={{ foo: 'bar' }}>ContextMenu Item 2</MenuItem>
-        <MenuItem divider />
-        <MenuItem data={{ foo: 'bar' }}>ContextMenu Item 3</MenuItem>
-      </ContextMenu>
-    </>
+      <Styled.AssetRemoveIcon
+        data-is-component-action
+        name='trash-alt'
+        size='18px'
+        color='var(--subTextColor)'
+        onClick={() => props.storeActions.deleteAsset(props.asset.id)}
+      />
+    </Styled.AssetInFolder>
   )
 }
 

@@ -40,11 +40,12 @@ export const LayerNameText = styled.p`
   margin-left: 8px;
   margin-bottom: 1px;
   cursor: pointer;
-  width: 180px;
+  max-width: 180px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   user-select: none;
+  position: relative;
 `
 
 export const LayerIconContainer = styled.div`
@@ -62,7 +63,7 @@ export const LayerEditIcon = styled(Icon)`
 export const LayerDeleteIcon = styled(Icon)``
 
 export const LayerEditorIconsContainer = styled.div`
-  padding-bottom: 24px;
+  padding-top: 2px;
   display: flex;
   align-items: center;
 `
@@ -71,6 +72,19 @@ const selectedLayerRowStyles = css`
   ${LayerNameText}, ${LayerIconContainer} i {
     color: var(--night-white);
   }
+
+  ${LayerIconContainer} i {
+    color: var(--secondary);
+  }
+
+  /* ${LayerNameText}::after {
+    color: var(--secondary);
+    display: inline;
+    font-size: 20px;
+    position: absolute;
+    content: ' \\25CF';
+    left: 100%;
+  } */
 `
 
 export const LayerRow = styled.div`
@@ -90,7 +104,7 @@ export const LayerRow = styled.div`
   min-height: ${(props) => (props.isEditorOpen ? 'fit-content' : '40px')};
 
   :hover {
-    ${LayerNameText}, ${LayerIconContainer} i {
+    ${LayerNameText} {
       color: var(--night-white);
     }
 
@@ -104,11 +118,14 @@ export const LayerRow = styled.div`
 
 export const LayerEditorContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: fit-content;
   display: flex;
   flex-direction: column;
-  width: 80%;
-  padding: 0 36px;
+  width: 90%;
+  padding: 18px 36px 12px;
+  background: var(--night-black1);
+  border-radius: 3px;
+  margin-bottom: 12px;
 `
 
 export const DisplayColorSwatch = styled(ColorSwatch)`

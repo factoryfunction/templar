@@ -101,7 +101,7 @@ const activeTabStyles = css`
   font-size: 12px;
   color: var(--night-white);
 
-  &:after {
+  &::after {
     color: var(--secondary);
     display: ${(props) => (props.isActive ? 'inline' : 'none')};
     font-size: 20px;
@@ -122,4 +122,6 @@ export const PanelBody = styled.div`
   height: calc(100% - 40px);
   max-height: calc(100% - 40px);
   overflow: auto;
+  overflow-y: scroll;
+  padding-bottom: 36px;
 `

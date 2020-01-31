@@ -95,14 +95,14 @@ const addBoxLayer = action((state) => {
     isBeingEdited: false,
     isRatioLocked: true,
     canFile: true,
-    type: 'block',
-    name: 'Block Layer',
+    type: 'box',
+    name: 'Box Layer',
     style: {
       top: 0,
       left: 0,
       width: 2.5,
       height: 1.5,
-      backgroundColor: 'rgba(0,0,0,1)',
+      background: '#000000',
     },
   })
 })
