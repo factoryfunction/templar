@@ -201,6 +201,18 @@ const initializeProject = thunk(async (actions, options) => {
   const initializeAssets = actions.initializeAssets(options)
   const projectData = await base.getProjectData(`${options.owner}_${options.project}`)
 
+  projectData.layers.forEach((layer) => {
+    if (layer.type === 'text') {
+      const fontUrl = fontsManager.getFontUrl(
+        layer.style.fontFamily,
+        layer.style.fontWeight,
+        'normal',
+      )
+
+      loadFont({ name: layer.style.fontFamily, url: fontUrl })
+    }
+  })
+
   await initializeAssets
   actions.setLayers(projectData.layers)
   actions.setProjectId(projectData.projectId)

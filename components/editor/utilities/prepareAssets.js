@@ -1,4 +1,5 @@
 import { organizeAssets } from './organizeAssets'
+import { fontsManager } from './fontsManager'
 
 // 8.5 * 96 pixels per inch.
 export const DOCUMENT_WIDTH = 816
@@ -101,7 +102,6 @@ export const loadFont = async (asset) => {
   }
 
   try {
-    console.log({ asset })
     const font = new FontFace(asset.name, `url("${asset.url}")`)
     await font.load()
     document.fonts.add(font)
