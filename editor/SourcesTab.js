@@ -1,9 +1,9 @@
 import * as React from 'react'
 import * as Styled from './SourcesTab.styled'
 
-import { SpreadSheet } from '../../components/SpreadSheet'
-import Icon from '../../components/Icon'
-import Spacer from '../../components/Spacer'
+import { SpreadSheet } from '../components/SpreadSheet'
+import Icon from '../components/Icon'
+import Spacer from '../components/Spacer'
 import { LeftPanelView } from './LeftPanelView'
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu'
 import { EditorStore } from './utilities/editorStore'

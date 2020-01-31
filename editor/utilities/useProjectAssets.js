@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
-import * as storage from '../../../utilities/backend/storage'
+import * as storage from '../../utilities/backend/storage'
 import { prepareAssets } from './prepareAssets'
 import { windowLocation } from './windowLocation'
 

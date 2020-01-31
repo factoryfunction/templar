@@ -1,6 +1,6 @@
-import useScale from '../../components/useScaleState'
+import useScale from '../components/useScaleState'
 import { Rnd } from 'react-rnd'
-import Icon from '../../components/Icon'
+import Icon from '../components/Icon'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { EditorStore } from './utilities/editorStore'
 

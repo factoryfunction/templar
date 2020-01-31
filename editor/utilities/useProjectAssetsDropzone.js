@@ -1,7 +1,7 @@
 import { useDropzone } from 'react-dropzone'
 import useAssets from './useAssets'
 import { windowLocation } from './windowLocation'
-import * as storage from '../../../utilities/backend/storage'
+import * as storage from '../../utilities/backend/storage'
 
 export const useProjectAssetsDropzone = () => {
   const assets = useAssets()

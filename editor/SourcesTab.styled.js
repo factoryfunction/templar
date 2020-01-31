@@ -47,3 +47,5 @@ export const SourcesConfigurationContainer = styled.div`
 
   opacity: ${(props) => (props.isReady ? 1 : 0)};
 `
+
+export default {}

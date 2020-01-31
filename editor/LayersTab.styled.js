@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
-import Icon from '../../components/Icon'
-import { ColorSwatch } from '../../components/ColorSwatch'
+import Icon from '../components/Icon'
+import { ColorSwatch } from '../components/ColorSwatch'
 
 export const AddLayerActions = styled.div`
   display: flex;

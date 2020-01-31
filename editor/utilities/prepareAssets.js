@@ -1,5 +1,10 @@
 import { organizeAssets } from './organizeAssets'
-import { DOCUMENT_WIDTH, DOCUMENT_HEIGHT } from '../../../consts'
+
+// 8.5 * 96 pixels per inch.
+export const DOCUMENT_WIDTH = 816
+
+// 11 * 96 pixels per inch.
+export const DOCUMENT_HEIGHT = 1104
 
 const FONT_FILE_EXTENSIONS = ['.otf', '.ttf', '.woff', '.woff2']
 

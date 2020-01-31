@@ -1,8 +1,8 @@
 import { action, thunk, computed, createContextStore } from 'easy-peasy'
-import * as storage from '../../../utilities/backend/storage'
+import * as storage from '../../utilities/backend/storage'
 import { prepareAssets, loadFont } from './prepareAssets'
 import { windowLocation } from './windowLocation'
-import { base } from '../../../utilities/backend/Base'
+import { base } from '../../utilities/backend/Base'
 import nanoid from 'nanoid'
 import arrayMove from 'array-move'
 
@@ -139,10 +139,11 @@ const setLayerStyle = action((state, [id, property, value]) => {
 const setLayerFontFamily = action((state, [id, value]) => {
   const layer = getFromListById(state.layers, id)
   layer.style.fontFamily = value
+  layer.style.fontWeight = '400'
 
   loadFont({
     name: value,
-    url: fontsManager.getFontUrl(value, 400, 'normal'),
+    url: fontsManager.getFontUrl(value, '400', 'normal'),
   })
 })
 

@@ -14,7 +14,7 @@ class FontsManager extends Map {
     return Object.keys(font.fontWeights)
   }
 
-  getFontWeightStyles = (family, weight) => {
+  getFontWeightStyles = (family, weight = 400) => {
     const font = this.get(family)
     const fontWeight = font.fontWeights[weight]
     return Object.keys(fontWeight)
