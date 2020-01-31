@@ -132,6 +132,11 @@ const setLayerText = action((state, [id, value]) => {
   layer.text = value
 })
 
+const setIsEditingText = action((state, [id, value]) => {
+  const layer = getFromListById(state.layers, id)
+  layer.isEditingText = value
+})
+
 const setLayerStyle = action((state, [id, property, value]) => {
   const layer = getFromListById(state.layers, id)
   layer.style[property] = value
@@ -160,6 +165,12 @@ const deselectLayer = action((state, id) => {
 
 const deselectAllLayers = action((state) => {
   state.selectedLayers = []
+
+  state.layers.forEach((layer) => {
+    if (layer.isEditingText) {
+      layer.isEditingText = false
+    }
+  })
 })
 
 const fontAssets = computed((state) => {
@@ -350,6 +361,7 @@ const store = {
   setLayerFontFamily,
   setLayerName,
   setLayerText,
+  setIsEditingText,
   setLayerStyle,
   selectLayer,
   deselectLayer,

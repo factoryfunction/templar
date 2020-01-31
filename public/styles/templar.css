@@ -151,3 +151,7 @@ p {
 .PowerSelect__Options {
   margin-top: 2px;
 }
+
+.SelectedCanvasLayer {
+  outline: 2px solid var(--highlight);
+}

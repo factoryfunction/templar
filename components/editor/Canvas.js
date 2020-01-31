@@ -42,11 +42,6 @@ const StyledCanvas = styled.div`
   outline: 1px solid var(--whiteBorderColor);
   position: relative;
   overflow: visible;
-
-  [data-is-selected='true'] {
-    /* background: #ff89061c; */
-    outline: 2px solid var(--highlight);
-  }
 `
 
 const WRAPPER_PROPS = {
@@ -86,6 +81,10 @@ const useStore = () => {
   return { state, actions }
 }
 
+const getCanvasLayer = (target) => {
+  return target.querySelector('[data-is-canvaslayer]')
+}
+
 // TODO: Wrap Canvas with an HOC that will unmount Canvas after
 // it goes invisible and re-mount it after it becomes visible.
 const Canvas = (props) => {
@@ -101,7 +100,7 @@ const Canvas = (props) => {
     const { target, which } = event
     const isClick = which === 1
     const isDismissableClick = isCanvasInvisible || event.target.className === 'ResizeHandle'
-    const isDeselectClick = !isCanvasInvisible && isClick && target.querySelector('.CanvasLayer')
+    const isDeselectClick = !isCanvasInvisible && isClick && getCanvasLayer(target)
     !isDismissableClick && isDeselectClick && store.actions.deselectAllLayers()
   })
 

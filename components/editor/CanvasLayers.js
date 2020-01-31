@@ -1,8 +1,8 @@
-import useScale from '../useScaleState'
 import { Rnd } from 'react-rnd'
-import Icon from '../Icon'
-import { useHotkeys } from 'react-hotkeys-hook'
+import useScale from '../useScaleState'
 import { EditorStore } from './utilities/editorStore'
+import useDoubleClick from 'use-double-click'
+import ContentEditable from 'react-contenteditable'
 
 const useStore = () => {
   const state = EditorStore.useStoreState((state) => ({
@@ -15,6 +15,8 @@ const useStore = () => {
     duplicateLayer: actions.duplicateLayer,
     selectLayer: actions.selectLayer,
     setLayerStyle: actions.setLayerStyle,
+    setLayerText: actions.setLayerText,
+    setIsEditingText: actions.setIsEditingText,
   }))
 
   return {
@@ -89,6 +91,9 @@ const CanvasLayer = (props) => {
 const ResizeHandle = (
   <div
     className='ResizeHandle'
+    onMouseUp={(event) => {
+      event.stopPropagation()
+    }}
     style={{
       width: 8,
       height: 8,
@@ -109,9 +114,24 @@ const resizeHandleComponents = {
 }
 
 const TextCanvasLayer = (props) => {
-  const onClick = (event) => {
+  const isSelected = props.store.state.selectedLayers.includes(props.layer.id)
+  const ref = React.useRef()
+
+  const onSingleClick = (event) => {
     props.store.actions.selectLayer(props.layer.id)
   }
+
+  const onDoubleClick = (event) => {
+    props.store.actions.selectLayer(props.layer.id)
+    props.store.actions.setIsEditingText([props.layer.id, true])
+  }
+
+  useDoubleClick({
+    onSingleClick,
+    onDoubleClick,
+    latency: 250,
+    ref,
+  })
 
   const style = {
     ...props.layer.style,
@@ -148,13 +168,15 @@ const TextCanvasLayer = (props) => {
 
   return (
     <Rnd
+      onDoubleClick={onDoubleClick}
       resizeHandleComponent={resizeHandleComponents}
       resizeHandleWrapperStyle={props.resizeHandleWrapperStyle}
-      disableDragging={!props.isSelected}
+      // Disabled if not selected or if editing.
+      disableDragging={!isSelected || props.layer.isEditingText}
       scale={props.scale}
       onDragStop={onDrop}
       onResizeStop={onResizeStop}
-      className={props.isSelected ? 'SelectedCanvasLayer' : ''}
+      className={isSelected ? 'SelectedCanvasLayer' : ''}
       default={{
         x: props.layer.style.left * 96,
         y: props.layer.style.top * 96,
@@ -162,19 +184,17 @@ const TextCanvasLayer = (props) => {
         height: props.layer.style.height * 96,
       }}
     >
-      <p
-        onClick={onClick}
-        className='CanvasLayer'
-        data-is-selected={props.isSelected}
+      <ContentEditable
+        innerRef={ref}
+        data-is-selected={String(isSelected)}
         style={style}
-      >
-        <For each='line' of={props.layer.text.split('\n')}>
-          <React.Fragment key={line}>
-            {line}
-            <br />
-          </React.Fragment>
-        </For>
-      </p>
+        data-is-canvaslayer='true'
+        html={props.layer.text}
+        disabled={!props.layer.isEditingText}
+        onChange={(event) =>
+          props.store.actions.setLayerText([props.layer.id, event.target.value])
+        }
+      />
     </Rnd>
   )
 }
@@ -229,7 +249,7 @@ const BlockCanvasLayer = (props) => {
     >
       <div
         onClick={onClick}
-        className='CanvasLayer'
+        data-is-canvaslayer='true'
         data-is-selected={props.isSelected}
         style={style}
       />
@@ -293,7 +313,7 @@ const ImageCanvasLayer = (props) => {
     >
       <div
         onClick={onClick}
-        className='CanvasLayer'
+        data-is-canvaslayer='true'
         data-is-selected={String(props.isSelected)}
         style={style}
       />
