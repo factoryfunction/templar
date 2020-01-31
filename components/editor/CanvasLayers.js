@@ -120,6 +120,9 @@ const TextCanvasLayer = (props) => {
     top: props.layer.style.top + 'in',
     left: props.layer.style.left + 'in',
     fontFamily: `"${props.layer.style.fontFamily}"`,
+    fontWeight: `${props.layer.style.fontWeight}`,
+    letterSpacing: `${props.layer.style.letterSpacing}`,
+    fontSize: `${props.layer.style.fontSize}`,
     lineHeight: `${props.layer.style.lineHeight}%`,
     overflow: 'hidden',
   }

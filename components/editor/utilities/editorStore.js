@@ -54,10 +54,11 @@ const addTextLayer = action((state) => {
       width: 2,
       height: 2,
       fontFamily: 'Work Sans',
-      fontWeight: 400,
+      fontWeight: '400',
+      fontStyle: 'normal',
       color: '#000000',
-      fontSize: 24,
-      letterSpacing: 0.5,
+      fontSize: '24',
+      letterSpacing: '0.5',
       lineHeight: 140,
     },
   })
@@ -316,7 +317,7 @@ const store = {
   setIsWorkbenchExpanded,
 
   projectId: '',
-  isProjectReady: true,
+  isProjectReady: false,
   setProjectId,
   setIsProjectReady,
   saveProject,

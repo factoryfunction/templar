@@ -1,25 +1,25 @@
 import * as React from 'react'
 import * as Styled from './LayersTab.styled'
-import { EditorStore } from './utilities/editorStore'
-import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc'
+import { SketchPicker } from 'react-color'
+import { rgbaToHex } from 'hex-and-rgba'
 import arrayMove from 'array-move'
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc'
 
-import Icon from '../Icon'
 import { LeftPanelView } from './LeftPanelView'
 
-import { LAYER_TYPE_ICON_NAME_MAP, LAYER_TYPE_ICON_SIZE_MAP } from '../../consts'
-import { GOOGLE_FONTS_MAP, GOOGLE_FONTS_LIST, GOOGLE_FONT_NAMES } from '../../consts/googleFonts'
-
+import Icon from '../Icon'
 import { TextField } from '../TextField'
 import Select from '../Select'
-
-import { SketchPicker } from 'react-color'
 import Spacer from '../Spacer'
-import { rgbaToHex } from 'hex-and-rgba'
-import { fontsManager } from './utilities/fontsManager'
 import { ColorPicker } from '../ColorPicker'
 import { ColorSwatch } from '../ColorSwatch'
 import * as Salem from '../Salem'
+
+import { EditorStore } from './utilities/editorStore'
+import { fontsManager } from './utilities/fontsManager'
+
+import { LAYER_TYPE_ICON_NAME_MAP, LAYER_TYPE_ICON_SIZE_MAP } from '../../consts'
+import { GOOGLE_FONTS_MAP, GOOGLE_FONTS_LIST, GOOGLE_FONT_NAMES } from '../../consts/googleFonts'
 
 const useLayers = () => {
   const layers = EditorStore.useStoreState((store) => {
@@ -160,6 +160,8 @@ const useLayerActions = (layer) => {
     setFontWeight: (value) => actions.setLayerStyle([layer.id, 'fontWeight', value]),
     setFontColor: (value) => actions.setLayerStyle([layer.id, 'color', value]),
     setFontFamily: (value) => actions.setLayerFontFamily([layer.id, value]),
+    setFontStyle: (value) => actions.setLayerStyle([layer.id, 'fontStyle', value]),
+    setFontSize: (value) => actions.setLayerStyle([layer.id, 'fontSize', value]),
     setName: (value) => actions.setLayerName([layer.id, value]),
     setText: (value) => actions.setLayerText([layer.id, value]),
     removeLayer: () => actions.removeLayer(layer.id),
@@ -197,14 +199,27 @@ const TextLayerEditor = (props) => {
         current={layerStyles.fontFamily}
         onChange={actions.setFontFamily}
       />
-      <Spacer size='24px' />
-      <FontColor current={layerStyles.color} onChange={actions.setFontColor} />
-      <Spacer size='24px' />
-      <FontWeight
-        options={fontWeightOptions}
-        current={layerStyles.fontWeight}
-        onChange={actions.setFontWeight}
+      <Spacer size='18px' />
+      <div style={{ display: 'flex', justifyContent: 'stretch' }}>
+        <FontWeight
+          options={fontWeightOptions}
+          current={layerStyles.fontWeight}
+          onChange={actions.setFontWeight}
+        />
+        <Spacer size='18px' />
+        <LineHeight value={layerStyles.lineHeight} onChange={actions.setFontLineHeight} />
+        <Spacer size='18px' />
+        <FontSize value={layerStyles.fontSize} onChange={actions.setFontSize} />
+      </div>
+      <Spacer size='18px' />
+      <FontStyle
+        options={fontStyleOptions}
+        current={layerStyles.fontStyle}
+        onChange={actions.setFontStyle}
       />
+      <Spacer size='18px' />
+      <FontColor current={layerStyles.color} onChange={actions.setFontColor} />
+      <Spacer size='18px' />
     </Styled.LayerEditorContainer>
   )
 }
@@ -227,6 +242,38 @@ const FontFamily = (props) => {
   )
 }
 
+const LineHeight = (props) => {
+  const onChange = (event) => {
+    props.onChange(event.target.value)
+  }
+
+  return (
+    <TextField
+      width='120px'
+      label='Line Height (%)'
+      value={props.value}
+      placeholder='140% by default'
+      onChange={onChange}
+    />
+  )
+}
+
+const FontSize = (props) => {
+  const onChange = (event) => {
+    props.onChange(event.target.value)
+  }
+
+  return (
+    <TextField
+      width='117px'
+      label='Font Size'
+      value={props.value}
+      placeholder=''
+      onChange={onChange}
+    />
+  )
+}
+
 const FontWeight = (props) => {
   const onChange = ({ option }) => {
     props.onChange(option)
@@ -234,7 +281,7 @@ const FontWeight = (props) => {
 
   return (
     <Select
-      label='Font'
+      label='Font Weight'
       showClear={false}
       searchEnabled={false}
       searchInputAutoFocus={false}
@@ -245,19 +292,19 @@ const FontWeight = (props) => {
   )
 }
 
-const FontSize = (props) => {
+const FontStyle = (props) => {
   const onChange = ({ option }) => {
-    props.onChange([props.layer.id, option])
+    props.onChange(option)
   }
 
   return (
     <Select
-      label='Font'
+      label='Font Style'
       showClear={false}
       searchEnabled={false}
       searchInputAutoFocus={false}
       options={props.options}
-      selected={props.selected}
+      selected={props.current}
       onChange={onChange}
     />
   )

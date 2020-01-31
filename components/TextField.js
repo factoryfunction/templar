@@ -1,40 +1,41 @@
 import styled from 'styled-components'
 
-export const StyledTextField = styled.input`
-  padding: 8px 12px;
-  background: transparent;
-  border-radius: 2px;
-  border: 1px solid var(--night-gray);
-  color: var(--night-white);
-  font-family: var(--mainFont);
-  font-size: 13px;
-  letter-spacing: 0.5px;
-  outline: none;
-  margin-top: 8px;
+const StyledContainer = styled.span`
+  display: flex;
+  flex-direction: column;
+  width: ${(props) => props.width || '100%'};
 
-  :focus {
-    outline: none;
-    border-color: var(--night-white);
-    box-shadow: 0px 1px 8px -2px rgba(255, 255, 255, 0.3);
+  ::before {
+    content: "${(props) => props.label || ''}";
+    display: flex;
+    font-size: 12px;
+    color: var(--night-gray);
+    font-family: var(--mainFont);
   }
 `
 
-const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const StyledLabel = styled.label`
-  font-size: 12px;
+export const StyledInput = styled.input`
+  margin-top: 6px;
+  background: var(--night-black2);
+  border-radius: 3px;
+  border: none;
+  outline: none;
+  color: var(--night-white);
+  font-size: 14px;
   letter-spacing: 0.5px;
-  color: var(--night-gray);
+  font-family: var(--mainFont);
+  color: var(--night-white);
+
+  padding: 6px 8px 6px 12px;
+
+  width: 100%;
+  height: 34px;
 `
 
 export const TextField = (props) => {
   return (
-    <StyledContainer>
-      <StyledLabel htmlFor={props.name}>{props.label}</StyledLabel>
-      <StyledTextField {...props} />
+    <StyledContainer label={props.label} width={props.width}>
+      <StyledInput {...props} />
     </StyledContainer>
   )
 }
