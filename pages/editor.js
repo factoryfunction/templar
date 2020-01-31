@@ -1,11 +1,11 @@
-import Canvas from '../editor/Canvas'
+import Canvas from '../components/editor/Canvas'
 import styled from 'styled-components'
 
-import { useEditorAccessCheck } from '../editor/utilities/useEditorAccessCheck'
+import { useEditorAccessCheck } from '../components/editor/utilities/useEditorAccessCheck'
 
-import { LeftPanel } from '../editor/LeftPanel'
-import { EditorStore } from '../editor/utilities/editorStore'
-import { windowLocation } from '../editor/utilities/windowLocation'
+import { LeftPanel } from '../components/editor/LeftPanel'
+import { EditorStore } from '../components/editor/utilities/editorStore'
+import { windowLocation } from '../components/editor/utilities/windowLocation'
 
 const StyledContainer = styled.div`
   display: flex;

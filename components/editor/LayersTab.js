@@ -4,22 +4,22 @@ import { EditorStore } from './utilities/editorStore'
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc'
 import arrayMove from 'array-move'
 
-import Icon from '../components/Icon'
+import Icon from '../Icon'
 import { LeftPanelView } from './LeftPanelView'
 
-import { LAYER_TYPE_ICON_NAME_MAP, LAYER_TYPE_ICON_SIZE_MAP } from '../consts'
-import { GOOGLE_FONTS_MAP, GOOGLE_FONTS_LIST, GOOGLE_FONT_NAMES } from '../consts/googleFonts'
+import { LAYER_TYPE_ICON_NAME_MAP, LAYER_TYPE_ICON_SIZE_MAP } from '../../consts'
+import { GOOGLE_FONTS_MAP, GOOGLE_FONTS_LIST, GOOGLE_FONT_NAMES } from '../../consts/googleFonts'
 
-import { TextField } from '../components/TextField'
-import Select from '../components/Select'
+import { TextField } from '../TextField'
+import Select from '../Select'
 
 import { SketchPicker } from 'react-color'
-import Spacer from '../components/Spacer'
+import Spacer from '../Spacer'
 import { rgbaToHex } from 'hex-and-rgba'
 import { fontsManager } from './utilities/fontsManager'
-import { ColorPicker } from '../components/ColorPicker'
-import { ColorSwatch } from '../components/ColorSwatch'
-import * as Salem from '../components/Salem'
+import { ColorPicker } from '../ColorPicker'
+import { ColorSwatch } from '../ColorSwatch'
+import * as Salem from '../Salem'
 
 const useLayers = () => {
   const layers = EditorStore.useStoreState((store) => {

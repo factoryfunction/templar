@@ -1,8 +1,8 @@
 import * as React from 'react'
 import * as Styled from './AssetsTab.styled'
 
-import Icon from '../components/Icon'
-import Spacer from '../components/Spacer'
+import Icon from '../Icon'
+import Spacer from '../Spacer'
 import { LeftPanelView } from './LeftPanelView'
 import styled from 'styled-components'
 

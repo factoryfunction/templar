@@ -1,4 +1,4 @@
-import createContextStore from '../../utilities/createContextStore'
+import createContextStore from '../../../utilities/createContextStore'
 import { useProjectAssets } from './useProjectAssets'
 import { useGlobalProjectAssets } from './useGlobalProjectAssets'
 

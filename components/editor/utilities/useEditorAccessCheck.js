@@ -1,4 +1,4 @@
-import useAuthStore from '../../stores/authStore'
+import useAuthStore from '../../../stores/authStore'
 import { useRouter } from 'next/router'
 import { windowLocation } from './windowLocation'
 

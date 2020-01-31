@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { Details } from '../components/Details'
-import Icon from '../components/Icon'
+import { Details } from '../Details'
+import Icon from '../Icon'
 
 export const AssetsTabContainer = styled.div`
   width: 100%;

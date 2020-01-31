@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as Styled from './LogIn.styled'
-import * as Salem from '../../components/Salem'
+import * as Salem from '../Salem'
 
 import useAuthStore from '../../stores/authStore'
 

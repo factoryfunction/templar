@@ -1,5 +1,5 @@
 import * as React from 'react'
-import * as storage from '../../utilities/backend/storage'
+import * as storage from '../../../utilities/backend/storage'
 import { prepareAssets } from './prepareAssets'
 
 const DEFAULT_STATE = { fonts: [], images: [] }

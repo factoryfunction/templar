@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 
-import { LogIn } from './index/LogIn'
+import { LogIn } from '../components/index/LogIn'
 
 const Index = () => {
   return (

@@ -3,9 +3,9 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { EditorStore } from './utilities/editorStore'
 import CanvasLayers from './CanvasLayers'
-import useClickHandler from '../utilities/useClickHandler'
-import { ScaleProvider } from '../components/useScaleState'
-import { useKeyPress } from '../utilities/useKeyPress'
+import useClickHandler from '../../utilities/useClickHandler'
+import { ScaleProvider } from '../useScaleState'
+import { useKeyPress } from '../../utilities/useKeyPress'
 
 const StyledCanvasContainer = styled.div`
   width: 100vw;
