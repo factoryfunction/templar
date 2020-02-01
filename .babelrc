@@ -11,6 +11,18 @@
     ],
     "babel-plugin-jsx-control-statements",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
-    ["@babel/plugin-proposal-class-properties", { "loose": true }]
+    [
+      "babel-plugin-module-resolver",
+      {
+        "alias": {
+          "#features": "./src/features",
+          "#stores": "./src/stores",
+          "#utilities": "./src/utilities",
+          "#services": "./src/services",
+          "#components": "./src/components",
+          "#assets": "./src/assets"
+        }
+      }
+    ]
   ]
 }

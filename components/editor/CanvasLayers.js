@@ -36,6 +36,13 @@ const RESIZE_HANDLE_NOT_SELECTED_STYLE = {
   display: 'none',
 }
 
+const RESIZE_HANDLE_COMPONENTS = {
+  topLeft: ResizeHandle,
+  topRight: ResizeHandle,
+  bottomRight: ResizeHandle,
+  bottomLeft: ResizeHandle,
+}
+
 const getResizeHandleWrapperStyle = (isSelected) => {
   return isSelected ? RESIZE_HANDLE_SELECTED_STYLE : RESIZE_HANDLE_NOT_SELECTED_STYLE
 }
@@ -91,9 +98,6 @@ const CanvasLayer = (props) => {
 const ResizeHandle = (
   <div
     className='ResizeHandle'
-    onMouseUp={(event) => {
-      event.stopPropagation()
-    }}
     style={{
       width: 8,
       height: 8,
@@ -105,13 +109,6 @@ const ResizeHandle = (
     }}
   />
 )
-
-const resizeHandleComponents = {
-  topLeft: ResizeHandle,
-  topRight: ResizeHandle,
-  bottomRight: ResizeHandle,
-  bottomLeft: ResizeHandle,
-}
 
 const TextCanvasLayer = (props) => {
   const isSelected = props.store.state.selectedLayers.includes(props.layer.id)
@@ -169,7 +166,7 @@ const TextCanvasLayer = (props) => {
   return (
     <Rnd
       onDoubleClick={onDoubleClick}
-      resizeHandleComponent={resizeHandleComponents}
+      resizeHandleComponent={RESIZE_HANDLE_COMPONENTS}
       resizeHandleWrapperStyle={props.resizeHandleWrapperStyle}
       // Disabled if not selected or if editing.
       disableDragging={!isSelected || props.layer.isEditingText}
@@ -190,7 +187,7 @@ const TextCanvasLayer = (props) => {
         style={style}
         data-is-canvaslayer='true'
         html={props.layer.text}
-        disabled={!props.layer.isEditingText}
+        disabled={!isSelected && !props.layer.isEditingText}
         onChange={(event) =>
           props.store.actions.setLayerText([props.layer.id, event.target.value])
         }
@@ -234,7 +231,7 @@ const BlockCanvasLayer = (props) => {
   return (
     <Rnd
       className={props.isSelected ? 'SelectedCanvasLayer' : ''}
-      resizeHandleComponent={resizeHandleComponents}
+      resizeHandleComponent={RESIZE_HANDLE_COMPONENTS}
       resizeHandleWrapperStyle={props.resizeHandleWrapperStyle}
       disableDragging={!props.isSelected}
       scale={props.scale}
@@ -297,7 +294,7 @@ const ImageCanvasLayer = (props) => {
   return (
     <Rnd
       className={props.isSelected ? 'SelectedCanvasLayer' : ''}
-      resizeHandleComponent={resizeHandleComponents}
+      resizeHandleComponent={RESIZE_HANDLE_COMPONENTS}
       resizeHandleWrapperStyle={props.resizeHandleWrapperStyle}
       lockAspectRatio={true}
       disableDragging={!props.isSelected}
