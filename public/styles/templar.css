@@ -9,44 +9,43 @@
 }
 
 :root {
-  /* Accent colors for light or dark theme. */
+  --mainFont: 'Work Sans', sans-serif;
+  --monoFont: 'Space Mono', monospace;
+
+  --white: #fffffe;
+  --black0: #0f0e17;
+  --black1: #1a1825;
+  --black2: #252331;
+  --black3: #1f1d30;
+  --gray0: #ececed;
+  --gray1: #ececed;
+  --gray2: #d8d8dd;
+  --gray3: #a7a9be;
+
   --highlight: #ff8906;
   --secondary: #f25f4c;
   --tertiary: #e53170;
-
   --danger: #f02c2c;
 
-  /* Dark theme. */
+  /* DEPRECATED COLORS */
+  --whiteBorderColor: #d8cfde;
+  --mainPurple: #7416ca;
   --night-white: #fffffe;
   --night-black: #0f0e17;
   --night-purple0: #1f1d30;
   --night-black1: #1a1825;
   --night-black2: #252331;
   --night-gray: #a7a9be;
-
   --day-gray: #ececed;
-  /* --gray: #e9e9ea; */
-
   --backgroundColor: #eff0f3;
   --headingColor: #0d0d0d;
+  --subTextColor: #695f6f;
 
   --boxShadow0: 0 1px 2px rgba(0, 0, 0, 0.125), 0 2px 4px rgba(0, 0, 0, 0.125),
     0 4px 8px rgba(0, 0, 0, 0.125), 0 8px 16px rgba(0, 0, 0, 0.125);
 
   --paneTransform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
     rotateZ(0deg) skew(0deg, 0deg);
-
-  --mainFont: 'Work Sans', sans-serif;
-  --monoFont: 'Space Mono', monospace;
-
-  --dark0: #12011d;
-  --white: #fff;
-  --mainPurple: #7416ca;
-  --editorBackgroundColor: #f4f4f4;
-  --whiteBorderColor: #d8cfde;
-
-  --mainTextColor: #12011d;
-  --subTextColor: #695f6f;
 }
 
 body {
@@ -68,6 +67,8 @@ p {
   font-size: 16px;
 }
 
+/* SCROLLBARS */
+
 ::-webkit-scrollbar {
   background: transparent;
   width: 12px;
@@ -83,6 +84,13 @@ p {
   background: var(--night-black2);
   margin-right: 2px;
 }
+
+.SelectedCanvasLayer {
+  outline: 2px solid var(--highlight);
+}
+
+/* REACT POWERSELECT */
+/* TODO: CREATE CUSTOM SELECT BOX */
 
 .PowerSelect {
   border: none;
@@ -150,8 +158,4 @@ p {
 
 .PowerSelect__Options {
   margin-top: 2px;
-}
-
-.SelectedCanvasLayer {
-  outline: 2px solid var(--highlight);
 }
