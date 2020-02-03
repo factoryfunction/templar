@@ -1,12 +1,9 @@
 import * as React from 'react'
 import { GoogleLogin } from 'react-google-login'
-import { useRouter } from 'next/router'
 
 import { AuthStore } from '../../stores/authStore'
 
 const useStore = () => {
-  const router = useRouter()
-
   const authActions = AuthStore.useStoreActions((actions) => ({
     logIn: actions.logIn,
   }))
