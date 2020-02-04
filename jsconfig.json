@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2016",
+    "jsx": "preserve",
+
+    "baseUrl": "./",
+    "paths": {
+      "#features": ["./src/features"],
+      "#stores": ["./src/stores"],
+      "#utilities": ["./src/utilities"],
+      "#services": ["./src/services"],
+      "#components": ["./src/components"],
+      "#assets": ["./src/assets"],
+      "#pages": ["./src/pages"]
+    }
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
+}

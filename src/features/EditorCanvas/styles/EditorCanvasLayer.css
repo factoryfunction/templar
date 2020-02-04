@@ -1,0 +1,6 @@
+/* .SelectedCanvasLayer is provided to React RND */
+/* so that it can apply correct styles to the */
+/* selected layer and its child ResizeHandles. */
+:global .SelectedCanvasLayer {
+  outline: 2px solid var(--highlight);
+}

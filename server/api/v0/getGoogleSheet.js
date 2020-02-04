@@ -1,7 +1,6 @@
 import fetch from 'node-fetch'
 
 const BASE_URL = 'https://sheets.googleapis.com/v4/spreadsheets'
-
 const { GOOGLE_SHEETS_API_KEY } = process.env
 
 const DEFAULT_OPTIONS = {

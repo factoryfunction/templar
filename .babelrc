@@ -9,6 +9,14 @@
         "preprocess": false
       }
     ],
+    [
+      "babel-plugin-react-css-modules",
+      {
+        "generateScopedName": "[name]__[local]",
+        "webpackHotModuleReloading": true,
+        "handleMissingStyleName": "warn"
+      }
+    ],
     "babel-plugin-jsx-control-statements",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
     [
@@ -20,7 +28,9 @@
           "#utilities": "./src/utilities",
           "#services": "./src/services",
           "#components": "./src/components",
-          "#assets": "./src/assets"
+          "#assets": "./src/assets",
+          "#pages": "./src/pages",
+          "#consts": "./src/consts"
         }
       }
     ]

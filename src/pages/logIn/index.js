@@ -1,42 +1,34 @@
 import * as React from 'react'
-import { GoogleLogin } from 'react-google-login'
 import { useRouter } from 'next/router'
 
-import { AuthStore } from '../../stores/authStore'
+import { AuthStore } from '#stores/authStore'
 
 const useStore = () => {
   const router = useRouter()
 
-  const authActions = AuthStore.useStoreActions((actions) => ({
-    logIn: actions.logIn,
+  const authStore = AuthStore.useStoreState((state) => ({
+    isAuthenticated: state.isAuthenticated,
   }))
 
-  const onLogInSuccess = (data) => {
-    authActions.logIn(data)
-  }
+  const authActions = AuthStore.useStoreActions((actions) => ({
+    signIn: () => actions.signIn('colshacol@gmail.com', 'Mellow122093'),
+  }))
 
-  const onLogInFailure = (data) => {
-    throw new Error('FAILED TO LOG IN', data)
-  }
+  React.useEffect(() => {
+    if (authStore.isAuthenticated) {
+      router.push('/')
+    }
+  }, [authStore.isAuthenticated])
 
   return {
-    onLogInSuccess,
-    onLogInFailure,
+    authActions,
   }
 }
 
-const LogIn = (props) => {
+const LogIn = () => {
   const store = useStore()
 
-  return (
-    <GoogleLogin
-      clientId={process.env.GOOGLE_AUTH_CLIENT_ID}
-      buttonText='Login'
-      onSuccess={store.onLogInSuccess}
-      onFailure={store.onLogInFailure}
-      cookiePolicy={'single_host_origin'}
-    />
-  )
+  return <button onClick={store.authActions.signIn}>SIGN IN</button>
 }
 
 export default LogIn

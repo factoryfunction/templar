@@ -20,16 +20,16 @@
   --gray0: #ececed;
   --gray1: #ececed;
   --gray2: #d8d8dd;
-  --gray3: rgba(167, 169, 190, 1);
+  --gray3: #a7a9be;
 
-  --highlight: rgba(255, 137, 6, 1);
-  --secondary: rgba(242, 95, 76, 1);
-  --tertiary: rgba(229, 49, 112, 1);
+  --highlight: #ff8906;
+  --secondary: #f25f4c;
+  --tertiary: #e53170;
   --danger: #f02c2c;
 
   /* DEPRECATED COLORS */
   --whiteBorderColor: #d8cfde;
-  --mainPurple: rgba(116, 22, 202, 1);
+  --mainPurple: #7416ca;
   --night-white: #fffffe;
   --night-black: #0f0e17;
   --night-purple0: #1f1d30;
@@ -46,6 +46,25 @@
 
   --paneTransform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg)
     rotateZ(0deg) skew(0deg, 0deg);
+}
+
+:global .DarkTree {
+  /* Text */
+  --pColor: var(--white);
+  --smallColor: var(--white);
+  --h1Color: var(--white);
+  --h2Color: var(--white);
+  --h3Color: var(--white);
+  --h4Color: var(--white);
+  --h5Color: var(--white);
+  --h6Color: var(--white);
+
+  /* Inputs */
+  --inputColor: var(--white);
+  --inputLabelColor: var(--white);
+  --selectOptionColor: var(--white);
+  --selectOptionDisabledColor: var(--white);
+  --selectOptionSelectedColor: var(--white);
 }
 
 body {
@@ -83,79 +102,4 @@ p {
 ::-webkit-scrollbar-thumb {
   background: var(--night-black2);
   margin-right: 2px;
-}
-
-.SelectedCanvasLayer {
-  outline: 2px solid var(--highlight);
-}
-
-/* REACT POWERSELECT */
-/* TODO: CREATE CUSTOM SELECT BOX */
-
-.PowerSelect {
-  border: none;
-  border-radius: 4px;
-  background: transparent !important;
-}
-
-.PowerSelect--open .PowerSelect__Trigger {
-  border-bottom: 1px solid var(--night-black);
-}
-
-.PowerSelect__Option {
-  padding-left: 12px;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  font-family: var(--mainFont);
-  color: var(--night-gray);
-}
-
-.PowerSelect__Option--highlighted {
-  background: var(--night-black2);
-  color: var(--night-white);
-}
-
-.PowerSelect__Tether {
-  z-index: 500;
-}
-
-.PowerSelect__Menu {
-  /* background: var(--night-black2) !important; */
-  background: #393747 !important;
-  box-shadow: 0px 1px 8px -2px rgba(0, 0, 0, 0.125);
-  border: none;
-}
-
-.PowerSelect__Option:not(.PowerSelect__Option--disabled):hover {
-  background: var(--night-black2);
-  color: var(--night-white);
-}
-
-.PowerSelect__SearchInput {
-  background: transparent;
-  color: var(--night-white);
-  background: var(--night-gray);
-  border: 1px solid #2a2839;
-}
-
-.PowerSelect--focused {
-  border: none;
-}
-
-.PowerSelect__Trigger {
-  margin-top: 6px;
-  background: var(--night-black2);
-  border-radius: 3px;
-}
-
-.PowerSelect__TriggerLabel {
-  padding-left: 12px;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  font-family: var(--mainFont);
-  color: var(--night-white);
-}
-
-.PowerSelect__Options {
-  margin-top: 2px;
 }

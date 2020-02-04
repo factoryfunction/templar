@@ -1,10 +1,17 @@
 import * as React from 'react'
-import { useGoogleSheet } from '#services/sheets/useGoogleSheet'
+import { useRouter } from 'next/router'
+
+// import { useGoogleSheet } from '#services/sheets/useGoogleSheet'
+// const sheet = useGoogleSheet('1SBePIhWIThoPoWzYt3aNkyqFDU365KqRhhLkypzu_NU')
 
 const Home = () => {
-  const sheet = useGoogleSheet('1SBePIhWIThoPoWzYt3aNkyqFDU365KqRhhLkypzu_NU')
+  const router = useRouter()
 
-  return <h1>HOME (got data? {String(!!sheet)})</h1>
+  React.useEffect(() => {
+    router.push('/root-and-roam-creative-studio/sell-sheet')
+  }, [])
+
+  return <h1>HOME</h1>
 }
 
 export default Home

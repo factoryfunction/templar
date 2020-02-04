@@ -1,0 +1,37 @@
+.Slider {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.Slider::before {
+  content: var(--sliderLabel);
+  display: flex;
+  font-size: 12px;
+  color: var(--night-gray);
+  position: relative;
+  bottom: 20px;
+}
+
+.Slider :global(.SliderThumb) {
+  background: var(--tertiary);
+  border-radius: 20px;
+  padding: 6px;
+  outline: none;
+}
+
+.Slider :global(.SliderThumb) * {
+  display: none;
+}
+
+.Slider :global(.SliderTrack) {
+  background: rgba(229, 49, 112, 0.5);
+
+  height: 4px;
+  border-radius: 3px;
+}
+
+.Slider :global(.SliderTrack-1) {
+  background: var(--black2);
+}
