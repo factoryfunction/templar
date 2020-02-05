@@ -2,8 +2,11 @@ import { action, thunk, computed, createContextStore } from 'easy-peasy'
 import nanoid from 'nanoid'
 
 import { base } from '#utilities/backend/Base'
+import * as storage from '#utilities/backend/storage'
 import { fontsManager } from '#utilities/fontsManager'
 import * as utilities from './storeUtilities'
+import { getImageMetadata } from '#utilities/getImageMetadata'
+import { windowLocation } from '#utilities/windowLocation'
 
 // BASIC STORE ACTIONS ------------------------------------
 // Since actions are *synchronous* ways of updating the
@@ -19,7 +22,7 @@ export const setLayers = action((state, layers) => {
   state.layers = layers
 })
 
-export const addTextLayer = action((state) => {
+export const addTextLayer = action((state, options) => {
   state.layers.push({
     id: nanoid(),
     isSelected: false,
@@ -46,7 +49,7 @@ export const addTextLayer = action((state) => {
   })
 })
 
-export const addImageLayer = action((state) => {
+export const addImageLayer = action((state, options) => {
   state.layers.push({
     id: nanoid(),
     isSelected: false,
@@ -65,7 +68,7 @@ export const addImageLayer = action((state) => {
   })
 })
 
-export const addBoxLayer = action((state) => {
+export const addBoxLayer = action((state, options) => {
   state.layers.push({
     id: nanoid(),
     isSelected: false,
@@ -223,6 +226,43 @@ export const initializeLayers = thunk(async (actions, projectId) => {
 
   actions.setLayers(project.layers)
   actions.setAreLayersLoading(false)
+})
+
+export const handleFileUpload = thunk(async (actions, acceptedFiles) => {
+  const uploads = []
+
+  for (const file of acceptedFiles) {
+    uploads.push(
+      storage.uploadFile({
+        ...windowLocation.params,
+        file,
+      }),
+    )
+  }
+
+  const files = await Promise.all(uploads)
+  const updateTasks = []
+
+  for (const file of files) {
+    console.log({ file })
+    const url = await file.ref.getDownloadURL()
+
+    const customMetadata = await getImageMetadata({
+      id: file.metadata.fullPath,
+      name: file.metadata.name,
+      size: file.metadata.size,
+      url,
+    })
+
+    updateTasks.push(
+      file.ref.updateMetadata({
+        customMetadata,
+      }),
+    )
+  }
+
+  const updates = Promise.all(updateTasks)
+  console.log({ updates })
 })
 
 // COMPUTED STORE PROPERTIES ------------------------------

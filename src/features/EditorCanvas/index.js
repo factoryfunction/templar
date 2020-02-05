@@ -73,6 +73,7 @@ const WRAPPER_PROPS = {
 const useStore = () => {
   const actions = EditorStore.useStoreActions((actions) => ({
     deselectAllLayers: actions.deselectAllLayers,
+    handleFileUpload: actions.handleFileUpload,
   }))
 
   return { actions }
@@ -92,22 +93,8 @@ export const EditorCanvas = (props) => {
     direction === 'down' ? setIsPanDisabled(false) : setIsPanDisabled(true)
   })
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: async (acceptedFiles) => {
-      const uploads = []
-
-      for (const file of acceptedFiles) {
-        uploads.push(
-          storage.uploadFile({
-            ...windowLocation.params,
-            file,
-          }),
-        )
-      }
-
-      const files = await Promise.all(uploads)
-      console.log({ files })
-    },
+  const { getRootProps } = useDropzone({
+    onDrop: store.actions.handleFileUpload,
   })
 
   // Don't deselect if the click is on a resize handle,

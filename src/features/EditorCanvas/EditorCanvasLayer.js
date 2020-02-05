@@ -130,7 +130,7 @@ const TextCanvasLayer = (props) => {
   }
 
   const onMouseUp = (event) => {
-    console.log('up', event.target)
+    // console.log('up', event.target)
   }
 
   return (

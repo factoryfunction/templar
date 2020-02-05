@@ -2,8 +2,21 @@ import { getFormattedFontsMap } from './getFormattedFonts'
 import DEFAULT_FONTS from './googleFonts.json'
 
 class FontsManager extends Map {
-  fontNames = Array.from(this.keys())
-  fonts = Array.from(this.values())
+  loadedFontUrls = []
+
+  // TODO: Memoize this so if the list of
+  // names hasn't changed we can just return
+  // the same list from the last invocation.
+  get fontNames() {
+    return Array.from(this.keys())
+  }
+
+  // TODO: Memoize this so if the list of
+  // fonts hasn't changed we can just return
+  // the same list from the last invocation.
+  get fonts() {
+    return Array.from(this.values())
+  }
 
   // Basic method for adding a new font family to
   // the manager's memory for quick lookup later.
@@ -23,7 +36,6 @@ class FontsManager extends Map {
   getFontWeightStyles = (family, weight = '400') => {
     const font = this.get(family)
     const fontWeight = font.fontWeights[weight]
-    console.log({ font, fontWeight })
     return Object.keys(fontWeight)
   }
 
@@ -41,11 +53,12 @@ class FontsManager extends Map {
   // font from a parent element, but once the font has been loaded
   // the element will automatically receive it.
   loadFont = async ({ name, url }) => {
-    console.log(this.has(name), this)
-    console.log('LOAD FONT', { name, url })
-    const font = new FontFace(name, `url("${url}")`)
-    await font.load()
-    document.fonts.add(font)
+    if (!this.loadedFontUrls.includes(url)) {
+      const font = new FontFace(name, `url("${url}")`)
+      await font.load()
+      document.fonts.add(font)
+      this.loadedFontUrls.push(url)
+    }
   }
 
   // A convenience wrapper around this.loadFont. Meant

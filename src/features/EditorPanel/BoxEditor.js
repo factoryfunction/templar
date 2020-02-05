@@ -47,7 +47,6 @@ const BackgroundColor = (props) => {
   const onChange = (color) => {
     const { r, g, b, a } = color.rgb
     const hexa = rgbaToHex(r, g, b, a)
-    console.log({ color, hexa })
     props.onChange(hexa)
   }
 
