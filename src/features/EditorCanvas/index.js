@@ -12,7 +12,6 @@ import * as storage from '#utilities/backend/storage'
 const StyledCanvasContainer = styled.div`
   width: 100vw;
   height: 100vh;
-  padding-left: 400px;
   display: flex;
   justify-content: center;
   overflow: visible;
@@ -25,10 +24,10 @@ const StyledCanvasContainer = styled.div`
   transition: opacity 0.5s;
   transition-delay: 0.5s;
 
-  .react-transform-component {
+  /* .react-transform-component {
     width: 100% !important;
     height: 100% !important;
-  }
+  } */
 
   .SelectedCanvasLayer .ResizeHandle {
     opacity: 1 !important;
@@ -36,8 +35,8 @@ const StyledCanvasContainer = styled.div`
 `
 
 const StyledCanvas = styled.div`
-  width: 8.5in;
-  height: 11in;
+  width: 2550px;
+  height: 3300px;
   background: #fff;
   box-shadow: 0px 2px 16px -4px rgba(0, 0, 0, 0.05);
   outline: 1px solid var(--whiteBorderColor);
@@ -48,25 +47,27 @@ const StyledCanvas = styled.div`
 const WRAPPER_PROPS = {
   style: { width: '100%', height: '100%' },
   zoomIn: {
-    step: 20,
+    step: 100,
   },
   zoomOut: {
-    step: 20,
+    step: 100,
   },
   options: {
-    limitToBounds: false,
+    minScale: 0.3,
+    limitToBounds: true,
     transformEnabled: true,
     disabled: false,
     limitToWrapper: true,
-    centerContent: true,
+    centerContent: false,
   },
+  scalePadding: { size: 222 },
   pinch: { disabled: true },
   doubleClick: { disabled: true },
   wheel: {
     wheelEnabled: true,
     touchPadEnabled: false,
     limitsOnWheel: false,
-    step: 20,
+    step: 100,
   },
 }
 
@@ -133,6 +134,10 @@ export const EditorCanvas = (props) => {
       })}
     >
       <TransformWrapper
+        defaultScale={0.5}
+        scale={0.5}
+        defaultPositionX={565}
+        defaultPositionY={80}
         {...WRAPPER_PROPS}
         pan={{
           disabled: isPanDisabled,
@@ -140,10 +145,11 @@ export const EditorCanvas = (props) => {
           lockAxisY: false,
           velocityEqualToMove: true,
           velocity: true,
+          paddingSize: 200,
         }}
       >
-        {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
-          <ScaleProvider scale={rest.scale}>
+        {(zoomProps) => (
+          <ScaleProvider {...zoomProps}>
             <TransformComponent>
               <StyledCanvas id='DocumentCanvas'>
                 <EditorCanvasLayers onDeselectClick={onDeselectClick} />

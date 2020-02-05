@@ -11,6 +11,7 @@ import { EditorStore } from '#stores/editorStore'
 import { LAYER_TYPE_ICON_NAME_MAP, LAYER_TYPE_ICON_SIZE_MAP } from '#consts'
 import Icon from '#components/Icon'
 import Spacer from '#components/Spacer'
+import { ImageEditor } from './ImageEditor'
 
 const useLayers = () => {
   const layers = EditorStore.useStoreState((store) => {
@@ -144,6 +145,9 @@ const LayerRow = SortableElement((props) => {
           </When>
           <When condition={props.layer.type === 'box'}>
             <BoxEditor layer={props.layer} />
+          </When>
+          <When condition={props.layer.type === 'image'}>
+            <ImageEditor layer={props.layer} />
           </When>
         </Choose>
       </If>

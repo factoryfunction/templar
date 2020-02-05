@@ -76,15 +76,6 @@ const selectedLayerRowStyles = css`
   ${LayerIconContainer} i {
     color: var(--secondary);
   }
-
-  /* ${LayerNameText}::after {
-    color: var(--secondary);
-    display: inline;
-    font-size: 20px;
-    position: absolute;
-    content: ' \\25CF';
-    left: 100%;
-  } */
 `
 
 export const LayerRow = styled.div`
@@ -126,6 +117,7 @@ export const LayerEditorContainer = styled.div`
   background: var(--night-black1);
   border-radius: 3px;
   margin-bottom: 12px;
+  --sliderLabel: 'Opacity';
 `
 
 export const DisplayColorSwatch = styled(ColorSwatch)`

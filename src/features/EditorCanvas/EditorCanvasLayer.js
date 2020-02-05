@@ -19,13 +19,13 @@ export const EditorCanvasLayer = (props) => {
     : ResizeHandle.notSelectedComponents
 
   const onDrop = (_, position) => {
-    props.setLayerPositionLeft([props.layer.id, position.x / 96])
-    props.setLayerPositionTop([props.layer.id, position.y / 96])
+    props.setLayerPositionLeft([props.layer.id, position.x])
+    props.setLayerPositionTop([props.layer.id, position.y])
   }
 
   const onResizeStop = (_, __, ___, d) => {
-    props.setLayerWidth([props.layer.id, props.layer.style.width + d.width / 96])
-    props.setLayerHeight([props.layer.id, props.layer.style.height + d.height / 96])
+    props.setLayerWidth([props.layer.id, props.layer.style.width + d.width])
+    props.setLayerHeight([props.layer.id, props.layer.style.height + d.height])
   }
 
   const onSingleClick = () => {
@@ -114,8 +114,8 @@ const TextCanvasLayer = (props) => {
     ...props.layer.style,
     width: '100%',
     height: '100%',
-    top: props.layer.style.top + 'in',
-    left: props.layer.style.left + 'in',
+    top: props.layer.style.top,
+    left: props.layer.style.left,
     fontFamily: `"${props.layer.style.fontFamily}"`,
     fontWeight: `${props.layer.style.fontWeight}`,
     letterSpacing: `${props.layer.style.letterSpacing}px`,
@@ -124,6 +124,9 @@ const TextCanvasLayer = (props) => {
     overflow: 'hidden',
     display: 'flex',
   }
+
+  const containerHeight =
+    props.layer.style.height === 'fit-content' ? 'fit-content' : props.layer.style.height
 
   const onTextChange = (value) => {
     props.store.actions.setLayerText([props.layer.id, value])
@@ -147,10 +150,10 @@ const TextCanvasLayer = (props) => {
       onResizeStop={props.onResizeStop}
       className={rndClassNames}
       default={{
-        x: props.layer.style.left * 96,
-        y: props.layer.style.top * 96,
-        width: props.layer.style.width * 96,
-        height: props.layer.style.height * 96,
+        x: props.layer.style.left,
+        y: props.layer.style.top,
+        width: props.layer.style.width,
+        height: containerHeight,
       }}
     >
       <EditableText
@@ -168,8 +171,8 @@ const TextCanvasLayer = (props) => {
 const BlockCanvasLayer = (props) => {
   const style = {
     ...props.layer.style,
-    top: props.layer.style.top + 'in',
-    left: props.layer.style.left + 'in',
+    top: props.layer.style.top,
+    left: props.layer.style.left,
     width: '100%',
     height: '100%',
   }
@@ -184,10 +187,10 @@ const BlockCanvasLayer = (props) => {
       onDragStop={props.onDrop}
       onResizeStop={props.onResizeStop}
       default={{
-        x: props.layer.style.left * 96,
-        y: props.layer.style.top * 96,
-        width: props.layer.style.width * 96,
-        height: props.layer.style.height * 96,
+        x: props.layer.style.left,
+        y: props.layer.style.top,
+        width: props.layer.style.width,
+        height: props.layer.style.height,
       }}
     >
       <div
@@ -203,20 +206,21 @@ const BlockCanvasLayer = (props) => {
 
 const ImageCanvasLayer = (props) => {
   const { width, height, ...layerStyle } = props.layer.style
-  const backgroundUrl = props.layer.imageAsset && props.layer.imageAsset.url
 
   const style = {
     ...layerStyle,
     width: '100%',
     height: '100%',
-    top: props.layer.style.top + 'in',
-    left: props.layer.style.left + 'in',
-    backgroundImage: `url("${backgroundUrl}")`,
+    padding: '16px !important',
+    top: props.layer.style.top,
+    left: props.layer.style.left,
+    backgroundImage: `url("${props.layer.url}")`,
     backgroundSize: '100%',
   }
 
   return (
     <Rnd
+      className={props.rndClassName}
       resizeHandleComponent={props.resizeHandles}
       resizeHandleStyle={props.resizeHandleStyle}
       lockAspectRatio={true}
@@ -225,10 +229,10 @@ const ImageCanvasLayer = (props) => {
       onDragStop={props.onDrop}
       onResizeStop={props.onResizeStop}
       default={{
-        x: props.layer.style.left * 96,
-        y: props.layer.style.top * 96,
-        width: props.layer.style.width * 96,
-        height: props.layer.style.height * 96,
+        x: props.layer.style.left,
+        y: props.layer.style.top,
+        width: props.layer.style.width,
+        height: props.layer.style.height,
       }}
     >
       <div

@@ -65,3 +65,28 @@
 :global .PowerSelect__Options {
   margin-top: 2px;
 }
+
+:global .PowerSelect__Option {
+  padding-left: 12px;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  font-family: var(--mainFont);
+  color: var(--night-gray);
+}
+
+:global .PowerSelect__Option--highlighted {
+  background: transparent;
+  color: var(--night-white);
+  font-weight: 700;
+}
+
+:global .PowerSelect__Option--highlighted span::before {
+  color: var(--secondary);
+  display: inline;
+  font-size: 20px;
+  position: relative;
+  content: ' \25CF';
+  bottom: -2px;
+  left: -1%;
+  line-height: 0%;
+}

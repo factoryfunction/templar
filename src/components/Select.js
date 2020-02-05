@@ -4,6 +4,7 @@ import { PowerSelect } from 'react-power-select'
 import './styles/Select.css'
 
 const Select = styled(PowerSelect)`
+width: ${(props) => props.width || 'auto'};
   ::before {
     content: "${(props) => props.label || ''}";
     display: flex;

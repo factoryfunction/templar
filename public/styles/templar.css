@@ -113,6 +113,16 @@ p {
 .PowerSelect__Option--highlighted {
   background: var(--night-black2);
   color: var(--night-white);
+  font-weight: 700;
+}
+
+.PowerSelect__Option--highlighted span::before {
+  color: var(--secondary);
+  display: inline;
+  font-size: 20px;
+  content: ' \25CF';
+  bottom: -11px;
+  left: 18%;
 }
 
 .PowerSelect__Tether {

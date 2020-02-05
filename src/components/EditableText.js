@@ -18,6 +18,7 @@ const useElementProps = (props) => {
   const Element = props.isEnabled ? 'textarea' : 'p'
   const isDisabled = !props.isEnabled
   const valueProp = props.isEnabled ? { value: props.value } : { children: props.value }
+  const spellCheck = props.isEnabled ? 'false' : undefined
 
   const onChange = (event) => {
     props.onChange(event.target.value)
@@ -29,6 +30,7 @@ const useElementProps = (props) => {
     onDoubleClick,
     Element,
     isDisabled,
+    spellCheck,
   }
 
   const otherProps = Object.entries(props).reduce((final, [key, value]) => {
@@ -43,15 +45,27 @@ const useElementProps = (props) => {
 }
 
 export const EditableText = (props) => {
+  const pRef = React.useRef()
+  const textareaRef = React.useRef()
   const { elementProps, otherProps } = useElementProps(props)
+
+  React.useEffect(() => {
+    if (!elementProps.isDisabled) {
+      const length = elementProps.valueProp.value.length
+      textareaRef.current.focus()
+      textareaRef.current.setSelectionRange(length, length)
+    }
+  }, [elementProps.isDisabled])
 
   return (
     <elementProps.Element
       {...otherProps}
       {...elementProps.valueProp}
       onChange={elementProps.onChange}
-      onDoubleClick={elementProps.onDoubleClick}
       disabled={elementProps.isDisabled}
+      spellCheck={elementProps.spellCheck}
+      onDoubleClick={elementProps.onDoubleClick}
+      ref={elementProps.isDisabled ? pRef : textareaRef}
       styleName='EditableText'
     />
   )

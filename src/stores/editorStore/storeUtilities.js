@@ -39,19 +39,7 @@ export const loadAssets = async (options) => {
 
 export const normalizeLayers = (layers) => {
   return layers.map((layer) => {
-    const asset = layer.imageAsset || layer.fontAsset || {}
-
-    const data =
-      layer.type === 'image'
-        ? { imageAsset: undefined, imageAssetId: asset.id }
-        : layer.type === 'font'
-        ? { fontAsset: undefined, fontAssetId: asset.id }
-        : {}
-
-    return {
-      ...layer,
-      ...data,
-    }
+    return JSON.parse(JSON.stringify(layer))
   })
 }
 

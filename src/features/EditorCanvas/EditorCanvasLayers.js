@@ -37,7 +37,12 @@ const useStore = () => {
 
 export const EditorCanvasLayers = (props) => {
   const store = useStore()
-  const scale = useScale()
+  const { scale, setScale, ...op } = useScale()
+
+  // console.log({ scale, op })
+  // React.useEffect(() => {
+  //   setScale(0.5)
+  // }, [])
 
   return (
     <For each='layer' of={store.state.layers}>

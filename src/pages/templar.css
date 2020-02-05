@@ -20,16 +20,16 @@
   --gray0: #ececed;
   --gray1: #ececed;
   --gray2: #d8d8dd;
-  --gray3: #a7a9be;
+  --gray3: rgba(167, 169, 190, 1);
 
-  --highlight: #ff8906;
-  --secondary: #f25f4c;
-  --tertiary: #e53170;
+  --highlight: rgba(255, 137, 6, 1);
+  --secondary: rgba(242, 95, 76, 1);
+  --tertiary: rgba(229, 49, 112, 1);
   --danger: #f02c2c;
 
   /* DEPRECATED COLORS */
   --whiteBorderColor: #d8cfde;
-  --mainPurple: #7416ca;
+  --mainPurple: rgba(116, 22, 202, 1);
   --night-white: #fffffe;
   --night-black: #0f0e17;
   --night-purple0: #1f1d30;
@@ -67,8 +67,10 @@
   --selectOptionSelectedColor: var(--white);
 }
 
-body {
+body,
+html {
   font-family: var(--mainFont);
+  overflow: hidden;
 }
 
 h1,
@@ -102,4 +104,11 @@ p {
 ::-webkit-scrollbar-thumb {
   background: var(--night-black2);
   margin-right: 2px;
+}
+
+@media print {
+  *:not(#CanvasContainer),
+  *:not(#CanvasContainer *) {
+    display: none;
+  }
 }

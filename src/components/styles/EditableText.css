@@ -6,30 +6,33 @@
   outline: none;
   user-select: none;
   white-space: pre-line;
+  padding: 16px;
 }
 
-.EditableText:focus {
-  outline: 2px solid rgba(167, 169, 190, 0.15);
-  box-shadow: 0 0 0 0 rgba(229, 49, 112, 0.1);
+textarea.EditableText {
+  cursor: text;
+  box-shadow: 0 0 0 0 rgba(255, 137, 6, 0.2);
+  outline: 3px dashed rgba(167, 169, 190, 0.35);
+  outline-offset: 10px;
   animation: backgroundPulse 2s infinite;
 }
 
 @keyframes backgroundPulse {
   0% {
-    outline: 2px solid rgba(167, 169, 190, 0.2);
-    box-shadow: 0 0 0 0 rgba(229, 49, 112, 0.1);
+    box-shadow: 0 0 0 0 rgba(255, 137, 6, 0.2);
+    outline: 3px dashed rgba(167, 169, 190, 0.55);
   }
   50% {
-    box-shadow: 0 0 0 16px rgba(229, 49, 112, 0);
-    outline: 2px solid rgba(229, 49, 112, 0.25);
+    box-shadow: 0 0 0 16px rgba(255, 137, 6, 0);
+    outline: 3px dashed rgba(255, 137, 6, 0.7);
   }
 
   80% {
-    outline: 2px solid rgba(167, 169, 190, 0.25);
+    outline: 3px dashed rgba(167, 169, 190, 0.55);
   }
 
   100% {
-    box-shadow: 0 0 0 0 rgba(229, 49, 112, 0);
-    outline: 2px solid rgba(167, 169, 190, 0.25);
+    box-shadow: 0 0 0 0 rgba(255, 137, 6, 0);
+    outline: 3px dashed rgba(167, 169, 190, 0.55);
   }
 }

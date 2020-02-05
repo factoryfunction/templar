@@ -1,5 +1,6 @@
 import { action, thunk, computed, createContextStore } from 'easy-peasy'
 import nanoid from 'nanoid'
+import domtoimage from 'dom-to-image'
 
 import { base } from '#utilities/backend/Base'
 import * as storage from '#utilities/backend/storage'
@@ -7,6 +8,7 @@ import { fontsManager } from '#utilities/fontsManager'
 import * as utilities from './storeUtilities'
 import { getImageMetadata } from '#utilities/getImageMetadata'
 import { windowLocation } from '#utilities/windowLocation'
+import arrayMove from 'array-move'
 
 // BASIC STORE ACTIONS ------------------------------------
 // Since actions are *synchronous* ways of updating the
@@ -25,23 +27,22 @@ export const setLayers = action((state, layers) => {
 export const addTextLayer = action((state, options) => {
   state.layers.push({
     id: nanoid(),
-    isSelected: false,
     isEditingText: false,
     type: 'text',
     name: 'Text Layer',
     text: 'some text',
     fontAsset: null,
     style: {
-      top: 0,
-      left: 0,
-      width: 2,
-      height: 2,
+      top: 100,
+      left: 100,
+      width: 200,
+      height: 'fit-content',
       fontFamily: 'Work Sans',
       fontWeight: '400',
       fontStyle: 'normal',
       color: '#000000',
-      fontSize: '24',
-      letterSpacing: '0.5',
+      fontSize: 48,
+      letterSpacing: 0.5,
       lineHeight: 140,
       backgroundColor: 'rgba(0,0,0,0)',
       opacity: 100,
@@ -52,18 +53,18 @@ export const addTextLayer = action((state, options) => {
 export const addImageLayer = action((state, options) => {
   state.layers.push({
     id: nanoid(),
-    isSelected: false,
-    isOverflowEnabled: false,
-    type: 'image',
     name: 'Image Layer',
     imageAsset: null,
-    url: null,
+    ...options,
+    type: 'image',
     style: {
       display: 'flex',
       backgroundSize: 'cover',
-      top: 0,
-      left: 0,
-      opacity: 1,
+      top: 100,
+      left: 100,
+      opacity: 100,
+      width: options.width,
+      height: options.height,
     },
   })
 })
@@ -71,16 +72,15 @@ export const addImageLayer = action((state, options) => {
 export const addBoxLayer = action((state, options) => {
   state.layers.push({
     id: nanoid(),
-    isSelected: false,
     type: 'box',
     name: 'Box Layer',
     style: {
-      top: 0,
-      left: 0,
-      width: 2.5,
-      height: 1.5,
+      top: 100,
+      left: 100,
+      width: 300,
+      height: 200,
       background: '#000000',
-      opacity: 1,
+      opacity: 100,
     },
   })
 })
@@ -244,7 +244,6 @@ export const handleFileUpload = thunk(async (actions, acceptedFiles) => {
   const updateTasks = []
 
   for (const file of files) {
-    console.log({ file })
     const url = await file.ref.getDownloadURL()
 
     const customMetadata = await getImageMetadata({
@@ -261,8 +260,39 @@ export const handleFileUpload = thunk(async (actions, acceptedFiles) => {
     )
   }
 
-  const updates = Promise.all(updateTasks)
-  console.log({ updates })
+  const updates = await Promise.all(updateTasks)
+
+  for (const update of updates) {
+    actions.addImageLayer(update.customMetadata)
+  }
+})
+
+export const screenshotCanvas = thunk(async (actions) => {
+  console.log('screenshotting that shit ')
+  const canvas = document.querySelector('.react-transform-element')
+
+  try {
+    const html2canvas = require('html2canvas')
+    // const options = { style: { fontFamily: 'Work Sans', transform: 'scale(1)' } }
+    // const url = await domtoimage.toPng(canvas, options)
+    // var img = new Image()
+    // img.src = url
+    // document.body.prepend(img)
+    // console.log({ img, url })
+
+    var domToPdf = require('dom-to-pdf')
+    var options = {
+      filename: 'test.pdf',
+    }
+    domToPdf(canvas, options, function() {
+      console.log('done')
+    })
+    // html2canvas(canvas).then(function(output) {
+    //   document.body.prepend(output)
+    // })
+  } catch (error) {
+    throw error
+  }
 })
 
 // COMPUTED STORE PROPERTIES ------------------------------
