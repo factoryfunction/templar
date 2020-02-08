@@ -22,8 +22,8 @@ const store = {
 
   scale: 0.5,
   panPosition: [],
-  panX: 0,
-  panY: 0,
+  panX: 180,
+  panY: -745,
   isPanningEnabled: false,
   ...canvas,
 

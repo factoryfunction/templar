@@ -4,37 +4,24 @@ import { useCanvas } from '#stores/editorStore/useCanvas'
 
 export const usePanZoom = (props) => {
   const canvas = useCanvas()
-
-  const [isPanning, setPanning] = React.useState(false)
   const oldX = React.useRef(0)
   const oldY = React.useRef(0)
-
-  const [position, setPosition] = React.useState({
-    x: 150,
-    y: -745,
-    z: 0.5,
-  })
 
   const containerRef = React.useRef()
   const canvasRef = React.useRef()
 
-  React.useEffect(() => {
-    canvas.setScale(position.z)
-  }, [position.z])
-
   const onMouseDown = (event) => {
     event.preventDefault()
-    console.log(event.button)
     if (event.button === 1) {
       oldX.current = event.clientX
       oldY.current = event.clientY
-      setPanning(true)
+      canvas.setIsPanningEnabled(true)
     }
   }
 
   const onMouseUp = () => {
     if (event.button === 1) {
-      setPanning(false)
+      canvas.setIsPanningEnabled(false)
     }
   }
 
@@ -44,30 +31,25 @@ export const usePanZoom = (props) => {
       const scale = 1 - sign
       const rect = containerRef.current.getBoundingClientRect()
 
-      setPosition({
-        ...position,
-        x: position.x * scale - (rect.width / 2 - e.clientX + rect.x) * sign,
-        y:
-          position.y * scale -
+      canvas.setScale(canvas.scale * scale)
+      canvas.setPanX(canvas.panX * scale - (rect.width / 2 - e.clientX + rect.x) * sign)
+      canvas.setPanY(
+        canvas.panY * scale -
           ((canvasRef.current.offsetHeight * rect.width) / canvasRef.current.offsetWidth / 2 -
             e.clientY +
             rect.y) *
             sign,
-        z: position.z * scale,
-      })
+      )
     }
   }
 
   const onMouseMove = (event) => {
-    if (isPanning) {
+    if (canvas.isPanningEnabled) {
       const _oldX = oldX.current
       const _oldY = oldY.current
 
-      setPosition({
-        ...position,
-        x: position.x + event.clientX - _oldX,
-        y: position.y + event.clientY - _oldY,
-      })
+      canvas.setPanX(canvas.panX + event.clientX - _oldX)
+      canvas.setPanY(canvas.panY + event.clientY - _oldY)
 
       oldX.current = event.clientX
       oldY.current = event.clientY
@@ -75,13 +57,13 @@ export const usePanZoom = (props) => {
   }
 
   const containerStyle = {
-    transform: `translate(${position.x}px, ${position.y}px) scale(${position.z})`,
+    transform: `translate(${canvas.panX}px, ${canvas.panY}px) scale(${canvas.scale})`,
   }
 
   return {
+    isPanning: canvas.isPanningEnabled,
     containerRef,
     canvasRef,
-    isPanning,
     onMouseDown,
     onMouseUp,
     onMouseMove,
