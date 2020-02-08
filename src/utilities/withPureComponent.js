@@ -7,7 +7,7 @@ export const withPureComponent = (Component, comparer) => {
     }
 
     render() {
-      console.log('SCU RENDER')
+      // console.log('SCU RENDER')
       return <Component {...this.props} />
     }
   }

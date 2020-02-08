@@ -1,41 +1,33 @@
-import styled from 'styled-components'
+import * as React from 'react'
 
-const StyledContainer = styled.span`
-  display: flex;
-  flex-direction: column;
-  width: ${(props) => props.width || '100%'};
+import './styles/TextField.css'
 
-  ::before {
-    content: "${(props) => props.label || ''}";
-    display: flex;
-    font-size: 12px;
-    color: var(--night-gray);
-    font-family: var(--mainFont);
+const getCssVariables = (props) => {
+  return {
+    '--TextFieldLabel': `"${props.label}"`,
+    '--TextFieldWidth': props.width,
+    '--TextFieldUnitMask': `"${props.unitMask}"`,
   }
-`
+}
 
-export const StyledInput = styled.input`
-  margin-top: 6px;
-  background: var(--night-black2);
-  border-radius: 3px;
-  border: none;
-  outline: none;
-  color: var(--night-white);
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  font-family: var(--mainFont);
-  color: var(--night-white);
-
-  padding: 6px 8px 6px 12px;
-
-  width: 100%;
-  height: 34px;
-`
+const getInputProps = (props) => {
+  const { label, width, ...inputProps } = props
+  return inputProps
+}
 
 export const TextField = (props) => {
+  const cssVariables = getCssVariables(props)
+  const inputProps = getInputProps(props)
+
   return (
-    <StyledContainer label={props.label} width={props.width}>
-      <StyledInput {...props} />
-    </StyledContainer>
+    <div styleName='TextField' style={cssVariables}>
+      <input styleName='input' {...inputProps} />
+    </div>
   )
+}
+
+TextField.defaultProps = {
+  label: '',
+  width: '100%',
+  unitMask: '',
 }

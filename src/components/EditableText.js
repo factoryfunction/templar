@@ -25,7 +25,7 @@ const useElementProps = (props) => {
   const isDisabled = !props.isEnabled
 
   const onChange = (event) => {
-    props.onChange(event.target.value)
+    props.onChange(event.target.value, event.target.scrollHeight)
   }
 
   const elementProps = {

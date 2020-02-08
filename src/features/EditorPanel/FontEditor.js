@@ -27,34 +27,43 @@ export const FontEditor = withLayerSubscription((props) => {
     <Styled.LayerEditorContainer>
       <LayerEditors.LayerName value={props.name} onChange={props.setName} />
       <Spacer size='18px' />
-      <LayerEditors.FontFamily
+      <LayerEditors.TextFontFamily
         options={fontFamilyOptions}
         current={currentFontFamily}
         onChange={props.setFontFamily}
       />
       <Spacer size='18px' />
-      <div style={{ display: 'flex', justifyContent: 'stretch' }}>
-        <LayerEditors.FontWeight
+      <div style={{ display: 'flex', width: '100%' }}>
+        <LayerEditors.TextFontSize value={currentFontSize} onChange={props.setFontSize} />
+        <Spacer size='18px' />
+
+        <LayerEditors.TextFontWeight
           options={fontWeightOptions}
           current={currentFontWeight}
           onChange={props.setFontWeight}
         />
-        <Spacer size='18px' />
-        <LayerEditors.LineHeight
+      </div>
+
+      <Spacer size='18px' />
+      <div style={{ display: 'flex', width: '100%' }}>
+        <LayerEditors.TextLineHeight
           value={currentFontLineHeight}
           onChange={props.setFontLineHeight}
         />
         <Spacer size='18px' />
-        <LayerEditors.FontSize value={currentFontSize} onChange={props.setFontSize} />
+        <LayerEditors.TextLetterSpacing
+          value={currentFontLetterSpacing}
+          onChange={props.setFontLetterSpacing}
+        />
       </div>
       <Spacer size='18px' />
-      <LayerEditors.FontStyle
+      <LayerEditors.TextFontStyle
         options={fontStyleOptions}
         current={currentFontStyle}
         onChange={props.setFontStyle}
       />
       <Spacer size='18px' />
-      <LayerEditors.FontColor current={currentFontColor} onChange={props.setFontColor} />
+      <LayerEditors.TextFontColor current={currentFontColor} onChange={props.setFontColor} />
       <Spacer size='18px' />
       <LayerEditors.Opacity value={currentOpacity} onChange={props.setOpacity} />
       <Spacer size='18px' />

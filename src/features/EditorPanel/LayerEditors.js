@@ -5,14 +5,12 @@ import Select from '#components/Select'
 import Spacer from '#components/Spacer'
 import { TextField } from '#components/TextField'
 import * as Styled from './LayersTab.styled'
-import { EditorStore } from '#stores/editorStore'
-import { fontsManager } from '#utilities/fontsManager'
 
 import ReactSlider from 'react-slider'
 
 import './styles/FontEditor.css'
 
-export const FontFamily = (props) => {
+export const TextFontFamily = (props) => {
   const onChange = ({ option }) => {
     props.onChange(option)
   }
@@ -30,17 +28,38 @@ export const FontFamily = (props) => {
   )
 }
 
-export const LineHeight = (props) => {
+export const TextLineHeight = (props) => {
   const onChange = (event) => {
     props.onChange(event.target.value)
   }
 
   return (
     <TextField
-      width='120px'
-      label='Line Height (%)'
+      width='100%'
+      unitMask='%'
+      type='number'
+      label='Line Height'
       value={props.value}
       placeholder='140% by default'
+      onChange={onChange}
+    />
+  )
+}
+
+export const TextLetterSpacing = (props) => {
+  const onChange = (event) => {
+    props.onChange(event.target.value)
+  }
+
+  return (
+    <TextField
+      width='100%'
+      unitMask='px'
+      type='number'
+      step='0.1'
+      label='Letter Spacing'
+      value={props.value}
+      placeholder='0px by default'
       onChange={onChange}
     />
   )
@@ -54,14 +73,16 @@ export const LayerName = (props) => {
   return <TextField label='Layer Name' value={props.value} onChange={onChange} />
 }
 
-export const FontSize = (props) => {
+export const TextFontSize = (props) => {
   const onChange = (event) => {
     props.onChange(event.target.value)
   }
 
   return (
     <TextField
-      width='117px'
+      width='100%'
+      unitMask='px'
+      type='number'
       label='Font Size'
       value={props.value}
       placeholder=''
@@ -70,14 +91,14 @@ export const FontSize = (props) => {
   )
 }
 
-export const FontWeight = (props) => {
+export const TextFontWeight = (props) => {
   const onChange = ({ option }) => {
     props.onChange(option)
   }
 
   return (
     <Select
-      width='33%'
+      width='100%'
       label='Font Weight'
       showClear={false}
       searchEnabled={false}
@@ -89,7 +110,7 @@ export const FontWeight = (props) => {
   )
 }
 
-export const FontStyle = (props) => {
+export const TextFontStyle = (props) => {
   const onChange = ({ option }) => {
     props.onChange(option)
   }
@@ -107,7 +128,7 @@ export const FontStyle = (props) => {
   )
 }
 
-export const FontColor = (props) => {
+export const TextFontColor = (props) => {
   const onChange = (color) => {
     const { r, g, b, a } = color.rgb
     const hexa = rgbaToHex(r, g, b, a)
