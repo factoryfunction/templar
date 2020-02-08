@@ -15,4 +15,9 @@ module.exports = withCSS({
     GOOGLE_AUTH_CLIENT_SECRET: '_UpeSktQqZFFNLA6PmQH-EuV',
     GOOGLE_SHEETS_API_KEY: 'AIzaSyBOVPyZk5hxaodNruXc5_KsOCueAGSoe3U',
   },
+
+  webpack: (config) => {
+    config.optimization.minimize = false
+    return config
+  },
 })

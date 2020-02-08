@@ -8,10 +8,13 @@ import { FontEditor } from './FontEditor'
 import { BoxEditor } from './BoxEditor'
 
 import { EditorStore } from '#stores/editorStore'
-import { LAYER_TYPE_ICON_NAME_MAP, LAYER_TYPE_ICON_SIZE_MAP } from '#consts'
 import Icon from '#components/Icon'
 import Spacer from '#components/Spacer'
 import { ImageEditor } from './ImageEditor'
+
+import './styles/LayersTab.css'
+
+import { LAYER_TYPE_ICON_NAME_MAP, LAYER_TYPE_ICON_SIZE_MAP } from '#consts'
 
 const useLayers = () => {
   const layers = EditorStore.useStoreState((store) => {
@@ -24,14 +27,11 @@ const useLayers = () => {
 
   const actions = EditorStore.useStoreActions((store) => {
     return {
-      removeLayer: store.removeLayer,
-      addTextLayer: store.addTextLayer,
+      addTextLayer: () => store.addTextLayer(),
       addImageLayer: store.addImageLayer,
-      addBoxLayer: store.addBoxLayer,
+      addBoxLayer: () => store.addBoxLayer(),
       selectLayer: store.selectLayer,
-      reorderLayer: store.reorderLayer,
-      setLayerStyle: store.setLayerStyle,
-      setLayerFontFamily: store.setLayerFontFamily,
+      reorderLayer: ({ oldIndex, newIndex }) => store.reorderLayer([oldIndex, newIndex]),
     }
   })
 
@@ -40,30 +40,26 @@ const useLayers = () => {
 
 export const LayersTab = () => {
   const layersState = useLayers()
-
-  const onSortEnd = ({ oldIndex, newIndex }) => {
-    layersState.actions.reorderLayer({ oldIndex, newIndex })
-  }
+  const PanelHeader = () => <LayerListActions layersState={layersState} />
 
   return (
-    <LeftPanelView title='Layers' header={() => <AddLayerActions layersState={layersState} />}>
+    <LeftPanelView title='Layers' header={PanelHeader}>
       <Choose>
         <When condition={layersState.layers.isLayersEmpty}>
-          <p style={{ marginTop: 24, color: 'var(--night-gray)' }}>
-            Layers will appear here when you add some.
-          </p>
+          <p styleName='noLayersMessage'>Layers will appear here when you add some.</p>
         </When>
         <Otherwise>
           <LayerList
             lockAxis='y'
-            pressDelay={350}
-            lockToContainerEdges
+            pressDelay={300}
             hideSortableGhost
-            onSortEnd={onSortEnd}
+            lockToContainerEdges
             layersState={layersState}
+            onSortEnd={layersState.actions.reorderLayer}
           />
         </Otherwise>
       </Choose>
+      {/* Spacer is for bottom padding. */}
       <Spacer size='36px' />
     </LeftPanelView>
   )
@@ -79,26 +75,26 @@ const LayerList = SortableContainer((props) => {
   )
 })
 
-const AddLayerActions = (props) => {
+const LayerListActions = (props) => {
   return (
     <Styled.AddLayerActions>
       <Icon
         name='text'
         size='16px'
         color='#fff'
-        onClick={props.layersState.actions.addTextLayer}
+        onClick={() => props.layersState.actions.addTextLayer()}
       />
       <Icon
         name='scenery'
         size='16px'
         color='#fff'
-        onClick={props.layersState.actions.addImageLayer}
+        onClick={() => props.layersState.actions.addImageLayer()}
       />
       <Icon
         name='square-full'
         size='16px'
         color='#fff'
-        onClick={props.layersState.actions.addBoxLayer}
+        onClick={() => props.layersState.actions.addBoxLayer()}
       />
     </Styled.AddLayerActions>
   )
@@ -114,11 +110,7 @@ const LayerRow = SortableElement((props) => {
     props.layersState.actions.selectLayer(props.layer.id)
   }
 
-  const onDeleteClick = () => {
-    props.layersState.actions.removeLayer(props.layer.id)
-  }
-
-  const onEllipsisClick = () => {
+  const onLayerRowArrowClick = () => {
     setIsEditing(!isEditing)
   }
 
@@ -135,19 +127,19 @@ const LayerRow = SortableElement((props) => {
           name='angle-down'
           size='18px'
           color='var(--night-gray)'
-          onClick={onEllipsisClick}
+          onClick={onLayerRowArrowClick}
         />
       </Styled.LayerRow>
       <If condition={isEditing}>
         <Choose>
           <When condition={props.layer.type === 'text'}>
-            <FontEditor layer={props.layer} />
+            <FontEditor layerId={props.layer.id} />
           </When>
           <When condition={props.layer.type === 'box'}>
-            <BoxEditor layer={props.layer} />
+            <BoxEditor layerId={props.layer.id} />
           </When>
           <When condition={props.layer.type === 'image'}>
-            <ImageEditor layer={props.layer} />
+            <ImageEditor layerId={props.layer.id} />
           </When>
         </Choose>
       </If>

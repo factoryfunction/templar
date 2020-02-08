@@ -1,4 +1,5 @@
 import { base } from './Base'
+import { getImageData } from '../getImageMetadata'
 
 const getStoragePath = (options) => {
   if (typeof options === 'string') {
@@ -13,6 +14,31 @@ export const uploadFile = async (options) => {
   const storagePath = getStoragePath(options)
   const snapshot = await base.storage.child(storagePath).put(options.file)
   return snapshot
+}
+
+export const uploadFiles = async (options) => {
+  return await Promise.all(
+    options.files.map((file) => {
+      return uploadFile({
+        ...options,
+        file,
+      })
+    }),
+  )
+}
+
+export const getUploadsData = async (uploads) => {
+  return await Promise.all(
+    uploads.map(async (upload) => {
+      const url = await upload.ref.getDownloadURL()
+
+      return getImageData({
+        filePath: upload.metadata.fullPath,
+        fileName: upload.metadata.name,
+        fileUrl: url,
+      })
+    }),
+  )
 }
 
 export const getFiles = async (options) => {

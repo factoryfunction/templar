@@ -5,9 +5,8 @@
   "author": "Colton Colcleasure <colshacol@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "babel-node server",
+    "dev": "babel-node -r dotenv/config server",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
     "loc": "sloc ./components ./pages ./stores ./utilities"
   },
   "dependencies": {

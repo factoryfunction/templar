@@ -1,12 +1,11 @@
 import { action, thunk, computed, createContextStore } from 'easy-peasy'
 import nanoid from 'nanoid'
-import domtoimage from 'dom-to-image'
 
 import { base } from '#utilities/backend/Base'
 import * as storage from '#utilities/backend/storage'
 import { fontsManager } from '#utilities/fontsManager'
 import * as utilities from './storeUtilities'
-import { getImageMetadata } from '#utilities/getImageMetadata'
+import { getImageData } from '#utilities/getImageMetadata'
 import { windowLocation } from '#utilities/windowLocation'
 import arrayMove from 'array-move'
 
@@ -24,64 +23,71 @@ export const setLayers = action((state, layers) => {
   state.layers = layers
 })
 
-export const addTextLayer = action((state, options) => {
+export const addTextLayer = action((state, options = ({} = {})) => {
   state.layers.push({
     id: nanoid(),
     isEditingText: false,
+    isVisible: true,
     type: 'text',
     name: 'Text Layer',
     text: 'some text',
-    fontAsset: null,
-    style: {
-      top: 100,
-      left: 100,
-      width: 200,
-      height: 'fit-content',
-      fontFamily: 'Work Sans',
-      fontWeight: '400',
-      fontStyle: 'normal',
-      color: '#000000',
-      fontSize: 48,
-      letterSpacing: 0.5,
-      lineHeight: 140,
-      backgroundColor: 'rgba(0,0,0,0)',
-      opacity: 100,
-    },
+    styleTop: 100,
+    styleLeft: 100,
+    styleWidth: 400,
+    styleHeight: 'fit-content',
+    styleFontFamily: 'Work Sans',
+    styleFontStyle: 'normal',
+    styleFontColor: '#000000',
+    styleFontWeight: '400',
+    styleFontSize: 48,
+    styleFontLetterSpacing: 0.5,
+    styleFontLineHeight: 140,
+    styleBackgroundColor: 'rgba(0,0,0,0)',
+    styleOpacity: 100,
+    // stylePosition: 'absolute',
+    // styleOverflow: 'hidden',
+    // styleDisplay: 'flex',
+    ...options,
   })
 })
 
-export const addImageLayer = action((state, options) => {
+export const addImageLayer = action((state, options = {}) => {
   state.layers.push({
     id: nanoid(),
+    isVisible: true,
     name: 'Image Layer',
-    imageAsset: null,
-    ...options,
     type: 'image',
-    style: {
-      display: 'flex',
-      backgroundSize: 'cover',
-      top: 100,
-      left: 100,
-      opacity: 100,
-      width: options.width,
-      height: options.height,
-    },
+    stylePosition: 'absolute',
+    styleOverflow: 'hidden',
+    styleDisplay: 'flex',
+    styleTop: 100,
+    styleLeft: 100,
+    styleWidth: 300,
+    styleHeight: 200,
+    styleOpacity: 100,
+    styleBackgroundSize: 'cover',
+    styleBackgroundColor: 'rgba(0,0,0,0)',
+    styleBackgroundImage: '',
+    ...options,
   })
 })
 
-export const addBoxLayer = action((state, options) => {
+export const addBoxLayer = action((state, options = {}) => {
   state.layers.push({
     id: nanoid(),
     type: 'box',
     name: 'Box Layer',
-    style: {
-      top: 100,
-      left: 100,
-      width: 300,
-      height: 200,
-      background: '#000000',
-      opacity: 100,
-    },
+    isVisible: true,
+    stylePosition: 'absolute',
+    styleOverflow: 'hidden',
+    styleDisplay: 'flex',
+    styleTop: 100,
+    styleLeft: 100,
+    styleWidth: 300,
+    styleHeight: 200,
+    styleOpacity: 100,
+    styleBackgroundColor: 'rgba(0,0,0,1)',
+    ...options,
   })
 })
 
@@ -123,19 +129,19 @@ export const setLayerName = action((state, [id, value]) => {
 })
 
 export const setLayerWidth = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.width', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleWidth', value)
 })
 
 export const setLayerHeight = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.height', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleHeight', value)
 })
 
 export const setLayerPositionTop = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.top', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleTop', value)
 })
 
 export const setLayerPositionLeft = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.left', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleLeft', value)
 })
 
 export const setLayerText = action((state, [id, value]) => {
@@ -147,54 +153,54 @@ export const setIsEditingText = action((state, [id, value]) => {
 })
 
 export const setLayerFontFamily = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.fontFamily', value)
-  utilities.setLayerKeyValue(state.layers, id, 'style.fontWeight', '400')
+  utilities.setLayerKeyValue(state.layers, id, 'styleFontFamily', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleFontWeight', '400')
   fontsManager.loadFontByName(value)
 })
 
 export const setLayerFontSize = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.fontSize', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleFontSize', value)
 })
 
 export const setLayerFontWeight = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.fontWeight', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleFontWeight', value)
 })
 
 export const setLayerFontColor = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.color', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleFontColor', value)
 })
 
 export const setLayerLetterSpacing = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.letterSpacing', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleFontLetterSpacing', value)
 })
 
 export const setLayerLineHeight = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.lineHeight', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleFontLineHeight', value)
 })
 
 export const setLayerFontStyle = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.fontStyle', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleFontStyle', value)
 })
 
 export const setLayerTextShadow = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.textShadow', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleFontTextShadow', value)
 })
 
 export const setLayerBoxShadow = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.boxShadow', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleBoxShadow', value)
 })
 
 export const setLayerOpacity = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.opacity', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleOpacity', value)
 })
 
 export const setLayerBackgroundColor = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'style.backgroundColor', value)
+  utilities.setLayerKeyValue(state.layers, id, 'styleBackgroundColor', value)
 })
 
 // Used to change the index of a layer when dragged
 // and dropped in the layers panel.
-export const reorderLayer = action((state, { oldIndex, newIndex }) => {
+export const reorderLayer = action((state, [oldIndex, newIndex]) => {
   const layers = [...state.layers].reverse()
   const reorderedLayers = arrayMove(layers, oldIndex, newIndex)
   state.layers = [...reorderedLayers].reverse()
@@ -212,13 +218,13 @@ export const initializeLayers = thunk(async (actions, projectId) => {
   for (const layer of project.layers) {
     if (layer.type === 'text') {
       const fontUrl = fontsManager.getFontUrl(
-        layer.style.fontFamily,
-        layer.style.fontWeight,
-        layer.style.fontStyle,
+        layer.styleFontFamily,
+        layer.styleFontWeight,
+        layer.styleFontStyle,
       )
 
       fontsManager.loadFont({
-        name: layer.style.fontFamily,
+        name: layer.styleFontFamily,
         url: fontUrl,
       })
     }
@@ -228,71 +234,26 @@ export const initializeLayers = thunk(async (actions, projectId) => {
   actions.setAreLayersLoading(false)
 })
 
-export const handleFileUpload = thunk(async (actions, acceptedFiles) => {
-  const uploads = []
+export const onCanvasImageDrop = thunk(async (actions, acceptedFiles) => {
+  const uploads = await storage.uploadFiles({
+    ...windowLocation.params,
+    files: acceptedFiles,
+  })
 
-  for (const file of acceptedFiles) {
-    uploads.push(
-      storage.uploadFile({
-        ...windowLocation.params,
-        file,
-      }),
-    )
-  }
+  const uploadsData = await storage.getUploadsData(uploads)
 
-  const files = await Promise.all(uploads)
-  const updateTasks = []
-
-  for (const file of files) {
-    const url = await file.ref.getDownloadURL()
-
-    const customMetadata = await getImageMetadata({
-      id: file.metadata.fullPath,
-      name: file.metadata.name,
-      size: file.metadata.size,
-      url,
+  for (const data of uploadsData) {
+    actions.addImageLayer({
+      styleWidth: data.styleOriginalWidth,
+      styleHeight: data.styleOriginalHeight,
+      ...data,
     })
-
-    updateTasks.push(
-      file.ref.updateMetadata({
-        customMetadata,
-      }),
-    )
-  }
-
-  const updates = await Promise.all(updateTasks)
-
-  for (const update of updates) {
-    actions.addImageLayer(update.customMetadata)
   }
 })
 
 export const screenshotCanvas = thunk(async (actions) => {
   console.log('screenshotting that shit ')
   const canvas = document.querySelector('.react-transform-element')
-
-  try {
-    const html2canvas = require('html2canvas')
-    // const options = { style: { fontFamily: 'Work Sans', transform: 'scale(1)' } }
-    // const url = await domtoimage.toPng(canvas, options)
-    // var img = new Image()
-    // img.src = url
-    // document.body.prepend(img)
-    // console.log({ img, url })
-
-    var domToPdf = require('dom-to-pdf')
-    var options = {
-      filename: 'test.pdf',
-    }
-    domToPdf(canvas, options, function() {
-      console.log('done')
-    })
-    // html2canvas(canvas).then(function(output) {
-    //   document.body.prepend(output)
-    // })
-  } catch (error) {
-    throw error
-  }
 })
 
 // COMPUTED STORE PROPERTIES ------------------------------

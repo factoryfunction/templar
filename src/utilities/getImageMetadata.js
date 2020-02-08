@@ -1,5 +1,4 @@
 const DOCUMENT_WIDTH = 2550
-
 const DOCUMENT_HEIGHT = 3300
 
 const getImage = (url) => {
@@ -13,18 +12,25 @@ const getImage = (url) => {
   })
 }
 
-export const getImageMetadata = async (file) => {
-  const image = await getImage(file.url)
+export const getImageData = async (files) => {
+  if (Array.isArray(files)) {
+    return await Promise.all(files.map(getFileImageData))
+  } else {
+    return await getFileImageData(files)
+  }
+}
+
+export const getFileImageData = async (file) => {
+  const image = await getImage(file.fileUrl)
   const heightRatio = image.height / image.width
 
   return {
-    type: 'image',
-    url: image.src,
-    name: file.name,
-    id: file.fullPath,
-    height: String(image.height),
-    width: String(image.width),
-    heightRatio: String(heightRatio),
+    fileUrl: image.src,
+    fileName: file.fileName,
+    filePath: file.filePath,
+    styleOriginalHeight: image.height,
+    styleOriginalWidth: image.width,
+    styleHeightRatio: heightRatio,
   }
 }
 

@@ -3,59 +3,62 @@ import Spacer from '#components/Spacer'
 import * as Styled from './LayersTab.styled'
 import { EditorStore } from '#stores/editorStore'
 import { fontsManager } from '#utilities/fontsManager'
-import { useLayerActions } from '#stores/editorStore/useLayerActions'
+import { useLayerActions } from '#stores/editorStore/useLayer'
 import * as LayerEditors from './LayerEditors'
+import { withLayerSubscription } from '#stores/editorStore/useLayer'
 import './styles/FontEditor.css'
 
 // TODO: Add font assets to FontManager for selection in FontEditor.
-export const FontEditor = (props) => {
-  const actions = useLayerActions(props.layer.id)
+export const FontEditor = withLayerSubscription((props) => {
+  const currentFontFamily = props.styleFontFamily
+  const currentFontSize = props.styleFontSize
+  const currentFontColor = props.styleFontColor
+  const currentFontLineHeight = props.styleFontLineHeight
+  const currentFontLetterSpacing = props.styleFontLetterSpacing
+  const currentFontWeight = props.styleFontWeight
+  const currentFontStyle = props.styleFontStyle
+  const currentOpacity = props.styleOpacity
 
-  const layerStyles = props.layer.style
   const fontFamilyOptions = fontsManager.fontNames
-  const fontWeightOptions = fontsManager.getFontWeights(layerStyles.fontFamily)
-
-  const fontStyleOptions = fontsManager.getFontWeightStyles(
-    layerStyles.fontFamily,
-    layerStyles.fontWeight,
-  )
+  const fontWeightOptions = fontsManager.getFontWeights(currentFontFamily)
+  const fontStyleOptions = fontsManager.getFontWeightStyles(currentFontFamily, currentFontWeight)
 
   return (
     <Styled.LayerEditorContainer>
-      <LayerEditors.LayerName value={props.layer.name} onChange={actions.setName} />
+      <LayerEditors.LayerName value={props.name} onChange={props.setName} />
       <Spacer size='18px' />
       <LayerEditors.FontFamily
         options={fontFamilyOptions}
-        current={layerStyles.fontFamily}
-        onChange={actions.setFontFamily}
+        current={currentFontFamily}
+        onChange={props.setFontFamily}
       />
       <Spacer size='18px' />
       <div style={{ display: 'flex', justifyContent: 'stretch' }}>
         <LayerEditors.FontWeight
           options={fontWeightOptions}
-          current={layerStyles.fontWeight}
-          onChange={actions.setFontWeight}
+          current={currentFontWeight}
+          onChange={props.setFontWeight}
         />
         <Spacer size='18px' />
         <LayerEditors.LineHeight
-          value={layerStyles.lineHeight}
-          onChange={actions.setFontLineHeight}
+          value={currentFontLineHeight}
+          onChange={props.setFontLineHeight}
         />
         <Spacer size='18px' />
-        <LayerEditors.FontSize value={layerStyles.fontSize} onChange={actions.setFontSize} />
+        <LayerEditors.FontSize value={currentFontSize} onChange={props.setFontSize} />
       </div>
       <Spacer size='18px' />
       <LayerEditors.FontStyle
         options={fontStyleOptions}
-        current={layerStyles.fontStyle}
-        onChange={actions.setFontStyle}
+        current={currentFontStyle}
+        onChange={props.setFontStyle}
       />
       <Spacer size='18px' />
-      <LayerEditors.FontColor current={layerStyles.color} onChange={actions.setFontColor} />
+      <LayerEditors.FontColor current={currentFontColor} onChange={props.setFontColor} />
       <Spacer size='18px' />
-      <LayerEditors.Opacity value={layerStyles.opacity} onChange={actions.setOpacity} />
+      <LayerEditors.Opacity value={currentOpacity} onChange={props.setOpacity} />
       <Spacer size='18px' />
-      <LayerEditors.BottomActions onDeleteClick={actions.removeLayer} />
+      <LayerEditors.BottomActions onDeleteClick={() => props.removeLayer(props.id)} />
     </Styled.LayerEditorContainer>
   )
-}
+})

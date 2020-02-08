@@ -1,136 +1,114 @@
-// import ContentEditable from 'react-contenteditable'
-// import ContentEditable from 'react-sane-contenteditable'
-import EdiText from 'react-editext'
 import { Rnd } from 'react-rnd'
-import useDoubleClick from 'use-double-click'
 
 import { ResizeHandle } from '#components/ResizeHandle'
-import './styles/EditorCanvasLayer.css'
 import { EditableText } from '#components/EditableText'
 
+import { withLayerSubscription } from '#stores/editorStore/useLayer'
+import './styles/EditorCanvasLayer.css'
+
+import dynamic from 'next/dynamic'
+import { withPureComponent } from '#utilities/withPureComponent'
+
+// const DynamicComponent = dynamic(() => import('../components/hello'))
+
 export const EditorCanvasLayer = (props) => {
-  const isSelected = props.store.state.selectedLayers.includes(props.layer.id)
-  const rndClassName = ResizeHandle.getRndClassName(isSelected)
-  const resizeHandleStyle = ResizeHandle.getStyle(isSelected)
+  // console.log('rendering EditorCanvasLayer', props)
+  const rndClassName = ResizeHandle.getRndClassName(props.isSelected)
+  const resizeHandleStyle = ResizeHandle.getStyle(props.isSelected)
   const clickerRef = React.useRef()
 
-  const resizeHandles = isSelected
+  const resizeHandles = props.isSelected
     ? ResizeHandle.selectedComponents
     : ResizeHandle.notSelectedComponents
 
-  const onDrop = (_, position) => {
-    props.setLayerPositionLeft([props.layer.id, position.x])
-    props.setLayerPositionTop([props.layer.id, position.y])
-  }
-
-  const onResizeStop = (_, __, ___, d) => {
-    props.setLayerWidth([props.layer.id, props.layer.style.width + d.width])
-    props.setLayerHeight([props.layer.id, props.layer.style.height + d.height])
-  }
-
-  const onSingleClick = () => {
-    props.store.actions.selectLayer(props.layer.id)
-  }
-
-  const onDoubleClick = () => {
-    props.store.actions.selectLayer(props.layer.id)
-
-    if (props.layer.type === 'text') {
-      props.store.actions.setIsEditingText([props.layer.id, true])
-    }
-  }
-
   return (
     <Choose>
-      <When condition={props.layer.type === 'text'}>
+      <When condition={props.type === 'text'}>
         <TextCanvasLayer
-          onSingleClick={onSingleClick}
-          onDoubleClick={onDoubleClick}
-          onResizeStop={onResizeStop}
+          onSingleClick={props.onCanvasLayerSingleClick}
+          onDoubleClick={props.onCanvasLayerDoubleClick}
+          onResizeStop={props.onCanvasLayerResizeStop}
           clickerRef={clickerRef}
-          onDrop={onDrop}
+          onDrop={props.onCanvasLayerDrop}
           scale={props.scale}
-          store={props.store}
-          isSelected={isSelected}
-          layer={props.layer}
+          isSelected={props.isSelected}
+          layer={{ ...props }}
           resizeHandles={resizeHandles}
           resizeHandleStyle={resizeHandleStyle}
           rndClassName={rndClassName}
+          onChange={props.setTextValue}
         />
       </When>
-      <When condition={props.layer.type === 'image'}>
+      <When condition={props.type === 'image'}>
         <ImageCanvasLayer
-          onSingleClick={onSingleClick}
-          onDoubleClick={onDoubleClick}
-          onResizeStop={onResizeStop}
           clickerRef={clickerRef}
-          onDrop={onDrop}
           scale={props.scale}
-          store={props.store}
-          isSelected={isSelected}
-          layer={props.layer}
           resizeHandles={resizeHandles}
           resizeHandleStyle={resizeHandleStyle}
           rndClassName={rndClassName}
+          isSelected={props.isSelected}
+          onDrop={props.onCanvasLayerDrop}
+          onSingleClick={props.onCanvasLayerSingleClick}
+          onDoubleClick={props.onCanvasLayerDoubleClick}
+          onResizeStop={props.onCanvasLayerResizeStop}
+          layer={{ ...props }}
         />
       </When>
-      <When condition={props.layer.type === 'box'}>
+      <When condition={props.type === 'box'}>
         <BlockCanvasLayer
-          onSingleClick={onSingleClick}
-          onDoubleClick={onDoubleClick}
-          onResizeStop={onResizeStop}
           clickerRef={clickerRef}
-          onDrop={onDrop}
           scale={props.scale}
-          store={props.store}
-          isSelected={isSelected}
-          layer={props.layer}
           resizeHandles={resizeHandles}
           resizeHandleStyle={resizeHandleStyle}
           rndClassName={rndClassName}
+          isSelected={props.isSelected}
+          onDrop={props.onCanvasLayerDrop}
+          onSingleClick={props.onCanvasLayerSingleClick}
+          onDoubleClick={props.onCanvasLayerDoubleClick}
+          onResizeStop={props.onCanvasLayerResizeStop}
+          layer={{ ...props }}
         />
       </When>
     </Choose>
   )
 }
 
-// const getStyleVariables = (style) => {
-//   return Object.entries(style).reduce((final, [key, value]) => {
-//     const firstCharacter = key[0].toUpperCase
-//     const restOfKey = key.substr(1)
-//     const newKey = `--layer${firstCharacter}${restOfKey}`
-//     final[newKey] = value
-//     return final
-//   }, {})
-// }
-
-const TextCanvasLayer = (props) => {
-  // The layer has to be selected and the text not currently being edited
-  // in order for the user to pan.
-  const isPanningEnabled = props.isSelected && !props.layer.isEditingText
-  const rndClassNames = props.isSelected ? 'SelectedCanvasLayer' : ''
-
-  const style = {
-    ...props.layer.style,
+const prepareTextCanvasLayerStyles = (props) => {
+  const element = {
+    // Rnd (container) receives the custom width/height. The
+    // p element always uses 100% to fill that space.
     width: '100%',
     height: '100%',
-    top: props.layer.style.top,
-    left: props.layer.style.left,
-    fontFamily: `"${props.layer.style.fontFamily}"`,
-    fontWeight: `${props.layer.style.fontWeight}`,
-    letterSpacing: `${props.layer.style.letterSpacing}px`,
-    fontSize: `${props.layer.style.fontSize}px`,
-    lineHeight: `${props.layer.style.lineHeight}%`,
-    overflow: 'hidden',
-    display: 'flex',
+    position: props.layer.stylePosition,
+    overflow: props.layer.styleOverflow,
+    display: props.layer.styleDisplay,
+    fontFamily: props.layer.styleFontFamily,
+    color: props.layer.styleFontColor,
+    fontWeight: props.layer.styleFontWeight,
+    letterSpacing: props.layer.styleLetterSpacing + 'px',
+    fontSize: props.layer.styleFontSize + 'px',
+    lineHeight: `${props.layer.styleLineHeight}%`,
+    backgroundColor: props.layer.styleBackgroundColor,
+    opacity: props.layer.styleOpacity,
+    top: props.layer.styleTop,
+    left: props.layer.styleLeft,
   }
 
-  const containerHeight =
-    props.layer.style.height === 'fit-content' ? 'fit-content' : props.layer.style.height
-
-  const onTextChange = (value) => {
-    props.store.actions.setLayerText([props.layer.id, value])
+  const container = {
+    width: props.layer.styleWidth,
+    height: props.layer.styleHeight,
+    y: props.layer.styleTop,
+    x: props.layer.styleLeft,
   }
+
+  return { element, container }
+}
+
+const TextCanvasLayer = (props) => {
+  // The layer has to be selected and the text not
+  // currently being edited in order for the user to pan.
+  const isPanningEnabled = props.isSelected && !props.layer.isEditingText
+  const styles = prepareTextCanvasLayerStyles(props)
 
   const onMouseUp = (event) => {
     // console.log('up', event.target)
@@ -138,44 +116,58 @@ const TextCanvasLayer = (props) => {
 
   return (
     <Rnd
-      // onDoubleClick={props.onDoubleClick}
-      // onMouseDown={(event) => {console.log('mousedown', event.nativeEvent)}}
       onMouseUp={onMouseUp}
-      onClick={props.onSingleClick}
-      resizeHandleComponent={props.resizeHandles}
-      resizeHandleStyle={props.resizeHandleStyle}
-      disableDragging={!isPanningEnabled}
       scale={props.scale}
       onDragStop={props.onDrop}
+      default={styles.container}
+      onClick={props.onSingleClick}
+      className={props.rndClassName}
       onResizeStop={props.onResizeStop}
-      className={rndClassNames}
-      default={{
-        x: props.layer.style.left,
-        y: props.layer.style.top,
-        width: props.layer.style.width,
-        height: containerHeight,
-      }}
+      disableDragging={!isPanningEnabled}
+      resizeHandleComponent={props.resizeHandles}
+      resizeHandleStyle={props.resizeHandleStyle}
     >
       <EditableText
         data-is-canvaslayer='true'
         value={props.layer.text}
-        style={style}
+        style={styles.element}
         isEnabled={props.layer.isEditingText}
-        onChange={onTextChange}
+        onChange={props.layer.setTextValue}
         onDoubleClick={props.onDoubleClick}
       />
     </Rnd>
   )
 }
 
-const BlockCanvasLayer = (props) => {
-  const style = {
-    ...props.layer.style,
-    top: props.layer.style.top,
-    left: props.layer.style.left,
+const prepareBoxCanvasLayerStyles = (props) => {
+  const element = {
+    // Rnd (container) receives the custom width/height. The
+    // p element always uses 100% to fill that space.
     width: '100%',
     height: '100%',
+    backgroundColor: props.layer.styleBackgroundColor,
+    opacity: props.layer.styleOpacity,
+    top: props.layer.styleTop,
+    left: props.layer.styleLeft,
+    position: props.layer.stylePosition,
+    overflow: props.layer.styleOverflow,
+    display: props.layer.styleDisplay,
+    top: props.layer.styleTop,
+    left: props.layer.styleLeft,
   }
+
+  const container = {
+    width: props.layer.styleWidth,
+    height: props.layer.styleHeight,
+    top: props.layer.styleTop,
+    left: props.layer.styleLeft,
+  }
+
+  return { element, container }
+}
+
+const BlockCanvasLayer = (props) => {
+  const styles = prepareBoxCanvasLayerStyles(props)
 
   return (
     <Rnd
@@ -186,37 +178,57 @@ const BlockCanvasLayer = (props) => {
       scale={props.scale}
       onDragStop={props.onDrop}
       onResizeStop={props.onResizeStop}
-      default={{
-        x: props.layer.style.left,
-        y: props.layer.style.top,
-        width: props.layer.style.width,
-        height: props.layer.style.height,
-      }}
+      default={styles.container}
     >
       <div
-        ref={props.clickerRef}
         onClick={props.onSingleClick}
         data-is-canvaslayer='true'
         data-is-selected={props.isSelected}
-        style={style}
+        style={styles.element}
       />
     </Rnd>
   )
 }
 
-const ImageCanvasLayer = (props) => {
-  const { width, height, ...layerStyle } = props.layer.style
-
-  const style = {
-    ...layerStyle,
+const prepareImageCanvasLayerStyles = (props) => {
+  const element = {
+    // Rnd (container) receives the custom width/height. The
+    // p element always uses 100% to fill that space.
     width: '100%',
     height: '100%',
-    padding: '16px !important',
-    top: props.layer.style.top,
-    left: props.layer.style.left,
-    backgroundImage: `url("${props.layer.url}")`,
     backgroundSize: '100%',
+    backgroundImage: `url("${props.layer.styleBackgroundImage}")`,
+    opacity: props.layer.styleOpacity,
+    top: props.layer.styleTop,
+    left: props.layer.styleLeft,
+    position: props.layer.stylePosition,
+    display: props.layer.styleDisplay,
+    top: props.layer.styleTop,
+    left: props.layer.styleLeft,
   }
+
+  const container = {
+    width: props.layer.styleWidth,
+    height: props.layer.styleHeight,
+    top: props.layer.styleTop,
+    left: props.layer.styleLeft,
+  }
+
+  return { element, container }
+}
+
+const ImageCanvasLayer = (props) => {
+  const { width, height, ...layerStyle } = props.layer.style
+  const styles = prepareImageCanvasLayerStyles(props)
+
+  // const style = {
+  //   ...layerStyle,
+  //   width: '100%',
+  //   height: '100%',
+  //   padding: '16px !important',
+  //   backgroundImage: `url("${props.layer.url}")`,
+  //   backgroundSize: '100%',
+  // }
 
   return (
     <Rnd
@@ -228,20 +240,64 @@ const ImageCanvasLayer = (props) => {
       scale={props.scale}
       onDragStop={props.onDrop}
       onResizeStop={props.onResizeStop}
-      default={{
-        x: props.layer.style.left,
-        y: props.layer.style.top,
-        width: props.layer.style.width,
-        height: props.layer.style.height,
-      }}
+      default={styles.container}
     >
       <div
-        ref={props.clickerRef}
         onClick={props.onSingleClick}
         data-is-canvaslayer='true'
-        data-is-selected={String(props.isSelected)}
-        style={style}
+        data-is-selected={props.isSelected}
+        style={styles.element}
       />
     </Rnd>
   )
+}
+
+export default withLayerSubscription(
+  withPureComponent(EditorCanvasLayer, (oldProps, newProps) => {
+    const differ = createDiffer(oldProps, newProps)
+
+    return differ([
+      'scale',
+      'layerType',
+      'layerId',
+      'id',
+      'isEditingText',
+      'isVisible',
+      'type',
+      'name',
+      'text',
+      'styleTop',
+      'styleLeft',
+      'styleWidth',
+      'styleHeight',
+      'styleFontFamily',
+      'styleFontStyle',
+      'styleFontColor',
+      'styleFontWeight',
+      'styleFontSize',
+      'styleFontLetterSpacing',
+      'styleFontLineHeight',
+      'styleBackgroundColor',
+      'styleOpacity',
+      'isSelected',
+    ])
+  }),
+)
+
+const createDiffer = (oldProps, newProps) => (propNames) => {
+  let allSame = true
+
+  for (const propName of propNames) {
+    if (oldProps[propName] !== newProps[propName]) {
+      allSame = false
+
+      console.warn(`[differ] ${propName} changed:`, {
+        propName,
+        old: oldProps[propName],
+        new: newProps[propName],
+      })
+    }
+  }
+
+  return !allSame
 }

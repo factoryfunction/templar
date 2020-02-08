@@ -1,24 +1,26 @@
 import * as React from 'react'
 
-import { useLayerActions } from '#stores/editorStore/useLayerActions'
+import { withLayerSubscription } from '#stores/editorStore/useLayer'
 import Spacer from '#components/Spacer'
 import * as Styled from './LayersTab.styled'
 import * as LayerEditors from './LayerEditors'
 
-export const BoxEditor = (props) => {
-  const actions = useLayerActions(props.layer.id)
-  const layerStyles = props.layer.style
+export const BoxEditor = withLayerSubscription((props) => {
+  const currentBackgroundColor = props.styleBackgroundColor
+  const currentOpacity = props.styleOpacity
 
   return (
     <Styled.LayerEditorContainer>
+      <LayerEditors.LayerName value={props.name} onChange={props.setName} />
+      <Spacer size='18px' />
       <LayerEditors.BackgroundColor
-        current={layerStyles.background}
-        onChange={actions.setBackgroundColor}
+        current={currentBackgroundColor}
+        onChange={props.setBackgroundColor}
       />
       <Spacer size='18px' />
-      <LayerEditors.Opacity value={layerStyles.opacity} onChange={actions.setOpacity} />
+      <LayerEditors.Opacity value={currentOpacity} onChange={props.setOpacity} />
       <Spacer size='18px' />
-      <LayerEditors.BottomActions onDeleteClick={actions.screenshot} />
+      <LayerEditors.BottomActions onDeleteClick={() => props.removeLayer(props.id)} />
     </Styled.LayerEditorContainer>
   )
-}
+})
