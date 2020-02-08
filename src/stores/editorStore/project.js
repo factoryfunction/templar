@@ -13,6 +13,10 @@ export const setIsProjectLoading = action((state, value) => {
   state.isProjectLoading = value
 })
 
+export const setIsProjectSaving = action((state, value) => {
+  state.isProjectSaving = value
+})
+
 export const setProjectId = action((state, value) => {
   state.projectId = value
 })

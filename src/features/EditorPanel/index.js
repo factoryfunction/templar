@@ -5,6 +5,8 @@ import { AssetsTab } from './AssetsTab'
 import { SourcesTab } from './SourcesTab'
 import { LayersTab } from './LayersTab'
 import { HelpTab } from './HelpTab'
+import { Button } from '#components/Button'
+import { Spacer } from '#components/Spacer'
 
 const tabsMap = {
   Assets: AssetsTab,
@@ -15,6 +17,7 @@ const tabsMap = {
 
 const useStore = () => {
   const state = EditorStore.useStoreState((state) => ({
+    wasProjectRecentlySaved: state.wasProjectRecentlySaved,
     isConfiguringSources: state.isConfiguringSources,
     isWorkbenchExpaneded: state.isWorkbenchExpanded,
     workbenchActiveTab: state.workbenchActiveTab,
@@ -41,13 +44,15 @@ export const EditorPanel = (props) => {
       <Styled.PanelHeaderContainer>
         <Styled.PanelTitleContainer>
           <Styled.PanelTitleText>
-            Workbench{' '}
-            <small
-              style={{ fontSize: 14, fontWeight: 400, marginLeft: 24 }}
-              onClick={() => store.actions.saveProject()}
-            >
-              save
-            </small>
+            Workbench <Spacer size='24px' />
+            <Choose>
+              <When condition={store.state.wasProjectRecentlySaved}>
+                <Button convey='success'>Saved!</Button>
+              </When>
+              <Otherwise>
+                <Button onClick={() => store.actions.saveProject()}>Save</Button>
+              </Otherwise>
+            </Choose>
           </Styled.PanelTitleText>
           <Styled.PanelProjectNameText>sell-sheet</Styled.PanelProjectNameText>
         </Styled.PanelTitleContainer>

@@ -1,0 +1,23 @@
+.Button {
+  padding: 0 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: var(--ButtonBackgroundColor);
+  outline: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: var(--white);
+  font-family: var(--mainFont);
+  text-transform: uppercase;
+  font-weight: 600;
+  height: 28px;
+}
+
+.Button:focus {
+  outline: none;
+  border: none;
+}

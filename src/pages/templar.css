@@ -26,6 +26,7 @@
   --secondary: rgba(242, 95, 76, 1);
   --tertiary: rgba(229, 49, 112, 1);
   --danger: #f02c2c;
+  --success: #27c74f;
 
   /* DEPRECATED COLORS */
   --whiteBorderColor: #d8cfde;
