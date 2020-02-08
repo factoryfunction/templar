@@ -206,7 +206,7 @@ export const Width = (props) => {
   return (
     <TextField
       width='100%'
-      unitMask='%'
+      unitMask='px'
       type='number'
       label='Layer Width'
       value={props.value}
@@ -224,7 +224,7 @@ export const Height = (props) => {
   return (
     <TextField
       width='100%'
-      unitMask='%'
+      unitMask='px'
       type='number'
       label='Layer Height'
       value={props.value}

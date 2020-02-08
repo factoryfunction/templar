@@ -63,8 +63,8 @@ export const useLayer = (layerId, layerType) => {
     },
 
     onCanvasLayerResizeStop: (_, __, ___, d) => {
-      actions.setWidth(state.styleWidth + d.width)
-      actions.setHeight(state.styleHeight + d.height)
+      actions.setWidth(Number(state.styleWidth) + d.width)
+      actions.setHeight(Number(state.styleHeight) + d.height)
     },
   }
 

@@ -1,4 +1,5 @@
 import { getCdnFolder } from './getCdnFolder'
+import { getFileKind } from '#utilities/file/getFileKind'
 
 type UploadFileOptionsT = {
   projectId: string,
