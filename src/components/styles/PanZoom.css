@@ -10,8 +10,8 @@
 }
 
 .Canvas {
-  width: 2550px;
-  height: 3300px;
+  width: 816;
+  height: 1056;
   /* min-width: calc(2550px / 5);
   min-height: calc(3300px / 5); */
   border: 1px solid #333;

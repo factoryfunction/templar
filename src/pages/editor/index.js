@@ -17,7 +17,7 @@ const useEditorState = () => {
   const isProjectReady = EditorStore.useStoreState((state) => state.isProjectReady)
 
   React.useEffect(() => {
-    initializeProject(windowLocation.params.projectId)
+    initializeProject([windowLocation.params.projectId])
   }, [])
 
   React.useEffect(() => {

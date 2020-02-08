@@ -1,4 +1,6 @@
 import { EditorStore } from '#stores/editorStore'
+import { useKeyPress } from '#utilities/useKeyPress'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 export const useLayerActions = (layerId) => {
   const actions = EditorStore.useStoreActions((actions) => ({
@@ -17,9 +19,10 @@ export const useLayerActions = (layerId) => {
     setFontWeight: (value) => actions.setLayerProperty([layerId, 'styleFontWeight', value]),
     setFontStyle: (value) => actions.setLayerProperty([layerId, 'styleFontStyle', value]),
     setFontSize: (value) => actions.setLayerProperty([layerId, 'styleFontSize', value]),
+    setTextAlign: (value) => actions.setLayerProperty([layerId, 'styleTextAlign', value]),
     setColor: (value) => actions.setLayerProperty([layerId, 'styleColor', value]),
     setTextShadow: (value) => actions.setLayerProperty([layerId, 'styleTextShadow', value]),
-    setIsEditingText: (value) => actions.setLayerProperty([layerId, 'isEditingText', value]),
+    setIsEditingText: (value) => actions.setIsEditingText([layerId, value]),
     setTextValue: (value) => actions.setLayerProperty([layerId, 'textValue', value]),
     setBackgroundColor: (value) =>
       actions.setLayerProperty([layerId, 'styleBackgroundColor', value]),
@@ -41,6 +44,7 @@ export const useLayerState = (layerId) => {
 }
 
 export const useLayer = (layerId, layerType) => {
+  const [dragGrid, setDragGrid] = React.useState()
   const state = useLayerState(layerId)
   const actions = useLayerActions(layerId)
 
@@ -68,10 +72,16 @@ export const useLayer = (layerId, layerType) => {
     },
   }
 
+  const styleZIndex = state.isSelected ? '99999' : '1000'
+
+  console.log(state.styleTextAlign)
+
   return {
     ...state,
     ...actions,
     ...extendedActions,
+    dragGrid,
+    styleZIndex,
   }
 }
 

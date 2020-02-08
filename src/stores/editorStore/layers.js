@@ -51,9 +51,6 @@ export const addImageLayer = action((state, options = {}) => {
     isVisible: true,
     name: 'Image Layer',
     type: 'image',
-    stylePosition: 'absolute',
-    styleOverflow: 'hidden',
-    styleDisplay: 'flex',
     styleTop: 5,
     styleLeft: 5,
     styleWidth: 300,
@@ -97,8 +94,24 @@ export const removeLayer = action((state, id) => {
   })
 })
 
-export const selectLayer = action((state, id) => {
-  state.selectedLayers = [id]
+export const setSelectedLayers = action((state, layers) => {
+  state.selectedLayers = layers
+})
+
+export const selectLayer = thunk(async (actions, id, { getState }) => {
+  actions.setSelectedLayers([id])
+
+  const state = getState()
+
+  state.layers.forEach((layer) => {
+    if (layer.id !== id && layer.isEditingText) {
+      actions.setIsEditingText(layer.id, false)
+    }
+  })
+})
+
+export const setIsEditingText = action((state, [id, value]) => {
+  utilities.setLayerKeyValue(state.layers, id, 'isEditingText', value)
 })
 
 export const deselectLayer = action((state, id) => {

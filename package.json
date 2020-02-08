@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "babel-node -r dotenv/config server",
     "build": "next build",
-    "loc": "sloc ./components ./pages ./stores ./utilities"
+    "pup": "node ./pup.js",
+    "loc": "sloc ./src"
   },
   "dependencies": {
     "@babel/core": "^7.8.4",
@@ -35,11 +36,13 @@
     "hex-and-rgba": "^1.4.2",
     "html2canvas": "^1.0.0-rc.5",
     "image-to-uri": "^1.0.0",
+    "jspdf": "^1.5.3",
     "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
     "nanoid": "^2.1.10",
     "next": "^9.2.1",
     "node-fetch": "^2.6.0",
+    "puppeteer": "^2.1.1",
     "qs": "^6.9.1",
     "re-resizable": "^6.1.1",
     "react": "^16.12.0",

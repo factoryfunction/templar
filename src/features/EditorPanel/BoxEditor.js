@@ -17,6 +17,8 @@ export const BoxEditor = withLayerSubscription((props) => {
   // const currentFontStyle = props.styleFontStyle
   const currentWidth = props.styleWidth
   const currentHeight = props.styleHeight
+  const currentPositionLeft = props.styleLeft
+  const currentPositionTop = props.styleTop
 
   return (
     <Styled.LayerEditorContainer>
@@ -30,6 +32,12 @@ export const BoxEditor = withLayerSubscription((props) => {
 
         <Spacer size='18px' />
         <LayerEditors.OpacityInput value={currentOpacity} onChange={props.setOpacity} />
+      </div>
+      <Spacer size='18px' />
+      <div style={{ display: 'flex', width: '100%' }}>
+        <LayerEditors.PositionLeft value={currentPositionLeft} onChange={props.setPositionLeft} />
+        <Spacer size='18px' />
+        <LayerEditors.PositionTop value={currentPositionTop} onChange={props.setPositionTop} />
       </div>
       <Spacer size='18px' />
       <LayerEditors.BackgroundColor

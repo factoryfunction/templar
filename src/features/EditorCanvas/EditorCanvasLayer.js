@@ -16,30 +16,33 @@ const BoxCanvasLayer = dynamic(() => import('./BoxCanvasLayer'))
 const ImageCanvasLayer = dynamic(() => import('./ImageCanvasLayer'))
 
 export const EditorCanvasLayer = (props) => {
-  // console.log('rendering EditorCanvasLayer', props)
   const canvas = useCanvas()
   const rndClassName = ResizeHandle.getRndClassName(props)
-  const resizeHandleStyle = ResizeHandle.getStyle(props.isSelected)
-  const clickerRef = React.useRef()
+
+  const resizeHandleStyles = props.isSelected
+    ? ResizeHandle.selectedHandleStyles
+    : ResizeHandle.notSelectedHandleStyles
 
   const resizeHandles = props.isSelected
     ? ResizeHandle.selectedComponents
     : ResizeHandle.notSelectedComponents
+
+  console.log(props.styleZIndex)
 
   return (
     <Choose>
       <When condition={props.type === 'text'}>
         <TextCanvasLayer
           onSingleClick={props.onCanvasLayerSingleClick}
+          dragGrid={props.dragGrid}
           onDoubleClick={props.onCanvasLayerDoubleClick}
           onResizeStop={props.onCanvasLayerResizeStop}
-          clickerRef={clickerRef}
           onDrop={props.onCanvasLayerDrop}
           scale={canvas.scale}
           isSelected={props.isSelected}
           layer={props}
           resizeHandles={resizeHandles}
-          resizeHandleStyle={resizeHandleStyle}
+          resizeHandleStyles={resizeHandleStyles}
           rndClassName={rndClassName}
           onChange={(value, height) => {
             props.setTextValue(value)
@@ -49,14 +52,14 @@ export const EditorCanvasLayer = (props) => {
       </When>
       <When condition={props.type === 'image'}>
         <ImageCanvasLayer
-          clickerRef={clickerRef}
           scale={canvas.scale}
           resizeHandles={resizeHandles}
-          resizeHandleStyle={resizeHandleStyle}
+          resizeHandleStyles={resizeHandleStyles}
           rndClassName={rndClassName}
           isSelected={props.isSelected}
           onDrop={props.onCanvasLayerDrop}
           onSingleClick={props.onCanvasLayerSingleClick}
+          dragGrid={props.dragGrid}
           onDoubleClick={props.onCanvasLayerDoubleClick}
           onResizeStop={props.onCanvasLayerResizeStop}
           layer={props}
@@ -64,14 +67,14 @@ export const EditorCanvasLayer = (props) => {
       </When>
       <When condition={props.type === 'box'}>
         <BoxCanvasLayer
-          clickerRef={clickerRef}
           scale={canvas.scale}
           resizeHandles={resizeHandles}
-          resizeHandleStyle={resizeHandleStyle}
+          resizeHandleStyles={resizeHandleStyles}
           rndClassName={rndClassName}
           isSelected={props.isSelected}
           onDrop={props.onCanvasLayerDrop}
           onSingleClick={props.onCanvasLayerSingleClick}
+          dragGrid={props.dragGrid}
           onDoubleClick={props.onCanvasLayerDoubleClick}
           onResizeStop={props.onCanvasLayerResizeStop}
           layer={props}
@@ -108,6 +111,7 @@ export default withLayerSubscription(
       'styleLineHeight',
       'styleBackgroundColor',
       'styleOpacity',
+      'styleTextAlign',
       'isSelected',
     ])
   }),

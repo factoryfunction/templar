@@ -1,5 +1,5 @@
-const DOCUMENT_WIDTH = 2550
-const DOCUMENT_HEIGHT = 3300
+const DOCUMENT_WIDTH = 816
+const DOCUMENT_HEIGHT = 1065
 
 const getImage = (url) => {
   const image = document.createElement('img')

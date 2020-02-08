@@ -19,7 +19,17 @@ const prepareBoxCanvasLayerStyles = (props) => {
     x: props.layer.styleLeft,
   }
 
-  return { element, container }
+  const containerPosition = {
+    y: props.layer.styleTop,
+    x: props.layer.styleLeft,
+  }
+
+  const containerSize = {
+    width: props.layer.styleWidth,
+    height: props.layer.styleHeight,
+  }
+
+  return { element, container, containerSize, containerPosition }
 }
 
 export const BoxCanvasLayer = (props) => {
@@ -27,6 +37,8 @@ export const BoxCanvasLayer = (props) => {
 
   return (
     <Rnd
+      size={styles.containerSize}
+      position={styles.containerPosition}
       data-layer-id={props.layer.id}
       scale={props.scale}
       onDragStop={props.onDrop}
@@ -36,7 +48,8 @@ export const BoxCanvasLayer = (props) => {
       onResizeStop={props.onResizeStop}
       disableDragging={!props.isSelected}
       resizeHandleComponent={props.resizeHandles}
-      resizeHandleStyle={props.resizeHandleStyle}
+      resizeHandleStyles={props.resizeHandleStyles}
+      dragGrid={props.dragGrid}
     >
       <div
         data-is-canvaslayer='true'

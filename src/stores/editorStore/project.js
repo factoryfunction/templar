@@ -30,8 +30,9 @@ export const setWasProjectRecentlySaved = action((state, value) => {
 // store, we use "thunks" when we need to do something
 // *asynchrnously* while updating the store along the way.
 
-export const initializeProject = thunk(async (actions, projectId) => {
+export const initializeProject = thunk(async (actions, [projectId, options = {}]) => {
   // await actions.initializeAssets(options)
+  options.scale && actions.setScale(options.scale)
   await actions.initializeLayers(projectId)
   actions.setProjectId(projectId)
 })

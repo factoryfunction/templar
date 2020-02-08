@@ -11,7 +11,7 @@ export const uploadFiles = async (options: UploadFileOptionsT) => {
 
   const asyncUploads = options.files.map((file) => {
     const category = `${getFileKind(file)}s`
-    return cdnFolder[category].put(file)
+    return cdnFolder[category].child(file.name).put(file)
   })
 
   const uploads = await Promise.all(asyncUploads)

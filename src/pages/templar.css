@@ -6,11 +6,13 @@
   padding: 0;
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
+  -webkit-print-color-adjust: exact;
 }
 
 :root {
   --mainFont: 'Work Sans', sans-serif;
   --monoFont: 'Space Mono', monospace;
+  -webkit-print-color-adjust: exact;
 
   --white: #fffffe;
   --black0: #0f0e17;

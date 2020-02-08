@@ -20,6 +20,11 @@ export const FontEditor = withLayerSubscription((props) => {
   const currentOpacity = props.styleOpacity
   const currentWidth = props.styleWidth
   const currentHeight = props.styleHeight
+  const currentPositionLeft = props.styleLeft
+  const currentPositionTop = props.styleTop
+  const currentTextAlign = props.styleTextAlign
+
+  console.log('...', props.styleTextAlign)
 
   const fontFamilyOptions = fontsManager.fontNames
   const fontWeightOptions = fontsManager.getFontWeights(currentFontFamily)
@@ -61,6 +66,8 @@ export const FontEditor = withLayerSubscription((props) => {
           value={currentLetterSpacing}
           onChange={props.setLetterSpacing}
         />
+        <Spacer size='18px' />
+        <LayerEditors.TextAlign current={currentTextAlign} onChange={props.setTextAlign} />
       </div>
 
       <Spacer size='18px' />
@@ -73,6 +80,14 @@ export const FontEditor = withLayerSubscription((props) => {
 
         <Spacer size='18px' />
         <LayerEditors.OpacityInput value={currentOpacity} onChange={props.setOpacity} />
+      </div>
+
+      <Spacer size='18px' />
+
+      <div style={{ display: 'flex', width: '100%' }}>
+        <LayerEditors.PositionLeft value={currentPositionLeft} onChange={props.setPositionLeft} />
+        <Spacer size='18px' />
+        <LayerEditors.PositionTop value={currentPositionTop} onChange={props.setPositionTop} />
       </div>
 
       <Spacer size='18px' />

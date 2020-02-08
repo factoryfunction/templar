@@ -1,6 +1,6 @@
 export const PAN_SCALE_WRAPPER_PROPS = {
-  defaultScale: 0.5,
-  scale: 0.5,
+  defaultScale: 1,
+  scale: 1,
   defaultPositionX: 565,
   defaultPositionY: 80,
   style: { width: '100%', height: '100%' },
@@ -11,7 +11,7 @@ export const PAN_SCALE_WRAPPER_PROPS = {
     step: 100,
   },
   options: {
-    minScale: 0.3,
+    minScale: 0.75,
     limitToBounds: true,
     transformEnabled: true,
     disabled: false,

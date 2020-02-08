@@ -18,6 +18,8 @@ const prepareTextCanvasLayerStyles = (props) => {
     left: props.layer.styleLeft,
     maxHeight: '60vh',
     minHeight: props.layer.styleHeight,
+    textAlign: props.layer.styleTextAlign,
+    zIndex: props.layer.styleZIndex,
   }
 
   const container = {
@@ -27,12 +29,17 @@ const prepareTextCanvasLayerStyles = (props) => {
     x: props.layer.styleLeft,
   }
 
+  const containerPosition = {
+    y: props.layer.styleTop,
+    x: props.layer.styleLeft,
+  }
+
   const containerSize = {
     width: props.layer.styleWidth,
     height: props.layer.styleHeight,
   }
 
-  return { element, container, containerSize }
+  return { element, container, containerSize, containerPosition }
 }
 
 export const TextCanvasLayer = (props) => {
@@ -45,6 +52,7 @@ export const TextCanvasLayer = (props) => {
     <Rnd
       data-layer-id={props.layer.id}
       size={styles.containerSize}
+      position={styles.containerPosition}
       scale={props.scale}
       onDragStop={props.onDrop}
       default={styles.container}
@@ -53,7 +61,9 @@ export const TextCanvasLayer = (props) => {
       onResizeStop={props.onResizeStop}
       disableDragging={!isPanningEnabled}
       resizeHandleComponent={props.resizeHandles}
-      resizeHandleStyle={props.resizeHandleStyle}
+      resizeHandleStyles={props.resizeHandleStyles}
+      dragGrid={props.dragGrid}
+      style={{ zIndex: props.layer.styleZIndex }}
     >
       <EditableText
         data-is-canvaslayer='true'

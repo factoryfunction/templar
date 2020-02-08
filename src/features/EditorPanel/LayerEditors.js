@@ -129,6 +129,61 @@ export const TextFontStyle = (props) => {
   )
 }
 
+export const TextAlign = (props) => {
+  const onChange = ({ option }) => {
+    props.onChange(option)
+  }
+
+  return (
+    <Select
+      width='100%'
+      label='Text Align'
+      showClear={false}
+      searchEnabled={false}
+      searchInputAutoFocus={false}
+      options={['left', 'center', 'right']}
+      selected={props.current}
+      onChange={onChange}
+    />
+  )
+}
+
+export const PositionLeft = (props) => {
+  const onChange = (event) => {
+    props.onChange(event.target.value)
+  }
+
+  return (
+    <TextField
+      width='100%'
+      unitMask='px'
+      type='number'
+      label='Position X'
+      value={props.value}
+      placeholder=''
+      onChange={onChange}
+    />
+  )
+}
+
+export const PositionTop = (props) => {
+  const onChange = (event) => {
+    props.onChange(event.target.value)
+  }
+
+  return (
+    <TextField
+      width='100%'
+      unitMask='px'
+      type='number'
+      label='Position Y'
+      value={props.value}
+      placeholder=''
+      onChange={onChange}
+    />
+  )
+}
+
 export const TextFontColor = (props) => {
   const onChange = (color) => {
     const { r, g, b, a } = color.rgb

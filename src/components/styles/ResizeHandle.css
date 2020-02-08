@@ -6,3 +6,11 @@
   border-radius: 20px;
   margin: 4px;
 }
+
+:global .RndResizeHandle > span {
+  display: none;
+}
+
+:global .SelectedCanvasLayer.RndResizeHandle > span {
+  display: inherit;
+}

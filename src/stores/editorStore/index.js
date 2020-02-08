@@ -20,10 +20,10 @@ const store = {
   wasProjectRecentlySaved: false,
   ...project,
 
-  scale: 0.5,
+  scale: 1,
   panPosition: [],
   panX: 180,
-  panY: -745,
+  panY: 80,
   isPanningEnabled: false,
   ...canvas,
 
