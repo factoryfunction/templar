@@ -10,9 +10,6 @@ const prepareBoxCanvasLayerStyles = (props) => {
     opacity: props.layer.styleOpacity,
     top: props.layer.styleTop,
     left: props.layer.styleLeft,
-    position: props.layer.stylePosition,
-    overflow: props.layer.styleOverflow,
-    display: props.layer.styleDisplay,
   }
 
   const container = {
@@ -28,21 +25,9 @@ const prepareBoxCanvasLayerStyles = (props) => {
 export const BoxCanvasLayer = (props) => {
   const styles = prepareBoxCanvasLayerStyles(props)
 
-  const onMouseUp = (event) => {
-    // console.log('up', event.target)
-  }
-
   return (
     <Rnd
-      // className={props.rndClassName}
-      // resizeHandleComponent={props.resizeHandles}
-      // resizeHandleStyle={props.resizeHandleStyle}
-      // disableDragging={!props.isSelected}
-      // scale={props.scale}
-      // onDragStop={props.onDrop}
-      // onResizeStop={props.onResizeStop}
-      // default={styles.container}
-      onMouseUp={onMouseUp}
+      data-layer-id={props.layer.id}
       scale={props.scale}
       onDragStop={props.onDrop}
       default={styles.container}
@@ -61,3 +46,5 @@ export const BoxCanvasLayer = (props) => {
     </Rnd>
   )
 }
+
+export default BoxCanvasLayer

@@ -1,9 +1,9 @@
-export const getFileType = (asset) => {
-  if (asset.meta.contentType.includes('image')) {
+export const getFileKind = (file) => {
+  if (file.meta.contentType.includes('image')) {
     return 'image'
   }
 
-  if (asset.meta.contentType.includes('octet-stream')) {
+  if (file.meta.contentType.includes('octet-stream')) {
     return 'font'
   }
 }

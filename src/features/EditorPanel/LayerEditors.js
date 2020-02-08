@@ -117,6 +117,7 @@ export const TextFontStyle = (props) => {
 
   return (
     <Select
+      width='100%'
       label='Font Style'
       showClear={false}
       searchEnabled={false}
@@ -175,6 +176,60 @@ export const Opacity = (props) => {
       defaultValue={props.value * 100}
       onAfterChange={onChange}
       renderThumb={(props, state) => <div {...props} />}
+    />
+  )
+}
+
+export const OpacityInput = (props) => {
+  const onChange = (event) => {
+    props.onChange(event.target.value / 100)
+  }
+
+  return (
+    <TextField
+      width='100%'
+      unitMask='%'
+      type='number'
+      label='Layer Opacity'
+      value={props.value}
+      placeholder=''
+      onChange={onChange}
+    />
+  )
+}
+
+export const Width = (props) => {
+  const onChange = (event) => {
+    props.onChange(event.target.value)
+  }
+
+  return (
+    <TextField
+      width='100%'
+      unitMask='%'
+      type='number'
+      label='Layer Width'
+      value={props.value}
+      placeholder=''
+      onChange={onChange}
+    />
+  )
+}
+
+export const Height = (props) => {
+  const onChange = (event) => {
+    props.onChange(event.target.value)
+  }
+
+  return (
+    <TextField
+      width='100%'
+      unitMask='%'
+      type='number'
+      label='Layer Height'
+      value={props.value}
+      placeholder=''
+      onChange={onChange}
     />
   )
 }

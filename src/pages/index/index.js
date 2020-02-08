@@ -6,7 +6,7 @@ import './index.css'
 const Index = () => {
   return (
     <div styleName='Index'>
-      <Link href='/editor/root-and-roam-creative-studio/sell-sheet'>GO TO PROJECT</Link>
+      <Link href='/editor?projectId=ul8McNxcefAlD23AjrMh'>GO TO PROJECT</Link>
     </div>
   )
 }

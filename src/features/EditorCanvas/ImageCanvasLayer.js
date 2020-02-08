@@ -7,12 +7,8 @@ const prepareImageCanvasLayerStyles = (props) => {
     width: '100%',
     height: '100%',
     backgroundSize: '100%',
-    backgroundImage: `url("${props.layer.styleBackgroundImage}")`,
+    backgroundImage: `url("${props.layer.fileUrl}")`,
     opacity: props.layer.styleOpacity,
-    top: props.layer.styleTop,
-    left: props.layer.styleLeft,
-    position: props.layer.stylePosition,
-    display: props.layer.styleDisplay,
     top: props.layer.styleTop,
     left: props.layer.styleLeft,
   }
@@ -20,31 +16,31 @@ const prepareImageCanvasLayerStyles = (props) => {
   const container = {
     width: props.layer.styleWidth,
     height: props.layer.styleHeight,
-    top: props.layer.styleTop,
-    left: props.layer.styleLeft,
+    y: props.layer.styleTop,
+    x: props.layer.styleLeft,
   }
 
   return { element, container }
 }
 
 export const ImageCanvasLayer = (props) => {
-  const { width, height, ...layerStyle } = props.layer.style
   const styles = prepareImageCanvasLayerStyles(props)
 
   return (
     <Rnd
-      className={props.rndClassName}
-      resizeHandleComponent={props.resizeHandles}
-      resizeHandleStyle={props.resizeHandleStyle}
+      data-layer-id={props.layer.id}
       lockAspectRatio={true}
-      disableDragging={!props.isSelected}
       scale={props.scale}
       onDragStop={props.onDrop}
-      onResizeStop={props.onResizeStop}
       default={styles.container}
+      onClick={props.onSingleClick}
+      className={props.rndClassName}
+      onResizeStop={props.onResizeStop}
+      disableDragging={!props.isSelected}
+      resizeHandleComponent={props.resizeHandles}
+      resizeHandleStyle={props.resizeHandleStyle}
     >
       <div
-        onClick={props.onSingleClick}
         data-is-canvaslayer='true'
         data-is-selected={props.isSelected}
         style={styles.element}
@@ -52,3 +48,5 @@ export const ImageCanvasLayer = (props) => {
     </Rnd>
   )
 }
+
+export default ImageCanvasLayer

@@ -40,7 +40,7 @@ export const LayerNameText = styled.p`
   margin-left: 8px;
   margin-bottom: 1px;
   cursor: pointer;
-  max-width: 180px;
+  max-width: 320px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

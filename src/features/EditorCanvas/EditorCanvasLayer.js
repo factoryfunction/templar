@@ -1,23 +1,24 @@
 import { Rnd } from 'react-rnd'
 
 import { ResizeHandle } from '#components/ResizeHandle'
-import { EditableText } from '#components/EditableText'
 
 import { withLayerSubscription } from '#stores/editorStore/useLayer'
 import './styles/EditorCanvasLayer.css'
 
-import dynamic from 'next/dynamic'
 import { withPureComponent } from '#utilities/withPureComponent'
 import { createPropsDiffer } from '#utilities/createPropsDiffer'
 
-import { TextCanvasLayer } from './TextCanvasLayer'
-import { BoxCanvasLayer } from './BoxCanvasLayer'
-import { ImageCanvasLayer } from './ImageCanvasLayer'
-// const DynamicComponent = dynamic(() => import('../components/hello'))
+import dynamic from 'next/dynamic'
+import { useCanvas } from '#stores/editorStore/useCanvas'
+
+const TextCanvasLayer = dynamic(() => import('./TextCanvasLayer'))
+const BoxCanvasLayer = dynamic(() => import('./BoxCanvasLayer'))
+const ImageCanvasLayer = dynamic(() => import('./ImageCanvasLayer'))
 
 export const EditorCanvasLayer = (props) => {
   // console.log('rendering EditorCanvasLayer', props)
-  const rndClassName = ResizeHandle.getRndClassName(props.isSelected)
+  const canvas = useCanvas()
+  const rndClassName = ResizeHandle.getRndClassName(props)
   const resizeHandleStyle = ResizeHandle.getStyle(props.isSelected)
   const clickerRef = React.useRef()
 
@@ -34,7 +35,7 @@ export const EditorCanvasLayer = (props) => {
           onResizeStop={props.onCanvasLayerResizeStop}
           clickerRef={clickerRef}
           onDrop={props.onCanvasLayerDrop}
-          scale={props.scale}
+          scale={canvas.scale}
           isSelected={props.isSelected}
           layer={props}
           resizeHandles={resizeHandles}
@@ -49,7 +50,7 @@ export const EditorCanvasLayer = (props) => {
       <When condition={props.type === 'image'}>
         <ImageCanvasLayer
           clickerRef={clickerRef}
-          scale={props.scale}
+          scale={canvas.scale}
           resizeHandles={resizeHandles}
           resizeHandleStyle={resizeHandleStyle}
           rndClassName={rndClassName}
@@ -64,7 +65,7 @@ export const EditorCanvasLayer = (props) => {
       <When condition={props.type === 'box'}>
         <BoxCanvasLayer
           clickerRef={clickerRef}
-          scale={props.scale}
+          scale={canvas.scale}
           resizeHandles={resizeHandles}
           resizeHandleStyle={resizeHandleStyle}
           rndClassName={rndClassName}
@@ -93,18 +94,18 @@ export default withLayerSubscription(
       'isVisible',
       'type',
       'name',
-      'text',
+      'textValue',
       'styleTop',
       'styleLeft',
       'styleWidth',
       'styleHeight',
       'styleFontFamily',
       'styleFontStyle',
-      'styleFontColor',
+      'styleColor',
       'styleFontWeight',
       'styleFontSize',
-      'styleFontLetterSpacing',
-      'styleFontLineHeight',
+      'styleLetterSpacing',
+      'styleLineHeight',
       'styleBackgroundColor',
       'styleOpacity',
       'isSelected',

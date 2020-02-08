@@ -1,5 +1,4 @@
 import { EditorStore } from '#stores/editorStore'
-import { useScale } from '#utilities/useScale'
 import EditorCanvasLayer from './EditorCanvasLayer'
 
 const useLayersList = () => {
@@ -8,11 +7,10 @@ const useLayersList = () => {
 
 export const EditorCanvasLayers = () => {
   const layers = useLayersList()
-  const { scale } = useScale()
 
   return (
     <For each='layer' of={layers}>
-      <EditorCanvasLayer scale={scale} layerType={layer.type} layerId={layer.id} key={layer.id} />
+      <EditorCanvasLayer layerType={layer.type} layerId={layer.id} key={layer.id} />
     </For>
   )
 }

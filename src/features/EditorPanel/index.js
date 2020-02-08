@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { EditorStore } from '#stores/editorStore'
 import * as Styled from './LeftPanel.styled'
-import { AssetsTab } from './AssetsTab'
+// import { AssetsTab } from './AssetsTab'
 import { SourcesTab } from './SourcesTab'
 import { LayersTab } from './LayersTab'
 import { HelpTab } from './HelpTab'
@@ -9,7 +9,7 @@ import { Button } from '#components/Button'
 import { Spacer } from '#components/Spacer'
 
 const tabsMap = {
-  Assets: AssetsTab,
+  // Assets: AssetsTab,
   Sources: SourcesTab,
   Layers: LayersTab,
   Help: HelpTab,
@@ -76,3 +76,5 @@ export const EditorPanel = (props) => {
     </Styled.PanelContainer>
   )
 }
+
+export default EditorPanel

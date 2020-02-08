@@ -30,6 +30,10 @@ ResizeHandle.getStyle = (isSelected) => {
   return isSelected ? RESIZE_HANDLE_SELECTED_STYLE : RESIZE_HANDLE_NOT_SELECTED_STYLE
 }
 
-ResizeHandle.getRndClassName = (isSelected) => {
-  return isSelected ? `RndResizeHandle SelectedCanvasLayer` : 'RndResizeHandle'
+ResizeHandle.getRndClassName = (props) => {
+  return [
+    'RndResizeHandle',
+    props.isSelected && 'SelectedCanvasLayer',
+    props.isEditingText && 'EditingLayerText',
+  ].filter(Boolean)
 }

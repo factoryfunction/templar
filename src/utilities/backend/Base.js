@@ -18,8 +18,6 @@ class Base {
   $projects = this.data.collection('projects')
   $organizations = this.data.collection('organizations')
 
-  const
-
   async getReferencesData(array) {
     const final = []
 

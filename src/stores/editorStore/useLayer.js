@@ -2,30 +2,27 @@ import { EditorStore } from '#stores/editorStore'
 
 export const useLayerActions = (layerId) => {
   const actions = EditorStore.useStoreActions((actions) => ({
-    // Globally available actions.
-    setName: (value) => actions.setLayerName([layerId, value]),
-    setOpacity: (value) => actions.setLayerOpacity([layerId, value]),
-    setPositionTop: (value) => actions.setLayerPositionTop([layerId, value]),
-    setPositionLeft: (value) => actions.setLayerPositionLeft([layerId, value]),
-    setBackgroundColor: (value) => actions.setLayerBackgroundColor([layerId, value]),
-    setBoxShadow: (value) => actions.setLayerBoxShadow([layerId, value]),
-    setWidth: (value) => actions.setLayerWidth([layerId, value]),
-    setHeight: (value) => actions.setLayerHeight([layerId, value]),
+    setName: (value) => actions.setLayerProperty([layerId, 'name', value]),
+    setOpacity: (value) => actions.setLayerProperty([layerId, 'styleOpacity', value]),
+    setPositionTop: (value) => actions.setLayerProperty([layerId, 'styleTop', value]),
+    setPositionLeft: (value) => actions.setLayerProperty([layerId, 'styleLeft', value]),
+    setBoxShadow: (value) => actions.setLayerProperty([layerId, 'styleBoxShadow', value]),
+    setWidth: (value) => actions.setLayerProperty([layerId, 'styleWidth', value]),
+    setHeight: (value) => actions.setLayerProperty([layerId, 'styleHeight', value]),
     selectLayer: () => actions.selectLayer(layerId),
     removeLayer: () => actions.removeLayer(layerId),
-    // Text layer actions.
-    setFontLetterSpacing: (value) => actions.setLayerLetterSpacing([layerId, value]),
-    setFontLineHeight: (value) => actions.setLayerLineHeight([layerId, value]),
-    setFontWeight: (value) => actions.setLayerFontWeight([layerId, value]),
-    setFontStyle: (value) => actions.setLayerFontStyle([layerId, value]),
-    setFontSize: (value) => actions.setLayerFontSize([layerId, value]),
-    setFontColor: (value) => actions.setLayerFontColor([layerId, value]),
     setFontFamily: (value) => actions.setLayerFontFamily([layerId, value]),
-    setTextValue: (value) => actions.setLayerText([layerId, value]),
-    setTextShadow: (value) => actions.setLayerTextShadow([layerId, value]),
-    setIsEditingText: (value) => actions.setIsEditingText([layerId, value]),
-    // Box layer actions.
-    // NONE SPECIFICALLY YET.
+    setLetterSpacing: (value) => actions.setLayerProperty([layerId, 'styleLetterSpacing', value]),
+    setLineHeight: (value) => actions.setLayerProperty([layerId, 'styleLineHeight', value]),
+    setFontWeight: (value) => actions.setLayerProperty([layerId, 'styleFontWeight', value]),
+    setFontStyle: (value) => actions.setLayerProperty([layerId, 'styleFontStyle', value]),
+    setFontSize: (value) => actions.setLayerProperty([layerId, 'styleFontSize', value]),
+    setColor: (value) => actions.setLayerProperty([layerId, 'styleColor', value]),
+    setTextShadow: (value) => actions.setLayerProperty([layerId, 'styleTextShadow', value]),
+    setIsEditingText: (value) => actions.setLayerProperty([layerId, 'isEditingText', value]),
+    setTextValue: (value) => actions.setLayerProperty([layerId, 'textValue', value]),
+    setBackgroundColor: (value) =>
+      actions.setLayerProperty([layerId, 'styleBackgroundColor', value]),
   }))
 
   return actions

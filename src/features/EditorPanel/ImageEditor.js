@@ -8,9 +8,24 @@ import './styles/FontEditor.css'
 import { useLayerActions } from '#stores/editorStore/useLayer'
 
 export const ImageEditor = withLayerSubscription((props) => {
+  const currentOpacity = props.styleOpacity
+  const currentWidth = props.styleWidth
+  const currentHeight = props.styleHeight
+
   return (
     <Styled.LayerEditorContainer>
       <LayerEditors.LayerName value={props.name} onChange={props.setName} />
+      <Spacer size='18px' />
+
+      <div style={{ display: 'flex', width: '100%' }}>
+        <LayerEditors.Width value={currentWidth} onChange={props.setWidth} />
+        {/* <Spacer size='18px' />
+
+        <LayerEditors.Height value={currentHeight} onChange={props.setHeight} /> */}
+
+        <Spacer size='18px' />
+        <LayerEditors.OpacityInput value={currentOpacity} onChange={props.setOpacity} />
+      </div>
       <Spacer size='18px' />
       <LayerEditors.Opacity value={props.styleOpacity} onChange={props.setOpacity} />
       <Spacer size='18px' />

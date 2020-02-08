@@ -12,6 +12,7 @@
   "dependencies": {
     "@babel/core": "^7.8.4",
     "@babel/node": "^7.8.4",
+    "@babel/preset-flow": "^7.8.3",
     "@iconscout/unicons": "^2.0.8",
     "@zeit/next-css": "^1.0.1",
     "add": "^2.0.6",

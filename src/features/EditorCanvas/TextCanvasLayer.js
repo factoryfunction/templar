@@ -3,20 +3,15 @@ import { EditableText } from '#components/EditableText'
 
 const prepareTextCanvasLayerStyles = (props) => {
   const element = {
-    // Rnd (container) receives the custom width/height. The
-    // p element always uses 100% to fill that space.
     width: '100%',
     height: '100%',
-    position: props.layer.stylePosition,
-    overflow: props.layer.styleOverflow,
-    textOverflow: props.layer.styleTextOverflow,
-    display: props.layer.styleDisplay,
     fontFamily: props.layer.styleFontFamily,
-    color: props.layer.styleFontColor,
+    color: props.layer.styleColor,
     fontWeight: props.layer.styleFontWeight,
-    letterSpacing: props.layer.styleFontLetterSpacing + 'px',
+    letterSpacing: props.layer.styleLetterSpacing + 'px',
     fontSize: props.layer.styleFontSize + 'px',
-    lineHeight: `${props.layer.styleFontLineHeight}%`,
+    fontStyle: props.layer.styleFontStyle,
+    lineHeight: `${props.layer.styleLineHeight}%`,
     backgroundColor: props.layer.styleBackgroundColor,
     opacity: props.layer.styleOpacity,
     top: props.layer.styleTop,
@@ -46,14 +41,10 @@ export const TextCanvasLayer = (props) => {
   const isPanningEnabled = props.isSelected && !props.layer.isEditingText
   const styles = prepareTextCanvasLayerStyles(props)
 
-  const onMouseUp = (event) => {
-    // console.log('up', event.target)
-  }
-
   return (
     <Rnd
+      data-layer-id={props.layer.id}
       size={styles.containerSize}
-      onMouseUp={onMouseUp}
       scale={props.scale}
       onDragStop={props.onDrop}
       default={styles.container}
@@ -66,7 +57,7 @@ export const TextCanvasLayer = (props) => {
     >
       <EditableText
         data-is-canvaslayer='true'
-        value={props.layer.text}
+        value={props.layer.textValue}
         style={styles.element}
         isEnabled={props.layer.isEditingText}
         onChange={props.onChange}
@@ -75,3 +66,5 @@ export const TextCanvasLayer = (props) => {
     </Rnd>
   )
 }
+
+export default TextCanvasLayer

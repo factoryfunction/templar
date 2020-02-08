@@ -101,17 +101,12 @@ const LayerListActions = (props) => {
 }
 
 const LayerRow = SortableElement((props) => {
-  const [isEditing, setIsEditing] = React.useState(false)
   const isSelected = props.layersState.layers.selectedLayers.includes(props.layer.id)
   const iconName = LAYER_TYPE_ICON_NAME_MAP[props.layer.type]
   const iconSize = LAYER_TYPE_ICON_SIZE_MAP[props.layer.type]
 
   const onRowClick = () => {
     props.layersState.actions.selectLayer(props.layer.id)
-  }
-
-  const onLayerRowArrowClick = () => {
-    setIsEditing(!isEditing)
   }
 
   return (
@@ -121,16 +116,8 @@ const LayerRow = SortableElement((props) => {
           <Icon name={iconName} size={iconSize} color='var(--night-gray)' />
         </Styled.LayerIconContainer>
         <Styled.LayerNameText>{props.layer.name}</Styled.LayerNameText>
-        <Styled.LayerEditIcon
-          isEditing={isEditing}
-          data-is-component-action
-          name='angle-down'
-          size='18px'
-          color='var(--night-gray)'
-          onClick={onLayerRowArrowClick}
-        />
       </Styled.LayerRow>
-      <If condition={isEditing}>
+      <If condition={isSelected}>
         <Choose>
           <When condition={props.layer.type === 'text'}>
             <FontEditor layerId={props.layer.id} />

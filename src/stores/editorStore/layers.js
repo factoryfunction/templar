@@ -5,14 +5,10 @@ import { base } from '#utilities/backend/Base'
 import * as storage from '#utilities/backend/storage'
 import { fontsManager } from '#utilities/fontsManager'
 import * as utilities from './storeUtilities'
-import { getImageData } from '#utilities/getImageMetadata'
 import { windowLocation } from '#utilities/windowLocation'
 import arrayMove from 'array-move'
 
-// BASIC STORE ACTIONS ------------------------------------
-// Since actions are *synchronous* ways of updating the
-// store, we use "thunks" when we need to do something
-// *asynchrnously* while updating the store along the way.
+import * as services from '#services/database'
 
 export const setAreLayersLoading = action((state, value) => {
   state.areLayersLoading = value
@@ -30,24 +26,21 @@ export const addTextLayer = action((state, options = ({} = {})) => {
     isVisible: true,
     type: 'text',
     name: 'Text Layer',
-    text: 'some text',
-    styleTop: 100,
-    styleLeft: 100,
+    textValue: 'some text',
+    styleTop: 5,
+    styleLeft: 5,
     styleWidth: 400,
     styleHeight: 200,
     styleFontFamily: 'Work Sans',
     styleFontStyle: 'normal',
-    styleFontColor: '#000000',
+    styleColor: '#000000',
     styleFontWeight: '400',
     styleFontSize: 48,
-    styleFontLetterSpacing: 0.5,
-    styleFontLineHeight: 140,
+    styleLetterSpacing: 0.5,
+    styleLineHeight: 20,
+    styleTextOverflow: 'ellipsis',
     styleBackgroundColor: 'rgba(0,0,0,0)',
     styleOpacity: 100,
-    styleTextOverflow: 'ellipsis',
-    // stylePosition: 'absolute',
-    // styleOverflow: 'hidden',
-    // styleDisplay: 'flex',
     ...options,
   })
 })
@@ -61,8 +54,8 @@ export const addImageLayer = action((state, options = {}) => {
     stylePosition: 'absolute',
     styleOverflow: 'hidden',
     styleDisplay: 'flex',
-    styleTop: 100,
-    styleLeft: 100,
+    styleTop: 5,
+    styleLeft: 5,
     styleWidth: 300,
     styleHeight: 200,
     styleOpacity: 100,
@@ -79,11 +72,8 @@ export const addBoxLayer = action((state, options = {}) => {
     type: 'box',
     name: 'Box Layer',
     isVisible: true,
-    // stylePosition: 'absolute',
-    styleOverflow: 'hidden',
-    styleDisplay: 'flex',
-    styleTop: 100,
-    styleLeft: 100,
+    styleTop: 5,
+    styleLeft: 5,
     styleWidth: 300,
     styleHeight: 200,
     styleOpacity: 100,
@@ -125,78 +115,15 @@ export const deselectAllLayers = action((state) => {
   })
 })
 
-export const setLayerName = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'name', value)
-})
-
-export const setLayerWidth = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleWidth', value)
-})
-
-export const setLayerHeight = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleHeight', value)
-})
-
-export const setLayerPositionTop = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleTop', value)
-})
-
-export const setLayerPositionLeft = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleLeft', value)
-})
-
-export const setLayerText = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'text', value)
-})
-
-export const setIsEditingText = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'isEditingText', value)
+export const setLayerProperty = action((state, [id, key, value]) => {
+  console.log('ACTION setLayerProperty', [id, key, value])
+  utilities.setLayerKeyValue(state.layers, id, key, value)
 })
 
 export const setLayerFontFamily = action((state, [id, value]) => {
   utilities.setLayerKeyValue(state.layers, id, 'styleFontFamily', value)
   utilities.setLayerKeyValue(state.layers, id, 'styleFontWeight', '400')
   fontsManager.loadFontByName(value)
-})
-
-export const setLayerFontSize = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleFontSize', value)
-})
-
-export const setLayerFontWeight = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleFontWeight', value)
-})
-
-export const setLayerFontColor = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleFontColor', value)
-})
-
-export const setLayerLetterSpacing = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleFontLetterSpacing', value)
-})
-
-export const setLayerLineHeight = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleFontLineHeight', value)
-})
-
-export const setLayerFontStyle = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleFontStyle', value)
-})
-
-export const setLayerTextShadow = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleFontTextShadow', value)
-})
-
-export const setLayerBoxShadow = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleBoxShadow', value)
-})
-
-export const setLayerOpacity = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleOpacity', value)
-})
-
-export const setLayerBackgroundColor = action((state, [id, value]) => {
-  utilities.setLayerKeyValue(state.layers, id, 'styleBackgroundColor', value)
 })
 
 // Used to change the index of a layer when dragged
@@ -207,16 +134,12 @@ export const reorderLayer = action((state, [oldIndex, newIndex]) => {
   state.layers = [...reorderedLayers].reverse()
 })
 
-// ASYNC STORE ACTIONS (THUNKS) ---------------------------
-// Since actions are *synchronous* ways of updating the
-// store, we use "thunks" when we need to do something
-// *asynchrnously* while updating the store along the way.
-
 export const initializeLayers = thunk(async (actions, projectId) => {
   actions.setAreLayersLoading(true)
-  const project = await base.getProjectData(projectId)
+  const project = await services.data.getProject(projectId)
+  const layers = project.layers || []
 
-  for (const layer of project.layers) {
+  for (const layer of layers) {
     if (layer.type === 'text') {
       const fontUrl = fontsManager.getFontUrl(
         layer.styleFontFamily,
@@ -231,13 +154,13 @@ export const initializeLayers = thunk(async (actions, projectId) => {
     }
   }
 
-  actions.setLayers(project.layers)
+  actions.setLayers(layers)
   actions.setAreLayersLoading(false)
 })
 
 export const onCanvasImageDrop = thunk(async (actions, acceptedFiles) => {
-  const uploads = await storage.uploadFiles({
-    ...windowLocation.params,
+  const uploads = await services.cdn.uploadFiles({
+    projectId: windowLocation.params.projectId,
     files: acceptedFiles,
   })
 
@@ -256,11 +179,6 @@ export const screenshotCanvas = thunk(async (actions) => {
   console.log('screenshotting that shit ')
   const canvas = document.querySelector('.react-transform-element')
 })
-
-// COMPUTED STORE PROPERTIES ------------------------------
-// These values are accessed and handled as static data
-// types and are recomputed automatically when there are
-// relevant changes to the store.
 
 export const layerCount = computed((state) => {
   return state.layers.length

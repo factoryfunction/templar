@@ -1,10 +1,11 @@
 import { createContextStore } from 'easy-peasy'
 
+// import * as assets from './assets'
 import * as project from './project'
-import * as assets from './assets'
 import * as layers from './layers'
 import * as source from './source'
 import * as workbench from './workbench'
+import * as canvas from './canvas'
 
 const TAB_NAMES = ['Layers', 'Sources', 'Help']
 
@@ -19,9 +20,12 @@ const store = {
   wasProjectRecentlySaved: false,
   ...project,
 
-  assets: [],
-  areAssetsLoading: false,
-  ...assets,
+  scale: 0.5,
+  panPosition: [],
+  panX: 0,
+  panY: 0,
+  isPanningEnabled: false,
+  ...canvas,
 
   source: null,
   sourceShareUrl: null,

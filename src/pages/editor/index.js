@@ -1,10 +1,12 @@
 import { EditorStore } from '#stores/editorStore'
 import { windowLocation } from '#utilities/windowLocation'
 import { LoaderTriangle } from '#components/LoaderTriangle'
-import { EditorCanvas } from '#features/EditorCanvas'
-import { EditorPanel } from '#features/EditorPanel'
 
 import './editor.css'
+import dynamic from 'next/dynamic'
+
+const EditorCanvas = dynamic(() => import('../../features/EditorCanvas'))
+const EditorPanel = dynamic(() => import('../../features/EditorPanel'))
 
 // This funky hook is used to ease the state changes from the project
 // not being ready to being ready. It makes the loading indicator
@@ -15,7 +17,7 @@ const useEditorState = () => {
   const isProjectReady = EditorStore.useStoreState((state) => state.isProjectReady)
 
   React.useEffect(() => {
-    initializeProject(windowLocation.params)
+    initializeProject(windowLocation.params.projectId)
   }, [])
 
   React.useEffect(() => {
