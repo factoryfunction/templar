@@ -4,7 +4,6 @@ import { useDropzone } from 'react-dropzone'
 import { EditorStore } from '#stores/editorStore'
 import { ScaleProvider } from '#utilities/useScale'
 import { useKeyPress } from '#utilities/useKeyPress'
-import { PanZoom } from '#components/PanZoom'
 import { EditorCanvasLayers } from './EditorCanvasLayers'
 import { PAN_SCALE_WRAPPER_PROPS } from './consts'
 
