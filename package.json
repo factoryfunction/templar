@@ -36,7 +36,7 @@
     "hex-and-rgba": "^1.4.2",
     "html2canvas": "^1.0.0-rc.5",
     "image-to-uri": "^1.0.0",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
     "nanoid": "^2.1.10",
