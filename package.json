@@ -69,7 +69,7 @@
     "react-spinners": "^0.8.0",
     "react-spreadsheet": "^0.4.43",
     "react-zoom-pan-pinch": "^1.6.1",
-    "set-value": "^3.0.1",
+    "set-value": "^4.0.1",
     "signale": "^1.4.0",
     "sleepjs": "^3.0.1",
     "sloc": "^0.2.1",
