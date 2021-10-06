@@ -74,7 +74,7 @@
     "sleepjs": "^3.0.1",
     "sloc": "^0.2.1",
     "styled-components": "^5.0.0",
-    "url-parse": "^1.4.7",
+    "url-parse": "^1.5.2",
     "use-double-click": "^1.0.5",
     "use-image": "^1.0.5",
     "webfontloader": "^1.6.28"
