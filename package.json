@@ -39,7 +39,7 @@
     "jspdf": "^1.5.3",
     "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
-    "nanoid": "^2.1.10",
+    "nanoid": "^3.1.31",
     "next": "^9.2.1",
     "node-fetch": "^2.6.0",
     "puppeteer": "^2.1.1",
