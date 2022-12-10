@@ -43,7 +43,7 @@
     "next": "^9.2.1",
     "node-fetch": "^2.6.0",
     "puppeteer": "^2.1.1",
-    "qs": "^6.9.1",
+    "qs": "^6.9.7",
     "re-resizable": "^6.1.1",
     "react": "^16.12.0",
     "react-color": "2.17.3",
