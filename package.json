@@ -29,7 +29,7 @@
     "dom-to-pdf": "^0.1.2",
     "dotenv": "^8.2.0",
     "easy-peasy": "^3.3.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "filereader": "^0.10.3",
     "firebase": "^7.7.0",
     "get-value": "^3.0.1",
